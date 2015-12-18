@@ -1,6 +1,6 @@
 var User = require("./../models/user");
 var Role = require("./../models/role");
-var checkAdmin = require("./checkAdmin").func;
+var checkAdmin = require("./checkAdmin");
 
 var cMthds = require("./helpers");
 var uKeys = ["name.first", "name.last", "username",
@@ -153,4 +153,4 @@ var userFunctions = {
   }
 };
 
-exports.func = userFunctions;
+module.exports = userFunctions;

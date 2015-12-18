@@ -275,4 +275,4 @@ var docFunctions = {
   }
 };
 
-exports.func = docFunctions;
+module.exports = docFunctions;

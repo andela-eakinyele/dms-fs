@@ -74,4 +74,4 @@ var roleFunctions = {
 
 };
 
-exports.func = roleFunctions;
+module.exports = roleFunctions;
