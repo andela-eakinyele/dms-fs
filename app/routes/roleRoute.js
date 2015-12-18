@@ -2,7 +2,7 @@ var routeMethods = require("./helpers");
 // define creqte request body
 var bodyKeys = ["title"];
 // require controller
-var roleFunc = require("./../controllers");
+var roleFunc = require("./../controllers").roleFunc;
 
 var roleRoutes = {
   createRole: function (req, res) {

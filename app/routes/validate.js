@@ -1,7 +1,6 @@
 var jwt = require("jwt-simple");
 var _ = require("lodash");
-var userFunc = require("./../controllers");
-
+var userFunc = require("./../controllers").userFunc;
 
 var authenticate = function (req, res, next) {
   var token = req.headers.access_token;

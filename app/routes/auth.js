@@ -1,5 +1,5 @@
 var jwt = require("jwt-simple");
-var userFunc = require("./../controllers/userMethods");
+var userFunc = require("./../controllers").userFunc;
 
 
 var getToken = function (validuser) {

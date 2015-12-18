@@ -19,7 +19,7 @@ exports.userMock = function (testUsers) {
 
 exports.docMock = function (testDocs) {
   return promise.mapSeries(_.values(testDocs), function (doc) {
-    return ModelFunc.docFunc.createDoc(doc);
+    return ModelFunc.docFunc.createDocument(doc);
   });
 };
 

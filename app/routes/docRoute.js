@@ -1,4 +1,4 @@
-var docFunc = require("./../controllers");
+var docFunc = require("./../controllers").docFunc;
 var routeMethods = require("./helpers");
 var bKeys = ["username", "documentName", "title", "content", "role"];
 

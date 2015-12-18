@@ -2,7 +2,7 @@ var routeMethods = require("./helpers");
 // define create request body
 var bKeys = ["firstname", "lastname", "username", "password", "role", "email"];
 // require controller
-var userFunc = require("./../controllers");
+var userFunc = require("./../controllers").userFunc;
 
 var userRoutes = {
   createUser: function (req, res) {
