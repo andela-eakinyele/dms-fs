@@ -1,0 +1,31 @@
+{
+  "testUsers": {
+    "admin": ["Edwin", "Abbott", "EAbbott", "eabbott", "Admin", "eabbott@project.com"],
+    "PM": ["Humayun", "Ahmed", "HAhmed", "hahmed", "Project Manager", "hahmed@project.com"],
+    "admin2": ["Alan", "Turing", "ATuring", "aturing", "Admin", "aturing@project.com"],
+    "trainee": ["Lucas", "LongSide", "LLongside", "llongside", "Trainee", "llongside@project.com"],
+    "DPM": ["Moniker", "Sims", "MSims", "msims", "Project Manager", "msims@project.com"]
+  },
+  "seedUsers": {
+    "teamLead": ["Douglas", "Adams", "DAdams", "dadams", "Team Lead", "dadams@project.com"],
+    "seniorDev": ["Crystal", "Rocksalt", "CRSalt", "crsalt", "Senior Dev", "crsalt@project.com"],
+    "midDev": ["John", "Craig", "JCraig", "jcraig", "Mid Dev", "jcraig@project.com"],
+    "trainee": ["Maureen", "Bridgewater", "MBridge", "mbridge", "Trainee", "mbridge@project.com"],
+    "owner": ["AndOne", "Courtside", "ACside", "acside", "Product Owner", "acside@api.com"]
+  },
+  "invalidTest": {
+    "invalidData": ["Enrico", "Benneti", "EBenneti", "ebenneti", "Trainee", "ebenneti@project.com"]
+  },
+  "testDocs": {
+    "doc1": ["Lorems.js", "Lorem Ipsum", "Who knows the whole words....", ["Project Manager", "Team Lead", "Senior Dev"]],
+    "doc2": ["Staples.json", "Staple Foods", "These are classes of group...", ["Product Owner", "Project Manager", "Team Lead"]]
+  },
+  "seedDocs": {
+    "doc3": ["CRSalt", "Techie.txt", "Life of a developer", "We can'ts stand bugs, we write and kill...", ["Project Manager", "Team Lead", "Senior Dev"]],
+    "doc4": ["DAdams", "Clothes.doc", "Winter is coming", "John Snow likes to say, winter is coming...", ["Team Lead"]],
+    "doc5": ["ACside", "API.txt", "Value for money", "I have money, I want value for it...", ["Project Manager", "Team Lead", "Senior Dev", "Mid Dev", "Trainee", "Product Owner"]],
+    "doc6": ["MBridge", "Hardware.jsx", "Memory, Processing and Crunching", "I have no Idea what an IC Chip does...", ["Team Lead", "Mid Dev", "Trainee"]]
+  },
+  "testRole": "Project Manager",
+  "seedRoles": ["Project Manager", "Team Lead", "Senior Dev", "Mid Dev", "Trainee", "Product Owner"]
+}
