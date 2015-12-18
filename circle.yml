@@ -1,0 +1,9 @@
+machine:
+  node:
+    version: 4.1
+  services:
+    - mongodb
+
+dependencies:
+  cache_directories:
+    - "node_modules"
