@@ -42,15 +42,15 @@ var roleFunctions = {
       Doc.getDocsByRole(id).then(function (data) {
         if (data.length) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Document for role-" + id,
             "data": data
           });
         } else {
           resolve({
-            "status": false,
+            "status": 200,
             "message": "No Document exist for role-" + id,
-            "data": ""
+            "data": []
           });
         }
       }).catch(function (err) {

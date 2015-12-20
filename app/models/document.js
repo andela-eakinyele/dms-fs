@@ -59,7 +59,7 @@ documentSchema.statics.getDocsByOwnerId = function (ownerId) {
   }).populate({
     path: "ownerId",
     select: "username"
-  });
+  }).sort('dateCreated');
   return new Promise(function (resolve, reject) {
     query.then(function (docs) {
         resolve(docs);
@@ -77,7 +77,7 @@ documentSchema.statics.getDocsByDate = function (date) {
   var query = this.find({}).where("dateCreated").gt(st).lt(edt).populate({
     path: "ownerId",
     select: "username"
-  });
+  }).sort("dateCreated");
   return new Promise(function (resolve, reject) {
     query.then(function (docs) {
         resolve(docs);
@@ -94,7 +94,7 @@ documentSchema.statics.getDocsByRole = function (roleId) {
     var query = doc.find().where("role").in([roleId]).populate({
       path: "role",
       select: "title"
-    });
+    }).sort("dateCreated");
     query.then(function (docs) {
         resolve(docs);
       },

@@ -52,17 +52,17 @@ function checkRoleValidType(docName, docRole) {
   });
   if (validType.length !== 1) {
     return {
-      "status": false,
+      "status": 401,
       "message": "Invalid file type",
-      "data": ""
+      "data": []
     };
   }
   // verify array of roles 
   if (!docRole.length || typeof roles === "string") {
     return {
-      "status": false,
+      "status": 401,
       "message": "No roles specified/Specify array of roles",
-      "data": ""
+      "data": []
     };
   } else {
     return {
@@ -85,7 +85,7 @@ var docFunctions = {
       var roles = docData.role;
       var checked = checkRoleValidType(docData.documentName, roles);
       // role is an array
-      if (!checked.status) {
+      if (checked.status !== true) {
         resolve(checked);
         return;
       } else {
@@ -108,11 +108,11 @@ var docFunctions = {
                     } else {
                       // Invalid user
                       resolve({
-                        "status": false,
+                        "status": 401,
                         "message": "Invalid User/Role specified '" +
                           docData.username + "/" + docData.role +
                           "' does not exist",
-                        "data": ""
+                        "data": []
                       });
                     }
                   },
@@ -122,10 +122,10 @@ var docFunctions = {
               // invalid roles
             } else {
               resolve({
-                "status": false,
+                "status": 401,
                 "message": "Invalid Roles specified '" +
                   docData.roles + "'' does not exist",
-                "data": ""
+                "data": []
               });
             }
           }, function (err) { // db error
@@ -142,7 +142,7 @@ var docFunctions = {
     }).populate({
       path: "role",
       select: "title"
-    });
+    }).sort("dateCreated");
     if (limit) {
       query = query.limit(limit);
     }
@@ -155,9 +155,9 @@ var docFunctions = {
         return docs;
       } else {
         return {
-          "status": false,
+          "status": 403,
           "message": "Not authorized to view document",
-          "data": ""
+          "data": []
         };
       }
     });
@@ -191,10 +191,10 @@ var docFunctions = {
                     resolve(cMthds.gUpdate("Documents", id, query));
                   } else { // invalid roles in array
                     resolve({
-                      "status": false,
+                      "status": 401,
                       "message": "Invalid roles specified '" +
                         docData.role + "' does not exist",
-                      "data": ""
+                      "data": []
                     });
                   }
                 },
@@ -205,9 +205,9 @@ var docFunctions = {
         }
       } else {
         return {
-          "status": false,
+          "status": 403,
           "message": "Not authorized to edit document",
-          "data": ""
+          "data": []
         };
       }
     });
@@ -219,15 +219,15 @@ var docFunctions = {
       Doc.getDocsByOwnerId(ownerId).then(function (data) {
         if (data.length) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Document for id " + id,
             "data": data
           });
         }
         resolve({
-          "status": false,
+          "status": 200,
           "message": "No Document exist for id " + id,
-          "data": ""
+          "data": []
         });
       }).catch(function (err) {
         cMthds.dberrors(reject, "querying database", err);
@@ -240,15 +240,15 @@ var docFunctions = {
       Doc.getDocsByDate(date).then(function (data) {
         if (data.length) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Document for " + date,
             "data": data
           });
         } else {
           resolve({
-            "status": false,
+            "status": 200,
             "message": "No Document exist for date ",
-            "data": ""
+            "data": []
           });
         }
       }).catch(function (err) {
@@ -266,9 +266,9 @@ var docFunctions = {
         return cMthds.gDelete("Documents", query, id);
       } else {
         return {
-          "status": false,
+          "status": 403,
           "message": "Not authorized to delete document",
-          "data": ""
+          "data": []
         };
       }
     });

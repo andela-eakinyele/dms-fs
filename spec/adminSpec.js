@@ -11,7 +11,7 @@ var docKeys = ["username", "documentName", "title", "content", "role"];
 
 module.exports = function () {
   // seed roles and users
-  describe("Admin users CRUD users and documents", function () {
+  describe("Admin users CRUD users and documents\n", function () {
     var token = "";
     var newUsers = [];
     var docIds = [];
@@ -19,11 +19,11 @@ module.exports = function () {
       username: "EAbbott",
       password: "eabbott"
     };
-    describe("Persisting admin and non-admin users" +
+    describe("Persisting admin and non-admin users\n" +
       " to the database",
       function () {
         // verify admin login
-        it("Should return a token on Successful login", function (done) {
+        it("- Should return a token on Successful login", function (done) {
           agent
             .post("/dmsapi/users/login")
             .type("json")
@@ -44,7 +44,7 @@ module.exports = function () {
         });
 
         ["admin2", "trainee"].forEach(function (key) {
-          it("Should persist a valid userdata to database:" +
+          it("- Should persist a valid userdata to database:" +
             key,
             function (done) {
               var userdata = mock.parseData(uKeys, data.testUsers[key]);
@@ -63,7 +63,6 @@ module.exports = function () {
                   }
                   var response = res.body;
                   newUsers.push(response.data);
-                  assert(response.status, "User not Created");
                   assert.equal(response.message, "Created new Users");
                   assert.equal(response.data.username + " " +
                     response.data.email, userdata.username + " " +
@@ -75,10 +74,10 @@ module.exports = function () {
       });
 
     describe("Retrieve all users, update and delete" +
-      " other users",
+      " other users\n",
       function () {
         // should be able to retrieve all user data
-        it("Should be able to retrieve all user data" +
+        it("- Should be able to retrieve all user data" +
           " at once",
           function (done) {
             agent
@@ -96,7 +95,6 @@ module.exports = function () {
                 }
                 var response = res.body;
                 var name = _.pluck(response.data, "username").slice(0, 4);
-                assert(response.status, "Admin user has no access");
                 assert.equal(response.message, "Existing Users");
                 assert.deepEqual(name, ["EAbbott", "DAdams", "CRSalt",
                   "JCraig"
@@ -105,7 +103,7 @@ module.exports = function () {
               });
           });
 
-        it("Should be able to update other users data", function (done) {
+        it("- Should be able to update other users data", function (done) {
           var userdata = {};
           userdata.role = "Mid Dev";
           uKeys.forEach(function (key) {
@@ -135,14 +133,13 @@ module.exports = function () {
                 return done(err);
               }
               var response = res.body;
-              assert(response.status, "User was not updated");
               assert.equal(response.message, "Updated Users");
               assert.equal(response.data.username, "LLong");
               done();
             });
         });
         // should be able to delete userdata
-        it("Should be able to delete userdata", function (done) {
+        it("- Should be able to delete userdata", function (done) {
           agent
             .delete("/dmsapi/users/" + newUsers[1]._id)
             .set({
@@ -157,7 +154,6 @@ module.exports = function () {
                 return done(err);
               }
               var response = res.body;
-              assert(response.status, "User not deleted");
               assert.equal(response.message, "Removed Users");
               assert.equal(response.data.username, "LLong");
               done();
@@ -165,10 +161,10 @@ module.exports = function () {
         });
       });
     //  should be able to get, getall, update and delete all documents
-    describe("Should be able to CRUD documents", function () {
+    describe("Should be able to CRUD documents\n", function () {
 
       [100, 101, 102, 104, 105].forEach(function (key) {
-        it("-Should be able to get all document", function (done) {
+        it("- Should be able to get all document", function (done) {
           agent
             .get("/dmsapi/documents/" + key)
             .set({
@@ -182,7 +178,6 @@ module.exports = function () {
                 return done(err);
               }
               var response = res.body;
-              assert(response.status, "Document not retrieved");
               assert.equal(response.message, "Documents data:");
               assert.deepEqual(response.data._id, key);
               done();
@@ -190,7 +185,7 @@ module.exports = function () {
         });
       });
       //  should be able to get all documents
-      it("-Should be able to get all document at once", function (done) {
+      it("- Should be able to get all document at once", function (done) {
         agent
           .get("/dmsapi/documents")
           .set({
@@ -205,14 +200,14 @@ module.exports = function () {
             }
             var response = res.body;
             docIds = _.pluck(response.data, "_id");
-            assert(response.status, "Documents not retrieved");
             assert.equal(response.message, "Existing Documents");
+            console.log(docIds);
             assert.deepEqual(docIds, [100, 101, 102, 104, 105]);
             done();
           });
       });
 
-      it("-Should be able to get document by role", function (done) {
+      it("- Should be able to get document by role", function (done) {
         //roleid 2 === Project Manager
         agent
           .get("/dmsapi/roles/2/documents")
@@ -228,14 +223,14 @@ module.exports = function () {
             }
             var response = res.body;
             var docbyroleIds = _.pluck(response.data, "_id");
-            assert(response.status, "Documents not retrieved");
             assert.equal(response.message, "Document for role-2");
+            console.log(docbyroleIds);
             assert.deepEqual(docbyroleIds, [100, 101, 102, 104]);
             done();
           });
       });
 
-      it("-Should be able to get document by date", function (done) {
+      it("- Should be able to get document by date", function (done) {
         agent
           .post("/dmsapi/documents/date")
           .set({
@@ -254,8 +249,9 @@ module.exports = function () {
             }
             var response = res.body;
             var docbydate = _.pluck(response.data, "_id");
-            assert(response.status, "Documents not retrieved");
-            assert.equal(response.message, "Document for " + new Date().toDateString());
+            assert.equal(response.message, "Document for " + 
+              new Date().toDateString());
+            console.log(docbydate);
             assert.deepEqual(docbydate, [100, 101, 102, 104, 105]);
             done();
           });
@@ -263,7 +259,7 @@ module.exports = function () {
 
       ["doc3", "doc5", "doc6"].forEach(function (key, index) {
         // should be able to update all document data
-        it("-Should be able to update all document", function (done) {
+        it("- Should be able to update all document", function (done) {
           var docdata = mock.parseData(docKeys, data.seedDocs[key]);
           var oldName = docdata.documentName;
           docdata.documentName = "Dolor-" + oldName;
@@ -281,7 +277,6 @@ module.exports = function () {
                 return done(err);
               }
               var response = res.body;
-              assert(response.status, "Document not updated");
               assert.equal(response.message, "Updated Documents");
               assert.equal(response.data.documentName, "Dolor-" +
                 data.seedDocs[key][1]);
@@ -292,7 +287,7 @@ module.exports = function () {
       // should be able to delete all documents
       [100, 101, 102, 104, 105].forEach(function (key) {
         // should be able to update all document data
-        it("-Should be able to delete all document", function (done) {
+        it("- Should be able to delete all document", function (done) {
           agent
             .delete("/dmsapi/documents/" + key)
             .set({
@@ -306,7 +301,6 @@ module.exports = function () {
                 return done(err);
               }
               var response = res.body;
-              assert(response.status, "Document not deleted");
               assert.equal(response.message, "Removed Documents");
               assert.equal(response.data._id, key);
               done();

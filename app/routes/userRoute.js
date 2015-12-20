@@ -9,7 +9,7 @@ var userRoutes = {
     // generate object for new user data
     var userData = routeMethods.parseReq(bKeys, req.body);
     userFunc.createUser(userData).then(function (result) {
-      res.json(result);
+      res.status(result.status).json(result);
     }).catch(function (err) {
       routeMethods.dberrors(res, "creating user", err); // db error
     });
@@ -19,7 +19,7 @@ var userRoutes = {
     var userData = routeMethods.parseReq(bKeys, req.body);
     userFunc.updateUser(userData, req.params.id, req.headers.username)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "updating user", err); // db error
       });
@@ -28,7 +28,7 @@ var userRoutes = {
   getUser: function (req, res) {
     userFunc.getUser(req.params.id, req.headers.username)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "getting user", err); // db error
       });
@@ -36,7 +36,7 @@ var userRoutes = {
 
   getAllUsers: function (req, res) {
     userFunc.getAllUsers(req.body.limit).then(function (result) {
-      res.json(result);
+      res.status(result.status).json(result);
     }).catch(function (err) {
       routeMethods.dberrors(res, "getting users", err); // db error
     });
@@ -45,7 +45,7 @@ var userRoutes = {
   deleteUser: function (req, res) {
     userFunc.deleteUser(req.params.id, req.headers.username)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "deleting user", err); // db error
       });
