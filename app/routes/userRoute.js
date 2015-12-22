@@ -2,7 +2,8 @@
   "use strict";
   var routeMethods = require("./helpers");
   // define create request body
-  var bKeys = ["firstname", "lastname", "username", "password", "role", "email"];
+  var bKeys = ["firstname", "lastname", "username", 
+  "password", "role", "email"];
   // require controller
   var userFunc = require("./../controllers").userFunc;
 

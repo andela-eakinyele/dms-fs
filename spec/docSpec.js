@@ -170,7 +170,8 @@
                   return done(err);
                 }
                 var response = res.body;
-                assert.equal(response.message, "Not authorized to edit document");
+                assert.equal(response.message, 
+                  "Not authorized to edit document");
                 assert.equal(response.data, "");
                 done();
               });
@@ -194,7 +195,8 @@
               assert.equal(response.message, "Document for id " +
                 usersId.teamLead._id);
               assert.equal(response.data.length, 3);
-              assert.deepEqual(_.pluck(response.data, "documentName"), ["Lorem " +
+              assert.deepEqual(_.pluck(response.data, 
+                "documentName"), ["Lorem " +
                 "Ipsum.js", "Staples.json", "Clothes.doc"
               ]);
               done();

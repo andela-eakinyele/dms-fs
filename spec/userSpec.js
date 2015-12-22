@@ -6,7 +6,8 @@
   var _ = require("lodash");
   var mock = apiTest.seed;
   var data = apiTest.testdata;
-  var uKeys = ["firstname", "lastname", "username", "password", "role", "email"];
+  var uKeys = ["firstname", "lastname", "username", "password", 
+  "role", "email"];
   var mKeys = ["name.first", "name.last", "username", "password",
     "role", "email"
   ];
@@ -94,7 +95,8 @@
           it("- Should throw error for invalid userdata: " +
             key,
             function(done) {
-              var userdata = mock.parseData(uKeys, data.invalidTest.invalidData);
+              var userdata = mock.parseData(uKeys,
+                data.invalidTest.invalidData);
               delete userdata[key];
               agent
                 .post("/dmsapi/users")
@@ -171,7 +173,8 @@
                   }
                   var response = res.body;
                   assert.equal(response.message, "Invalid credentials");
-                  assert.equal(undefined, response.token, "Token was generated");
+                  assert.equal(undefined, response.token,
+                    "Token was generated");
                   done();
                 });
             });
