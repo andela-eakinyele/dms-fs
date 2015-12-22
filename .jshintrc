@@ -32,10 +32,12 @@
     "browser",
     "element",
     "by",
-    "exports"
+    "exports",
+    "Promise"
   ],
   "quotmark": true,
   "trailing": true,
   "undef": true,
-  "unused": true
+  "unused": true,
+  "globalstrict": true
 }
