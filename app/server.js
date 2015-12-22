@@ -1,6 +1,8 @@
-var app = require("./config/express");
+(function() {
+  "use strict";
+  var app = require("./config/express");
 
-var port = process.env.PORT || 9876;
-app.listen(port);
-console.log("We are on ", port);
-
+  var port = process.env.PORT || 9876;
+  app.listen(port);
+  console.log("We are on ", port);
+})();

@@ -22,6 +22,7 @@
     "describe",
     "expect",
     "it",
+    "after",
     "angular",
     "inject",
     "module",
@@ -32,10 +33,12 @@
     "browser",
     "element",
     "by",
-    "exports"
+    "exports",
+    "Promise"
   ],
   "quotmark": true,
   "trailing": true,
   "undef": true,
-  "unused": true
+  "unused": true,
+  "globalstrict": true
 }
