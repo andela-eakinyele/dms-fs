@@ -1,7 +1,7 @@
 var _ = require("lodash");
 
 exports.dberrors = function(res, dbaction, err) {
-  res.json({
+  res.status(500).json({
     "status": false,
     "message": "Error " + dbaction,
     "error": err

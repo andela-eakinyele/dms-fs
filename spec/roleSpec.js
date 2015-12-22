@@ -21,13 +21,12 @@ module.exports = function () {
           "title": data.testRole
         })
         .expect("Content-Type", /json/)
-        .expect(200)
+        .expect(400)
         .end(function (err, res) {
           if (err) {
             return done(err);
           }
           var response = res.body;
-          assert.notEqual(true, response.status);
           assert.equal(response.message, "Invalid Token or Key");
           assert.equal(undefined, response.data);
           done();
@@ -67,14 +66,13 @@ module.exports = function () {
           "title": data.testRole
         })
         .expect("Content-Type", /json/)
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) {
             return done(err);
           }
           var response = res.body;
           roleId = response.data._id;
-          assert(response.status, "Role not created");
           assert.equal(response.message, "Created new Roles");
           assert.equal(response.data.title, "Project Manager");
           done();
@@ -96,7 +94,6 @@ module.exports = function () {
             return done(err);
           }
           var response = res.body;
-          assert(response.status, "Role not retrieved");
           assert.equal(response.message, "Roles data:");
           assert.equal(response.data.title, "Project Manager");
           done();
@@ -118,7 +115,6 @@ module.exports = function () {
             return done(err);
           }
           var response = res.body;
-          assert(response.status, "Roles not retrieved");
           assert.equal(response.message, "Existing Roles");
           assert.deepEqual(_.pluck(response.data, "title"), ["Admin",
             "Project Manager"
@@ -146,7 +142,6 @@ module.exports = function () {
             return done(err);
           }
           var response = res.body;
-          assert(response.status, "Role not updated");
           assert.equal(response.message, "Updated Roles");
           assert.equal(response.data.title, "Package Manager");
           done();
@@ -172,7 +167,6 @@ module.exports = function () {
             return done(err);
           }
           var response = res.body;
-          assert(response.status, "Role not deleted");
           assert.equal(response.message, "Removed Roles");
           assert.equal(response.data.title, "Package Manager");
           done();

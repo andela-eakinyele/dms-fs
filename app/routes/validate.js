@@ -8,8 +8,8 @@ var authenticate = function (req, res, next) {
     try {
       var decoded = jwt.decode(token, require("./../config/secret.js")());
       if (decoded.exp <= Date.now()) {
-        res.json({
-          "status": false,
+        res.status(400).json({
+          "status": 400,
           "message": "Token Expired, redirect to login",
           "error": "Token expired"
         });
@@ -18,15 +18,15 @@ var authenticate = function (req, res, next) {
         next();
       }
     } catch (err) {
-      res.json({
+      res.status(500).json({
         "status": false,
         "message": "Token not validated",
         "error": err
       });
     }
   } else {
-    res.json({
-      "status": false,
+    res.status(400).json({
+      "status": 400,
       "message": "Invalid Token or Key"
     });
     return;
@@ -46,15 +46,15 @@ exports.authorize = function (req, res, next) {
       if (admin.length) {
         next();
       } else {
-        res.json({
-          "status": false,
+        res.status(403).json({
+          "status": 403,
           "message": "Not authorized",
           "error": "Unauthorized user"
         });
       }
     } else {
-      res.json({
-        "status": false,
+      res.status(400).json({
+        "status": 400,
         "message": "User is not logged in/does not exists",
         "error": "User not verified"
       });
@@ -74,8 +74,8 @@ exports.adminUser = function (req, res, next) {
         if (user.username === req.headers.username) {
           authenticate(req, res, next);
         } else {
-          res.json({
-            "status": false,
+          res.status(403).json({
+            "status": 403,
             "message": "Not authorized to create Admin user",
             "error": "Unauthorized user action"
           });
@@ -84,8 +84,8 @@ exports.adminUser = function (req, res, next) {
         next();
       }
     }, function (err) {
-      res.json({
-        "status": false,
+      res.status(500).json({
+        "status": 500,
         "message": "Database error",
         "error": "User not verified " + err
       });

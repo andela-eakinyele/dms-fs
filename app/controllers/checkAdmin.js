@@ -18,7 +18,7 @@ module.exports = function (userData) {
         resolve({
           "status": true,
           "message": "Admin exists",
-          "data": ""
+          "data": []
         });
       } else {
         // create admin if userData is admin
@@ -27,7 +27,7 @@ module.exports = function (userData) {
             resolve({
               "status": true,
               "message": "Create User as Admin",
-              "data": ""
+              "data": []
             });
           }).catch(function (err) {
             resolve(err);
@@ -35,9 +35,9 @@ module.exports = function (userData) {
         } else {
           // admin status false
           resolve({
-            "status": false,
+            "status": 400,
             "message": "Create Admin User -role:Admin",
-            "data": ""
+            "data": []
           });
         }
       }

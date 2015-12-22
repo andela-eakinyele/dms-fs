@@ -48,7 +48,7 @@ var userFunctions = {
     });
     return new Promise(function (resolve, reject) {
       checkAdmin(userData).then(function (result) {
-        if (result.status) {
+        if (result.status === true) {
           Role.findOne({
             title: userData.role
           }, "_id").then(function (_role) {
@@ -57,10 +57,10 @@ var userFunctions = {
                 resolve(cMthds.gCreate("Users", userData, User, query));
               } else {
                 resolve({
-                  "status": false,
+                  "status": 400,
                   "message": "Invalid role specified \"" + userData.role +
                     "\" does not exist",
-                  "data": ""
+                  "data": []
                 });
               }
             },
@@ -113,18 +113,18 @@ var userFunctions = {
                 return cMthds.gUpdate("Users", hid, query);
               } else {
                 return {
-                  "status": false,
+                  "status": 403,
                   "message": "Not authorized to update user",
-                  "data": ""
+                  "data": []
                 };
               }
             }));
           } else {
             resolve({
-              "status": false,
+              "status": 400,
               "message": "Invalid role specified '" + userData.role +
                 "' does not exist",
-              "data": ""
+              "data": []
             });
           }
         },

@@ -9,7 +9,7 @@ var roleRoutes = {
     // generate object for new role data
     var roleData = routeMethods.parseReq(bodyKeys, req.body);
     roleFunc.createRole(roleData).then(function (result) {
-      res.json(result);
+      res.status(result.status).json(result);
     }).catch(function (err) {
       routeMethods.dberrors(res, "creating role", err); // db error
     });
@@ -19,7 +19,7 @@ var roleRoutes = {
     var roleData = routeMethods.parseReq(bodyKeys, req.body);
     roleFunc.updateRole(roleData, req.params.id)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "updating role", err); // db error
       });
@@ -28,7 +28,7 @@ var roleRoutes = {
   getRole: function (req, res) {
     roleFunc.getRole(req.params.id)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "getting role", err); // db error
       });
@@ -37,7 +37,7 @@ var roleRoutes = {
   getAllRoles: function (req, res) {
     roleFunc.getAllRoles(req.body.limit)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "getting roles", err); // db error
       });
@@ -46,7 +46,7 @@ var roleRoutes = {
   deleteRole: function (req, res) {
     roleFunc.deleteRole(req.params.id)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "deleting role", err); // db error
       });
@@ -55,7 +55,7 @@ var roleRoutes = {
   getDocsById: function (req, res) {
     roleFunc.getDocsByRole(req.params.id)
       .then(function (result) {
-        res.json(result);
+        res.status(result.status).json(result);
       }).catch(function (err) {
         routeMethods.dberrors(res, "getting docs by role", err); // db error
       });

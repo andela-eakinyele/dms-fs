@@ -35,8 +35,8 @@ var auth = {
     var password = req.body.password || "";
     // check for empty credentials
     if (username === "" || password === "") {
-      res.json({
-        "status": false,
+      res.status(400).json({
+        "status": 400,
         "message": "Invalid credentials"
       });
       return;
@@ -49,8 +49,8 @@ var auth = {
         if (validuser) {
           res.json(getToken(validuser));
         } else {
-          res.json({
-            "status": false,
+          res.status(400).json({
+            "status": 400,
             "message": "Invalid credentials"
           });
         }

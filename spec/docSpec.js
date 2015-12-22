@@ -8,7 +8,7 @@ var docKeys = ["documentName", "title", "content", "role"];
 
 module.exports = function () {
 
-  describe("Document CRUD", function () {
+  describe("Document CRUD\n", function () {
     var token = {};
     var usersId = {};
     var docId = {};
@@ -27,13 +27,12 @@ module.exports = function () {
           .type("json")
           .send(docdata)
           .expect("Content-Type", /json/)
-          .expect(200)
+          .expect(400)
           .end(function (err, res) {
             if (err) {
               return done(err);
             }
             var response = res.body;
-            assert.notEqual(true, response.status);
             assert.equal(response.message, "Invalid Token or Key");
             assert.equal(undefined, response.data);
             done();
@@ -80,14 +79,13 @@ module.exports = function () {
             .type("json")
             .send(docdata)
             .expect("Content-Type", /json/)
-            .expect(200)
+            .expect(201)
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
               var response = res.body;
               docId[key] = response.data._id;
-              assert(response.status, "Document not created");
               assert.equal(response.message, "Created new Documents");
               assert.equal(response.data.documentName, data.testDocs[key][0]);
               done();
@@ -120,7 +118,6 @@ module.exports = function () {
               return done(err);
             }
             var response = res.body;
-            assert(response.status, "Document not retrieved");
             assert.equal(response.message, "Documents data:");
             assert.equal(response.data.documentName, "Lorems.js");
             done();
@@ -145,7 +142,6 @@ module.exports = function () {
               return done(err);
             }
             var response = res.body;
-            assert(response.status, "Document not updated");
             assert.equal(response.message, "Updated Documents");
             assert.equal(response.data.documentName, "Lorem Ipsum.js");
             done();
@@ -153,7 +149,7 @@ module.exports = function () {
       });
 
       it("-Should not be able to update document" +
-        "without role access",
+        " without role access",
         function (done) {
           var docdata = mock.parseData(docKeys, data.testDocs.doc2);
           docdata.documentName = "Hardware Softies.js";
@@ -166,13 +162,12 @@ module.exports = function () {
             })
             .send(docdata)
             .expect("Content-Type", /json/)
-            .expect(200)
+            .expect(403)
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
               var response = res.body;
-              assert.notEqual(true, response.status, "Document updated");
               assert.equal(response.message, "Not authorized to edit document");
               assert.equal(response.data, "");
               done();
@@ -194,7 +189,6 @@ module.exports = function () {
               return done(err);
             }
             var response = res.body;
-            assert(response.status, "Document not retrieved");
             assert.equal(response.message, "Document for id " +
               usersId.teamLead._id);
             assert.equal(response.data.length, 3);
@@ -221,7 +215,6 @@ module.exports = function () {
               return done(err);
             }
             var response = res.body;
-            assert(response.status, "Document not deleted");
             assert.equal(response.message, "Removed Documents");
             assert.equal(response.data._id, seededId[1]);
             done();
@@ -240,14 +233,12 @@ module.exports = function () {
             })
             .type("json")
             .expect("Content-Type", /json/)
-            .expect(200)
+            .expect(403)
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
               var response = res.body;
-              assert.notEqual(true, response.status, "Non-admin" +
-                " user has access");
               assert.equal(response.message, "Not authorized");
               assert.equal(response.error, "Unauthorized user");
               done();
@@ -265,13 +256,12 @@ module.exports = function () {
               "username": data.seedUsers.teamLead[2]
             })
             .expect("Content-Type", /json/)
-            .expect(200)
+            .expect(403)
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
               var response = res.body;
-              assert(true, response.status, "Document deleted");
               assert.equal(response.message, "Not authorized " +
                 "to delete document");
               assert.equal(response.data, "");
@@ -289,13 +279,12 @@ module.exports = function () {
               "username": data.seedUsers.teamLead[2]
             })
             .expect("Content-Type", /json/)
-            .expect(200)
+            .expect(403)
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
               var response = res.body;
-              assert(true, response.status, "Document deleted");
               assert.equal(response.message, "Not authorized " +
                 "to delete document");
               assert.equal(response.data, "");

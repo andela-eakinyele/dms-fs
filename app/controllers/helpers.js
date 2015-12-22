@@ -15,7 +15,7 @@ exports.getNextId = getNextId;
 
 var dberrors = function (reject, dbaction, err) {
   reject({
-    "status": false,
+    "status": 500,
     "message": "Error " + dbaction,
     "error": err
   });
@@ -24,9 +24,9 @@ exports.dberrors = dberrors;
 
 var notExist = function (modelName, data, resolve) {
   resolve({
-    "status": false,
+    "status": 400,
     "message": modelName + "(s) do(es) not exist",
-    "data": ""
+    "data": []
   });
 };
 exports.notExist = notExist;
@@ -48,7 +48,7 @@ exports.gCreate = function (modelName, modelData, model, findQuery) {
           // create document
           model.create(modelData).then(function (rstcreate) {
             resolve({
-              "status": true,
+              "status": 201,
               "message": "Created new " + modelName,
               "data": rstcreate
             });
@@ -59,9 +59,9 @@ exports.gCreate = function (modelName, modelData, model, findQuery) {
         } else { // document exists
           var msg = modelName + " already exist \n Change unique data";
           resolve({
-            "status": false,
+            "status": 400,
             "message": msg,
-            "data": ""
+            "data": []
           });
         }
       }, function (err) { // db error
@@ -79,7 +79,7 @@ exports.gGetAll = function (modelName, query) {
     query.then(function (rstGet) {
         if (rstGet.length) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Existing " + modelName,
             "data": rstGet
           });
@@ -99,15 +99,15 @@ exports.gGetOne = function (modelName, query, id) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": false,
+        "status": 400,
         "message": "Get parameter not specified",
-        "data": ""
+        "data": []
       });
     }
     query.then(function (rstGetOne) {
       if (rstGetOne) {
         resolve({
-          "status": true,
+          "status": 200,
           "message": modelName + " data:",
           "data": rstGetOne
         });
@@ -125,16 +125,16 @@ exports.gUpdate = function (modelName, id, query) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": false,
+        "status": 400,
         "message": "Get parameter not specified",
-        "data": ""
+        "data": []
       });
       return;
     }
     query.then(function (rstUpdate) {
         if (rstUpdate) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Updated " + modelName,
             "data": rstUpdate
           });
@@ -153,15 +153,15 @@ exports.gDelete = function (modelName, query, id) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": false,
+        "status": 400,
         "message": "Get parameter not specified",
-        "data": ""
+        "data": []
       });
     }
     query.then(function (rstDel) {
         if (rstDel) {
           resolve({
-            "status": true,
+            "status": 200,
             "message": "Removed " + modelName,
             "data": rstDel
           });
