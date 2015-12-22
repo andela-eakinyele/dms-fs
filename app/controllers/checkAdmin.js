@@ -35,7 +35,7 @@ module.exports = function (userData) {
         } else {
           // admin status false
           resolve({
-            "status": 401,
+            "status": 400,
             "message": "Create Admin User -role:Admin",
             "data": []
           });

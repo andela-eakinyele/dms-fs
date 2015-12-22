@@ -8,8 +8,8 @@ var authenticate = function (req, res, next) {
     try {
       var decoded = jwt.decode(token, require("./../config/secret.js")());
       if (decoded.exp <= Date.now()) {
-        res.status(401).json({
-          "status": false,
+        res.status(400).json({
+          "status": 400,
           "message": "Token Expired, redirect to login",
           "error": "Token expired"
         });
@@ -25,8 +25,8 @@ var authenticate = function (req, res, next) {
       });
     }
   } else {
-    res.status(401).json({
-      "status": false,
+    res.status(400).json({
+      "status": 400,
       "message": "Invalid Token or Key"
     });
     return;
@@ -53,8 +53,8 @@ exports.authorize = function (req, res, next) {
         });
       }
     } else {
-      res.status(401).json({
-        "status": 401,
+      res.status(400).json({
+        "status": 400,
         "message": "User is not logged in/does not exists",
         "error": "User not verified"
       });

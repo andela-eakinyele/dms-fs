@@ -21,7 +21,7 @@ module.exports = function () {
           "title": data.testRole
         })
         .expect("Content-Type", /json/)
-        .expect(401)
+        .expect(400)
         .end(function (err, res) {
           if (err) {
             return done(err);
@@ -66,7 +66,7 @@ module.exports = function () {
           "title": data.testRole
         })
         .expect("Content-Type", /json/)
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) {
             return done(err);

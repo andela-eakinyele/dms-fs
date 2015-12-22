@@ -24,7 +24,7 @@ exports.dberrors = dberrors;
 
 var notExist = function (modelName, data, resolve) {
   resolve({
-    "status": 500,
+    "status": 400,
     "message": modelName + "(s) do(es) not exist",
     "data": []
   });
@@ -48,7 +48,7 @@ exports.gCreate = function (modelName, modelData, model, findQuery) {
           // create document
           model.create(modelData).then(function (rstcreate) {
             resolve({
-              "status": 200,
+              "status": 201,
               "message": "Created new " + modelName,
               "data": rstcreate
             });
@@ -59,7 +59,7 @@ exports.gCreate = function (modelName, modelData, model, findQuery) {
         } else { // document exists
           var msg = modelName + " already exist \n Change unique data";
           resolve({
-            "status": 200,
+            "status": 400,
             "message": msg,
             "data": []
           });
@@ -99,7 +99,7 @@ exports.gGetOne = function (modelName, query, id) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": 401,
+        "status": 400,
         "message": "Get parameter not specified",
         "data": []
       });
@@ -125,7 +125,7 @@ exports.gUpdate = function (modelName, id, query) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": 401,
+        "status": 400,
         "message": "Get parameter not specified",
         "data": []
       });
@@ -153,7 +153,7 @@ exports.gDelete = function (modelName, query, id) {
   return new Promise(function (resolve, reject) {
     if (id === undefined) {
       resolve({
-        "status": 401,
+        "status": 400,
         "message": "Get parameter not specified",
         "data": []
       });

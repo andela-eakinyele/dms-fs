@@ -52,7 +52,7 @@ function checkRoleValidType(docName, docRole) {
   });
   if (validType.length !== 1) {
     return {
-      "status": 401,
+      "status": 400,
       "message": "Invalid file type",
       "data": []
     };
@@ -60,7 +60,7 @@ function checkRoleValidType(docName, docRole) {
   // verify array of roles 
   if (!docRole.length || typeof roles === "string") {
     return {
-      "status": 401,
+      "status": 400,
       "message": "No roles specified/Specify array of roles",
       "data": []
     };
@@ -108,7 +108,7 @@ var docFunctions = {
                     } else {
                       // Invalid user
                       resolve({
-                        "status": 401,
+                        "status": 400,
                         "message": "Invalid User/Role specified '" +
                           docData.username + "/" + docData.role +
                           "' does not exist",
@@ -122,7 +122,7 @@ var docFunctions = {
               // invalid roles
             } else {
               resolve({
-                "status": 401,
+                "status": 400,
                 "message": "Invalid Roles specified '" +
                   docData.roles + "'' does not exist",
                 "data": []
@@ -191,7 +191,7 @@ var docFunctions = {
                     resolve(cMthds.gUpdate("Documents", id, query));
                   } else { // invalid roles in array
                     resolve({
-                      "status": 401,
+                      "status": 400,
                       "message": "Invalid roles specified '" +
                         docData.role + "' does not exist",
                       "data": []

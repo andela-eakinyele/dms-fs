@@ -43,7 +43,7 @@ module.exports = function () {
             .post("/dmsapi/users")
             .type("json")
             .send(userdata)
-            .expect(200)
+            .expect(201)
             .end(function (err, res) {
               if (err) {
                 return done(err);
@@ -72,7 +72,7 @@ module.exports = function () {
               .post("/dmsapi/users")
               .type("json")
               .send(userdata)
-              .expect(200)
+              .expect(400)
               .end(function (err, res) {
                 if (err) {
                   return done(err);
@@ -86,7 +86,7 @@ module.exports = function () {
       });
 
       uKeys.forEach(function (key, index) {
-        var statusCode = (key === "role")? 401 : 500;
+        var statusCode = (key === "role")? 400 : 500;
         // check email, username, firstname, passsword, empty or invalid role
         it("- Should throw error for invalid userdata: " + 
           key, function (done) {
@@ -130,7 +130,7 @@ module.exports = function () {
             .get("/dmsapi/users/" + usersId[0])
             .type("json")
             .expect("Content-Type", /json/)
-            .expect(401)
+            .expect(400)
             .end(function (err, res) {
               if (err) {
                 return done(err);
@@ -160,7 +160,7 @@ module.exports = function () {
                 password: password
               })
               .expect("Content-Type", /json/)
-              .expect(401)
+              .expect(400)
               .end(function (err, res) {
                 if (err) {
                   return done(err);
@@ -330,7 +330,7 @@ module.exports = function () {
           .type("json")
           .send(userdata)
           .expect("Content-Type", /json/)
-          .expect(200)
+          .expect(201)
           .end(function (err, res) {
             if (err) {
               return done(err);

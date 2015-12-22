@@ -29,13 +29,12 @@ module.exports = function () {
         .post("/dmsapi/users")
         .type("json")
         .send(userdata)
-        .expect(401)
+        .expect(400)
         .end(function (err, res) {
           if (err) {
             return done(err);
           }
           var response = res.body;
-          assert.notEqual(true, response.status, "User created");
           assert.equal(response.message, "Create Admin User " +
             "-role:Admin", "Admin user required");
           done();
@@ -48,7 +47,7 @@ module.exports = function () {
         .post("/dmsapi/users")
         .type("json")
         .send(userdata)
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) {
             return done(err);

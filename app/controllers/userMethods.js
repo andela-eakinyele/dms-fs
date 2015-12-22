@@ -57,7 +57,7 @@ var userFunctions = {
                 resolve(cMthds.gCreate("Users", userData, User, query));
               } else {
                 resolve({
-                  "status": 401,
+                  "status": 400,
                   "message": "Invalid role specified \"" + userData.role +
                     "\" does not exist",
                   "data": []
@@ -121,7 +121,7 @@ var userFunctions = {
             }));
           } else {
             resolve({
-              "status": 401,
+              "status": 400,
               "message": "Invalid role specified '" + userData.role +
                 "' does not exist",
               "data": []

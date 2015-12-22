@@ -56,7 +56,7 @@ module.exports = function () {
                 })
                 .type("json")
                 .send(userdata)
-                .expect(200)
+                .expect(201)
                 .end(function (err, res) {
                   if (err) {
                     return done(err);
@@ -224,7 +224,6 @@ module.exports = function () {
             var response = res.body;
             var docbyroleIds = _.pluck(response.data, "_id");
             assert.equal(response.message, "Document for role-2");
-            console.log(docbyroleIds);
             assert.deepEqual(docbyroleIds, [100, 101, 102, 104]);
             done();
           });
@@ -249,9 +248,8 @@ module.exports = function () {
             }
             var response = res.body;
             var docbydate = _.pluck(response.data, "_id");
-            assert.equal(response.message, "Document for " + 
+            assert.equal(response.message, "Document for " +
               new Date().toDateString());
-            console.log(docbydate);
             assert.deepEqual(docbydate, [100, 101, 102, 104, 105]);
             done();
           });
