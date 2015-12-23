@@ -1,10 +1,10 @@
 (function() {
-  "use strict";
-  var routeMethods = require("./helpers");
+  'use strict';
+  var routeMethods = require('./helpers');
   // define creqte request body
-  var bodyKeys = ["title"];
+  var bodyKeys = ['title'];
   // require controller
-  var roleFunc = require("./../controllers").roleFunc;
+  var roleFunc = require('./../controllers').roleFunc;
 
   var roleRoutes = {
     createRole: function(req, res) {
@@ -13,7 +13,7 @@
       roleFunc.createRole(roleData).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {
-        routeMethods.dberrors(res, "creating role", err); // db error
+        routeMethods.dberrors(res, 'creating role', err); // db error
       });
     },
 
@@ -23,7 +23,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "updating role", err); // db error
+          routeMethods.dberrors(res, 'updating role', err); // db error
         });
     },
 
@@ -32,7 +32,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting role", err); // db error
+          routeMethods.dberrors(res, 'getting role', err); // db error
         });
     },
 
@@ -41,7 +41,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting roles", err); // db error
+          routeMethods.dberrors(res, 'getting roles', err); // db error
         });
     },
 
@@ -50,7 +50,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "deleting role", err); // db error
+          routeMethods.dberrors(res, 'deleting role', err); // db error
         });
     },
 
@@ -59,7 +59,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting docs by role", err); // db error
+          routeMethods.dberrors(res, 'getting docs by role', err); // db error
         });
     }
 
