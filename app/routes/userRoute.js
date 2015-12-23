@@ -1,11 +1,11 @@
 (function() {
-  "use strict";
-  var routeMethods = require("./helpers");
+  'use strict';
+  var routeMethods = require('./helpers');
   // define create request body
-  var bKeys = ["firstname", "lastname", "username", 
-  "password", "role", "email"];
+  var bKeys = ['firstname', 'lastname', 'username', 
+  'password', 'role', 'email'];
   // require controller
-  var userFunc = require("./../controllers").userFunc;
+  var userFunc = require('./../controllers').userFunc;
 
   var userRoutes = {
     createUser: function(req, res) {
@@ -14,7 +14,7 @@
       userFunc.createUser(userData).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {
-        routeMethods.dberrors(res, "creating user", err); // db error
+        routeMethods.dberrors(res, 'creating user', err); // db error
       });
     },
 
@@ -24,7 +24,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "updating user", err); // db error
+          routeMethods.dberrors(res, 'updating user', err); // db error
         });
     },
 
@@ -33,7 +33,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting user", err); // db error
+          routeMethods.dberrors(res, 'getting user', err); // db error
         });
     },
 
@@ -41,7 +41,7 @@
       userFunc.getAllUsers(req.body.limit).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {
-        routeMethods.dberrors(res, "getting users", err); // db error
+        routeMethods.dberrors(res, 'getting users', err); // db error
       });
     },
 
@@ -50,7 +50,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "deleting user", err); // db error
+          routeMethods.dberrors(res, 'deleting user', err); // db error
         });
     }
 

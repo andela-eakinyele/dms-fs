@@ -1,8 +1,8 @@
 (function() {
-  "use strict";
-  var User = require("./../models/user");
-  var roleFunc = require("./roleMethods");
-  var cmMethods = require("./helpers");
+  'use strict';
+  var User = require('./../models/user');
+  var roleFunc = require('./roleMethods');
+  var cmMethods = require('./helpers');
 
   /**
    * checks for Admin user
@@ -18,18 +18,18 @@
       query.then(function(user) {
           if (user) {
             resolve({
-              "status": true,
-              "message": "Admin exists",
-              "data": []
+              'status': true,
+              'message': 'Admin exists',
+              'data': []
             });
           } else {
             // create admin if userData is admin
-            if (userData.role === "Admin") {
+            if (userData.role === 'Admin') {
               roleFunc.createAdmin().then(function() {
                 resolve({
-                  "status": true,
-                  "message": "Create User as Admin",
-                  "data": []
+                  'status': true,
+                  'message': 'Create User as Admin',
+                  'data': []
                 });
               }).catch(function(err) {
                 resolve(err);
@@ -37,15 +37,15 @@
             } else {
               // admin status false
               resolve({
-                "status": 400,
-                "message": "Create Admin User -role:Admin",
-                "data": []
+                'status': 400,
+                'message': 'Create Admin User -role:Admin',
+                'data': []
               });
             }
           }
         },
         function(err) {
-          cmMethods.dberrors(reject, "querying database", err);
+          cmMethods.dberrors(reject, 'querying database', err);
         });
     });
   };

@@ -1,6 +1,6 @@
 (function() {
-  "use strict";
-  var mongoose = require("mongoose");
+  'use strict';
+  var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
   var documentSchema = new Schema({
@@ -13,23 +13,23 @@
     },
     ownerId: [{
       type: Number,
-      ref: "Users"
+      ref: 'Users'
     }],
     documentName: {
       type: String,
-      required: (true, "Document name is invalid")
+      required: (true, 'Document name is invalid')
     },
     title: {
       type: String,
-      required: (true, "title is invalid")
+      required: (true, 'title is invalid')
     },
     content: {
       type: String,
-      required: (true, "content is invalid")
+      required: (true, 'content is invalid')
     },
     role: [{
       type: Number,
-      ref: "Roles"
+      ref: 'Roles'
     }],
     dateCreated: {
       type: Date,
@@ -44,7 +44,7 @@
   });
 
   documentSchema.statics.getMaxId = function() {
-    var query = this.find({}, "_id");
+    var query = this.find({}, '_id');
     return new Promise(function(resolve, reject) {
       query.then(function(ids) {
           resolve(ids);
@@ -59,9 +59,9 @@
     var query = this.find({
       ownerId: ownerId
     }).populate({
-      path: "ownerId",
-      select: "username"
-    }).sort("dateCreated");
+      path: 'ownerId',
+      select: 'username'
+    }).sort('dateCreated');
     return new Promise(function(resolve, reject) {
       query.then(function(docs) {
           resolve(docs);
@@ -76,10 +76,10 @@
     var st = new Date(date);
     var end = (new Date(date)).setDate(st.getDate() + 1);
     var edt = new Date(end);
-    var query = this.find({}).where("dateCreated").gt(st).lt(edt).populate({
-      path: "ownerId",
-      select: "username"
-    }).sort("dateCreated");
+    var query = this.find({}).where('dateCreated').gt(st).lt(edt).populate({
+      path: 'ownerId',
+      select: 'username'
+    }).sort('dateCreated');
     return new Promise(function(resolve, reject) {
       query.then(function(docs) {
           resolve(docs);
@@ -93,10 +93,10 @@
   documentSchema.statics.getDocsByRole = function(roleId) {
     var doc = this;
     return new Promise(function(resolve, reject) {
-      var query = doc.find().where("role").in([roleId]).populate({
-        path: "role",
-        select: "title"
-      }).sort("dateCreated");
+      var query = doc.find().where('role').in([roleId]).populate({
+        path: 'role',
+        select: 'title'
+      }).sort('dateCreated');
       query.then(function(docs) {
           resolve(docs);
         },
@@ -106,5 +106,5 @@
     });
   };
 
-  module.exports = mongoose.model("Documents", documentSchema);
+  module.exports = mongoose.model('Documents', documentSchema);
 })();

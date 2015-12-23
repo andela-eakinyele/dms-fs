@@ -1,8 +1,8 @@
 (function() {
-  "use strict";
-  var docFunc = require("./../controllers").docFunc;
-  var routeMethods = require("./helpers");
-  var bKeys = ["username", "documentName", "title", "content", "role"];
+  'use strict';
+  var docFunc = require('./../controllers').docFunc;
+  var routeMethods = require('./helpers');
+  var bKeys = ['username', 'documentName', 'title', 'content', 'role'];
 
   var docRoutes = {
     createDoc: function(req, res) {
@@ -12,7 +12,7 @@
       docFunc.createDocument(docData).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {
-        routeMethods.dberrors(res, "creating doc", err); // db error
+        routeMethods.dberrors(res, 'creating doc', err); // db error
       });
     },
 
@@ -22,7 +22,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "updating doc", err); // db error
+          routeMethods.dberrors(res, 'updating doc', err); // db error
         });
     },
 
@@ -31,7 +31,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting doc", err); // db error
+          routeMethods.dberrors(res, 'getting doc', err); // db error
         });
     },
 
@@ -39,7 +39,7 @@
       docFunc.getAllDocuments(req.body.limit).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {
-        routeMethods.dberrors(res, "getting docs", err); // db error
+        routeMethods.dberrors(res, 'getting docs', err); // db error
       });
     },
 
@@ -48,7 +48,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "deleting doc", err); // db error
+          routeMethods.dberrors(res, 'deleting doc', err); // db error
         });
     },
 
@@ -57,7 +57,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting doc", err); // db error
+          routeMethods.dberrors(res, 'getting doc', err); // db error
         });
     },
 
@@ -66,7 +66,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          routeMethods.dberrors(res, "getting doc", err); // db error
+          routeMethods.dberrors(res, 'getting doc', err); // db error
         });
     }
 

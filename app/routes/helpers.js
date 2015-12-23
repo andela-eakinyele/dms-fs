@@ -1,12 +1,12 @@
 (function() {
-  "use strict";
-  var _ = require("lodash");
+  'use strict';
+  var _ = require('lodash');
 
   exports.dberrors = function(res, dbaction, err) {
     res.status(500).json({
-      "status": false,
-      "message": "Error " + dbaction,
-      "error": err
+      'status': false,
+      'message': 'Error ' + dbaction,
+      'error': err
     });
   };
 

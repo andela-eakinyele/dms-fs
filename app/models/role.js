@@ -1,6 +1,6 @@
 (function() {
-  "use strict";
-  var mongoose = require("mongoose");
+  'use strict';
+  var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
   var roleSchema = new Schema({
@@ -14,12 +14,12 @@
     title: {
       type: String,
       unique: true,
-      required: (true, " title is invalid")
+      required: (true, ' title is invalid')
     }
   });
 
   roleSchema.statics.getMaxId = function() {
-    var query = this.find({}, "_id");
+    var query = this.find({}, '_id');
     return new Promise(function(resolve, reject) {
       query.exec(function(err, ids) {
         if (err) {
@@ -30,5 +30,5 @@
     });
   };
 
-  module.exports = mongoose.model("Roles", roleSchema);
+  module.exports = mongoose.model('Roles', roleSchema);
 })();

@@ -1,6 +1,6 @@
 (function() {
-  "use strict";
-  var mongoose = require("mongoose");
+  'use strict';
+  var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
   var userSchema = new Schema({
     _id: {
@@ -13,16 +13,16 @@
     username: {
       type: String,
       unique: true,
-      required: (true, " username is invalid")
+      required: (true, ' username is invalid')
     },
     name: {
       first: {
         type: String,
-        required: (true, " firstname is required")
+        required: (true, ' firstname is required')
       },
       last: {
         type: String,
-        required: (true, " lastname is required")
+        required: (true, ' lastname is required')
       }
     },
     email: {
@@ -30,7 +30,7 @@
       unique: true,
       required: true,
       match: /.+\@.+\..+/,
-      message: "Enter a valid email"
+      message: 'Enter a valid email'
     },
     password: {
       type: String,
@@ -38,7 +38,7 @@
     },
     role: [{
       type: Number,
-      ref: "Roles"
+      ref: 'Roles'
     }],
     active: {
       type: Boolean,
@@ -49,7 +49,7 @@
   });
 
   userSchema.statics.getMaxId = function() {
-    var query = this.find({}, "_id");
+    var query = this.find({}, '_id');
     return new Promise(function(resolve, reject) {
       query.exec(function(err, ids) {
         if (err) {
@@ -60,5 +60,5 @@
     });
   };
 
-  module.exports = mongoose.model("Users", userSchema);
+  module.exports = mongoose.model('Users', userSchema);
 })();

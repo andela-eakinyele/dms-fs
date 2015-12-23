@@ -21,7 +21,7 @@
     "doc2": ["Staples.json", "Staple Foods", "These are classes of group...", ["Product Owner", "Project Manager", "Team Lead"]]
   },
   "seedDocs": {
-    "doc3": ["CRSalt", "Techie.txt", "Life of a developer", "We can'ts stand bugs, we write and kill...", ["Project Manager", "Team Lead", "Senior Dev"]],
+    "doc3": ["CRSalt", "Techie.txt", "Life of a developer", "We can\"t stand bugs, we write and kill...", ["Project Manager", "Team Lead", "Senior Dev"]],
     "doc4": ["DAdams", "Clothes.doc", "Winter is coming", "John Snow likes to say, winter is coming...", ["Team Lead"]],
     "doc5": ["ACside", "API.txt", "Value for money", "I have money, I want value for it...", ["Project Manager", "Team Lead", "Senior Dev", "Mid Dev", "Trainee", "Product Owner"]],
     "doc6": ["MBridge", "Hardware.jsx", "Memory, Processing and Crunching", "I have no Idea what an IC Chip does...", ["Team Lead", "Mid Dev", "Trainee"]]

@@ -1,6 +1,6 @@
 (function() {
-  "use strict";
-  var _ = require("lodash");
+  'use strict';
+  var _ = require('lodash');
 
   // generate objec data for create and update
   exports.parseData = function(keys, _data) {
@@ -15,20 +15,20 @@
   };
   exports.getNextId = getNextId;
 
-  var dberrors = function(reject, dbaction, err) {
-    reject({
-      "status": 500,
-      "message": "Error " + dbaction,
-      "error": err
+  var dberrors = function(cb, dbaction, err) {
+    cb({
+      'status': 500,
+      'message': 'Error ' + dbaction,
+      'error': err
     });
   };
   exports.dberrors = dberrors;
 
   var notExist = function(modelName, data, resolve) {
     resolve({
-      "status": 400,
-      "message": modelName + "(s) do(es) not exist",
-      "data": []
+      'status': 400,
+      'message': modelName + '(s) do(es) not exist',
+      'data': []
     });
   };
   exports.notExist = notExist;
@@ -50,27 +50,27 @@
             // create document
             model.create(modelData).then(function(rstcreate) {
               resolve({
-                "status": 201,
-                "message": "Created new " + modelName,
-                "data": rstcreate
+                'status': 201,
+                'message': 'Created new ' + modelName,
+                'data': rstcreate
               });
             }, function(err) { // db error
-              dberrors(reject, "creating " + modelData.title + " " +
+              dberrors(reject, 'creating ' + modelData.title + ' ' +
                 modelName, err);
             });
           } else { // document exists
-            var msg = modelName + " already exist \n Change unique data";
+            var msg = modelName + ' already exist \n Change unique data';
             resolve({
-              "status": 400,
-              "message": msg,
-              "data": []
+              'status': 400,
+              'message': msg,
+              'data': []
             });
           }
         }, function(err) { // db error
-          dberrors(reject, "querying database", err);
+          dberrors(reject, 'querying database', err);
         });
       }).catch(function(err) {
-        dberrors(reject, "querying database", err);
+        dberrors(reject, 'querying database', err);
       });
     });
   };
@@ -81,17 +81,17 @@
       query.then(function(rstGet) {
           if (rstGet.length) {
             resolve({
-              "status": 200,
-              "message": "Existing " + modelName,
-              "data": rstGet
+              'status': 200,
+              'message': 'Existing ' + modelName,
+              'data': rstGet
             });
           } else {
             notExist(modelName, rstGet, resolve);
           }
         },
         function(err) { // db error
-          // console.log("Error querying database");
-          dberrors(reject, "querying database", err);
+          // console.log('Error querying database');
+          dberrors(reject, 'querying database', err);
         });
     });
   };
@@ -101,23 +101,23 @@
     return new Promise(function(resolve, reject) {
       if (id === undefined) {
         resolve({
-          "status": 400,
-          "message": "Get parameter not specified",
-          "data": []
+          'status': 400,
+          'message': 'Get parameter not specified',
+          'data': []
         });
       }
       query.then(function(rstGetOne) {
         if (rstGetOne) {
           resolve({
-            "status": 200,
-            "message": modelName + " data:",
-            "data": rstGetOne
+            'status': 200,
+            'message': modelName + ' data:',
+            'data': rstGetOne
           });
         } else {
           notExist(modelName, id, resolve);
         }
       }, function(err) {
-        dberrors(reject, "querying database", err);
+        dberrors(reject, 'querying database', err);
       });
     });
   };
@@ -127,25 +127,25 @@
     return new Promise(function(resolve, reject) {
       if (id === undefined) {
         resolve({
-          "status": 400,
-          "message": "Get parameter not specified",
-          "data": []
+          'status': 400,
+          'message': 'Get parameter not specified',
+          'data': []
         });
         return;
       }
       query.then(function(rstUpdate) {
           if (rstUpdate) {
             resolve({
-              "status": 200,
-              "message": "Updated " + modelName,
-              "data": rstUpdate
+              'status': 200,
+              'message': 'Updated ' + modelName,
+              'data': rstUpdate
             });
           } else {
             notExist(modelName, id, resolve);
           }
         },
         function(err) {
-          dberrors(reject, "querying database", err);
+          dberrors(reject, 'querying database', err);
         });
     });
   };
@@ -155,24 +155,24 @@
     return new Promise(function(resolve, reject) {
       if (id === undefined) {
         resolve({
-          "status": 400,
-          "message": "Get parameter not specified",
-          "data": []
+          'status': 400,
+          'message': 'Get parameter not specified',
+          'data': []
         });
       }
       query.then(function(rstDel) {
           if (rstDel) {
             resolve({
-              "status": 200,
-              "message": "Removed " + modelName,
-              "data": rstDel
+              'status': 200,
+              'message': 'Removed ' + modelName,
+              'data': rstDel
             });
           } else {
             notExist(modelName, id, resolve);
           }
         },
         function(err) { // db error
-          dberrors(reject, "querying database", err);
+          dberrors(reject, 'querying database', err);
         });
     });
   };
@@ -187,7 +187,7 @@
           resolve(false);
         }
       }, function(err) { // db error
-        dberrors(reject, "querying database", err);
+        dberrors(reject, 'querying database', err);
       });
     });
   };
