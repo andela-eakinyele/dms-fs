@@ -54,7 +54,7 @@
     });
     if (validType.length !== 1) {
       return {
-        'status': 400,
+        'status': 406,
         'message': 'Invalid file type',
         'data': []
       };
@@ -62,7 +62,7 @@
     // verify array of roles 
     if (!docRole.length || typeof roles === 'string') {
       return {
-        'status': 400,
+        'status': 406,
         'message': 'No roles specified/Specify array of roles',
         'data': []
       };
@@ -110,7 +110,7 @@
                       } else {
                         // Invalid user
                         resolve({
-                          'status': 400,
+                          'status': 406,
                           'message': 'Invalid User/Role specified \'' +
                             docData.username + '/' + docData.role +
                             '\' does not exist',
@@ -124,7 +124,7 @@
                 // invalid roles
               } else {
                 resolve({
-                  'status': 400,
+                  'status': 406,
                   'message': 'Invalid Roles specified \'' +
                     docData.roles + '\' does not exist',
                   'data': []
@@ -193,7 +193,7 @@
                       resolve(cMthds.gUpdate('Documents', id, query));
                     } else { // invalid roles in array
                       resolve({
-                        'status': 400,
+                        'status': 406,
                         'message': 'Invalid roles specified \'' +
                           docData.role + '\' does not exist',
                         'data': []

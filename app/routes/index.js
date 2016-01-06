@@ -25,8 +25,9 @@
   Routes that can be accessed only by authenticated users
    */
   router.all('/*', validate.authenticate);
-  router.get('/users/:id', userRoute.getUser);
-  router.put('/users/:id', userRoute.updateUser);
+  router.route('/users/:id')
+    .get(userRoute.getUser)
+    .put(userRoute.updateUser);
   router.post('/documents', docRoute.createDoc);
   router.put('/documents/:id', docRoute.updateDoc);
   router.get('/users/:id/documents', docRoute.getDocsById);
@@ -34,8 +35,9 @@
   /*
   Routes that require owner/access validation
   */
-  router.get('/documents/:id', docRoute.getDoc);
-  router.delete('/documents/:id', docRoute.deleteDoc);
+  router.route('/documents/:id')
+    .get(docRoute.getDoc)
+    .delete(docRoute.deleteDoc);
 
   /*
   Routes that can be accessed only by authenticated and authorized users
@@ -44,14 +46,15 @@
   router.get('/documents', docRoute.getAllDocs);
   router.get('/users', userRoute.getAllUsers);
   router.delete('/users/:id', userRoute.deleteUser);
-
-  router.post('/roles', roleRoute.createRole);
-  router.put('/roles/:id', roleRoute.updateRole);
-  router.get('/roles', roleRoute.getAllRoles);
-  router.get('/roles/:id', roleRoute.getRole);
+  router.route('/roles')
+    .post(roleRoute.createRole)
+    .get(roleRoute.getAllRoles);
+  router.route('/roles/:id')
+    .get(roleRoute.getRole)
+    .put(roleRoute.updateRole)
+    .delete(roleRoute.deleteRole);
   router.get('/roles/:id/documents', roleRoute.getDocsById);
   router.post('/documents/date', docRoute.getDocsByDate);
-  router.delete('/roles/:id', roleRoute.deleteRole);
 
   module.exports = router;
 })();

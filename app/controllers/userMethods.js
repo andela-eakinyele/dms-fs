@@ -59,7 +59,7 @@
                   resolve(cMthds.gCreate('Users', userData, User, query));
                 } else {
                   resolve({
-                    'status': 400,
+                    'status': 406,
                     'message': 'Invalid role specified \'' + userData.role +
                       '\' does not exist',
                     'data': []
@@ -123,7 +123,7 @@
               }));
             } else {
               resolve({
-                'status': 400,
+                'status': 406,
                 'message': 'Invalid role specified \'' + userData.role +
                   '\' does not exist',
                 'data': []
