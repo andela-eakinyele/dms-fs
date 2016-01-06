@@ -9,6 +9,7 @@
   var uKeys = ['firstname', 'lastname', 'username', 'password',
     'role', 'email'
   ];
+
   var mKeys = ['name.first', 'name.last', 'username', 'password',
     'role', 'email'
   ];
@@ -60,64 +61,187 @@
               });
           });
 
-        ['username', 'email'].forEach(function(unique) {
-          it('- Should throw validation error for duplicate data: ' +
-            unique,
-            function(done) {
-              var userdata = mock.parseData(uKeys, data.testUsers.PM);
-              if (unique === 'username') {
-                userdata.email = 'hahmed123@project.com';
-              } // duplicate username
-              if (unique === 'email') {
-                userdata.username = 'HAhmed123';
-              } // duplicate email
-              agent
-                .post('/api/users')
-                .type('json')
-                .send(userdata)
-                .expect(400)
-                .end(function(err, res) {
-                  assert.equal(null, err, 'Error encountered');
-                  var response = res.body;
-                  assert.equal(response.message, 'Users already exist \n ' +
-                    'Change unique data');
-                  done();
-                });
-            });
-        });
+        it('- Should throw validation error for duplicate data: ' +
+          'username',
+          function(done) {
+            var userdata = mock.parseData(uKeys, data.testUsers.PM);
+            userdata.username = 'HAhmed123';
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Users already exist \n ' +
+                  'Change unique data');
+                done();
+              });
+          });
 
-        uKeys.forEach(function(key, index) {
-          var statusCode = (key === 'role') ? 400 : 500;
-          // check email, username, firstname, passsword, empty or invalid role
-          it('- Should throw error for invalid userdata: ' +
-            key,
-            function(done) {
-              var userdata = mock.parseData(uKeys,
-                data.invalidTest.invalidData);
-              delete userdata[key];
-              agent
-                .post('/api/users')
-                .type('json')
-                .send(userdata)
-                .expect(statusCode)
-                .end(function(err, res) {
-                  assert.equal(null, err, 'Error encountered');
-                  var response = res.body;
-                  if (key === 'role') {
-                    assert.equal(response.message, 'Invalid role specified' +
-                      ' \'undefined\' does not exist');
-                  } else {
-                    var invalid = _.keys(response.error.error.errors);
-                    assert.equal(response.error.message, 'Error creating' +
-                      ' undefined Users');
-                    assert.equal(response.error.error.message, 'Users ' +
-                      'validation failed');
-                    assert.deepEqual(invalid, [mKeys[index]]);
-                  }
-                  done();
-                });
-            });
-        });
+        it('- Should throw validation error for duplicate data: ' +
+          'email',
+          function(done) {
+            var userdata = mock.parseData(uKeys, data.testUsers.PM);
+            userdata.email = 'hahmed123@project.com';
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Users already exist \n ' +
+                  'Change unique data');
+                done();
+              });
+          });
+      });
+
+      describe('Persisting Incomplete userdata', function() {
+        /* check email, username, firstname, passsword, empty or 
+        invalid role*/
+        it('- Should throw error for invalid userdata: ' +
+          'firstname',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.firstname;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.error.error.errors);
+                assert.equal(response.error.message, 'Error creating' +
+                  ' undefined Users');
+                assert.equal(response.error.error.message, 'Users ' +
+                  'validation failed');
+                assert.deepEqual(invalid, [mKeys[0]]);
+                done();
+              });
+          });
+
+        it('- Should throw error for invalid userdata: ' +
+          'lastname',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.lastname;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.error.error.errors);
+                assert.equal(response.error.message, 'Error creating' +
+                  ' undefined Users');
+                assert.equal(response.error.error.message, 'Users ' +
+                  'validation failed');
+                assert.deepEqual(invalid, [mKeys[1]]);
+                done();
+              });
+          });
+
+        it('- Should throw error for invalid userdata: ' +
+          'username',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.username;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.error.error.errors);
+                assert.equal(response.error.message, 'Error creating' +
+                  ' undefined Users');
+                assert.equal(response.error.error.message, 'Users ' +
+                  'validation failed');
+                assert.deepEqual(invalid, [mKeys[2]]);
+                done();
+              });
+          });
+
+        it('- Should throw error for invalid userdata: ' +
+          'password',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.password;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.error.error.errors);
+                assert.equal(response.error.message, 'Error creating' +
+                  ' undefined Users');
+                assert.equal(response.error.error.message, 'Users ' +
+                  'validation failed');
+                assert.deepEqual(invalid, [mKeys[3]]);
+                done();
+              });
+          });
+
+        it('- Should throw error for invalid userdata: ' +
+          'role',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.role;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(406)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid role specified' +
+                  ' \'undefined\' does not exist');
+                done();
+              });
+          });
+
+        it('- Should throw error for invalid userdata: ' +
+          'email',
+          function(done) {
+            var userdata = mock.parseData(uKeys,
+              data.invalidTest.invalidData);
+            delete userdata.email;
+            agent
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.error.error.errors);
+                assert.equal(response.error.message, 'Error creating' +
+                  ' undefined Users');
+                assert.equal(response.error.error.message, 'Users ' +
+                  'validation failed');
+                assert.deepEqual(invalid, [mKeys[5]]);
+                done();
+              });
+          });
       });
 
       describe('Persisted non-admin users - retrieve and update\n', function() {
@@ -141,35 +265,48 @@
               });
           });
         // invalid username or password
-        ['username', 'password'].forEach(function(args) {
-          it('- Should validate username and password - Invalid ' +
-            args,
-            function(done) {
-              if (args === 'username') {
-                username = 'HAhmed123';
-              } // invalid username
-              if (args === 'password') {
-                password = 'HAhmed123';
-              } // invalid password
-              agent
-                .post('/api/users/login')
-                .type('json')
-                .send({
-                  username: username,
-                  password: password
-                })
-                .expect('Content-Type', /json/)
-                .expect(400)
-                .end(function(err, res) {
-                  assert.equal(null, err, 'Error encountered');
-                  var response = res.body;
-                  assert.equal(response.message, 'Invalid credentials');
-                  assert.equal(undefined, response.token,
-                    'Token was generated');
-                  done();
-                });
-            });
-        });
+        it('- Should validate username',
+          function(done) {
+            var username = 'HAhmed123';
+            agent
+              .post('/api/users/login')
+              .type('json')
+              .send({
+                username: username,
+                password: password
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid credentials');
+                assert.equal(undefined, response.token,
+                  'Token was generated');
+                done();
+              });
+          });
+        it('- Should validate password',
+          function(done) {
+            var password = 'HAhmed123';
+            agent
+              .post('/api/users/login')
+              .type('json')
+              .send({
+                username: username,
+                password: password
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid credentials');
+                assert.equal(undefined, response.token,
+                  'Token was generated');
+                done();
+              });
+          });
 
         // successful login and token 
         it('- Should return a token on Successful login', function(done) {
