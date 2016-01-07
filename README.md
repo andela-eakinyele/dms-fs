@@ -1,5 +1,6 @@
 # dms_api
 REST API for Document Management System
+[![Code Climate](https://codeclimate.com/repos/568e48bea1a79710d2002469/badges/87dd0ea7447e66650f2e/gpa.svg)](https://codeclimate.com/repos/568e48bea1a79710d2002469/feed)
 
 # Description
 This api is utilized for managing documents, users and roles for a simple project. It utilizes mongodb document models, and is built on an express server. 
