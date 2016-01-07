@@ -182,7 +182,7 @@
             return new Promise(function(resolve, reject) {
               Role.find({}).where('title').in(addRoles).select('_id')
                 .then(function(arrRoles) {
-                    if (arrRoles.length) {
+                    if (arrRoles.length >= docData.role.length) {
                       arrRoles = _.pluck(arrRoles, '_id');
                       docData.role = arrRoles;
                       docData.lastModified = Date.now();
