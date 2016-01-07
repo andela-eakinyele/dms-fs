@@ -5,7 +5,7 @@ machine:
     - mongodb
 test:
   post:
-    - cp -r ./coverage/default $CIRCLE_ARTIFACTS
+    - cp -r ./coverage $CIRCLE_ARTIFACTS
 dependencies:
   cache_directories:
     - "node_modules"
