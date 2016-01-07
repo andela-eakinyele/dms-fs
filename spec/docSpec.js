@@ -13,7 +13,7 @@
     describe('Document CRUD\n', function() {
       var token = {};
       var usersId = {};
-      var docId = {};
+      var docId;
       var seededId = [];
 
       describe('Valid and authenticate users can create documents', function() {
@@ -39,34 +39,80 @@
             });
         });
 
-        ['teamLead', 'seniorDev'].forEach(function(key) {
+        it('Should return a token on Successful login', function(done) {
           var user = {
-            username: data.seedUsers[key][2],
-            password: data.seedUsers[key][3]
+            username: data.seedUsers.teamLead[2],
+            password: data.seedUsers.teamLead[3]
           };
-          it('Should return a token on Successful login', function(done) {
-            agent
-              .post('/api/users/login')
-              .type('json')
-              .send(user)
-              .expect('Content-Type', /json/)
-              .expect(200)
-              .end(function(err, res) {
-                assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                usersId[key] = response.user;
-                token[key] = response.token;
-                assert(response.token, 'Token not generated');
-                assert.equal(typeof response.expires, 'number');
-                assert.equal(response.user.username, user.username);
-                done();
-              });
-          });
+          agent
+            .post('/api/users/login')
+            .type('json')
+            .send(user)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              usersId.teamLead = response.user;
+              token.teamLead = response.token;
+              assert(response.token, 'Token not generated');
+              assert.equal(typeof response.expires, 'number');
+              assert.equal(response.user.username, user.username);
+              done();
+            });
         });
+
+        it('Should return a token on Successful login', function(done) {
+          var user = {
+            username: data.seedUsers.seniorDev[2],
+            password: data.seedUsers.seniorDev[3]
+          };
+          agent
+            .post('/api/users/login')
+            .type('json')
+            .send(user)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              usersId.seniorDev = response.user;
+              token.seniorDev = response.token;
+              assert(response.token, 'Token not generated');
+              assert.equal(typeof response.expires, 'number');
+              assert.equal(response.user.username, user.username);
+              done();
+            });
+        });
+
         // logged in user should be able to create documents
-        ['doc1', 'doc2'].forEach(function(key) {
-          it('Users should be able to create documents', function(done) {
-            var docdata = mock.parseData(docKeys, data.testDocs[key]);
+        it('Users should be able to create documents', function(done) {
+          var docdata = mock.parseData(docKeys, data.testDocs);
+          agent
+            .post('/api/documents')
+            .set({
+              'Accept': 'application/json',
+              'access_token': token.teamLead,
+              'username': data.seedUsers.teamLead[2]
+            })
+            .type('json')
+            .send(docdata)
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              docId = response.data._id;
+              assert.equal(response.message, 'Created new Documents');
+              assert.equal(response.data.documentName, data.testDocs[0]);
+              done();
+            });
+        });
+
+        it('Users should not be able to create documents' +
+          ' with invalid file type',
+          function(done) {
+            var docdata = mock.parseData(docKeys, data.invalidTest.invalidFile);
             agent
               .post('/api/documents')
               .set({
@@ -77,18 +123,39 @@
               .type('json')
               .send(docdata)
               .expect('Content-Type', /json/)
-              .expect(201)
+              .expect(406)
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                docId[key] = response.data._id;
-                assert.equal(response.message, 'Created new Documents');
-                assert.equal(response.data.documentName, data.testDocs[key][0]);
+                assert.equal(response.message, 'Invalid file type');
                 done();
               });
           });
-        });
 
+        it('Users should not be able to create documents' +
+          ' with invalid role',
+          function(done) {
+            var docdata = mock.parseData(docKeys, data.invalidTest.invalidRole);
+            agent
+              .post('/api/documents')
+              .set({
+                'Accept': 'application/json',
+                'access_token': token.teamLead,
+                'username': data.seedUsers.teamLead[2]
+              })
+              .type('json')
+              .send(docdata)
+              .expect('Content-Type', /json/)
+              .expect(406)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid User/Role ' +
+                  'specified \'' + data.seedUsers.teamLead[2] +
+                  '/' + docdata.role + '\' does not exist');
+                done();
+              });
+          });
       });
 
       // testing role access
@@ -102,7 +169,7 @@
         // users with role defined should be able to get, and update document
         it('-Should be able to get document', function(done) {
           agent
-            .get('/api/documents/' + docId.doc1)
+            .get('/api/documents/' + docId)
             .set({
               'Accept': 'application/json',
               'access_token': token.seniorDev,
@@ -139,10 +206,10 @@
         });
 
         it('-Should be able to update document with access', function(done) {
-          var docdata = mock.parseData(docKeys, data.testDocs.doc1);
+          var docdata = mock.parseData(docKeys, data.testDocs);
           docdata.documentName = 'Lorem Ipsum.js';
           agent
-            .put('/api/documents/' + docId.doc1)
+            .put('/api/documents/' + docId)
             .set({
               'Accept': 'application/json',
               'access_token': token.seniorDev,
@@ -160,13 +227,37 @@
             });
         });
 
+        it('-Should not be able to update document with access' +
+          ' with invalid role',
+          function(done) {
+            var docdata = mock.parseData(docKeys, data.invalidTest.update);
+            docdata.documentName = 'Lorem Ipsums.js';
+            agent
+              .put('/api/documents/' + docId)
+              .set({
+                'Accept': 'application/json',
+                'access_token': token.seniorDev,
+                'username': data.seedUsers.seniorDev[2]
+              })
+              .send(docdata)
+              .expect('Content-Type', /json/)
+              .expect(406)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid roles specified \'' +
+                  docdata.role.join(',') + '\' does not exist');
+                done();
+              });
+          });
+
         it('-Should not be able to update document' +
           ' without role access',
           function(done) {
-            var docdata = mock.parseData(docKeys, data.testDocs.doc2);
+            var docdata = mock.parseData(docKeys, data.seedDocs.doc2);
             docdata.documentName = 'Hardware Softies.js';
             agent
-              .put('/api/documents/' + docId.doc2)
+              .put('/api/documents/' + seededId[0])
               .set({
                 'Accept': 'application/json',
                 'access_token': token.seniorDev,
@@ -184,6 +275,7 @@
                 done();
               });
           });
+
         // should return all docs owned by user
         it('-Should be able to get document by userid', function(done) {
           agent
@@ -212,7 +304,7 @@
         // should be able to delete document with only role access and ownerId
         it('-Should be able to delete own document', function(done) {
           agent
-            .delete('/api/documents/' + seededId[1])
+            .delete('/api/documents/' + seededId[2])
             .set({
               'Accept': 'application/json',
               'access_token': token.teamLead,
@@ -224,7 +316,7 @@
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
               assert.equal(response.message, 'Removed Documents');
-              assert.equal(response.data._id, seededId[1]);
+              assert.equal(response.data._id, seededId[2]);
               done();
             });
         });
@@ -276,7 +368,7 @@
         it('-Should not be able to delete own shared document',
           function(done) {
             agent
-              .delete('/api/documents/' + docId.doc1)
+              .delete('/api/documents/' + docId)
               .set({
                 'Accept': 'application/json',
                 'access_token': token.teamLead,

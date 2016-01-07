@@ -14,13 +14,14 @@
     "owner": ["AndOne", "Courtside", "ACside", "acside", "Product Owner", "acside@api.com"]
   },
   "invalidTest": {
-    "invalidData": ["Enrico", "Benneti", "EBenneti", "ebenneti", "Trainee", "ebenneti@project.com"]
+    "invalidData": ["Enrico", "Benneti", "EBenneti", "ebenneti", "Trainee", "ebenneti@project.com"],
+    "invalidFile": ["Staples", "Mission Impossible", "Make a million dollars a day", ["Team Lead", "Senior Dev"]],
+    "invalidRole": ["Staples.txt", "Mission Impossible 4", "Make a million babies a day", ["STeam Lead"]],
+    "update": ["Lorems.js", "Lorem Ipsum", "Who knows the whole words....", ["Admin", "STeam Lead", "Senior Dev"]]
   },
-  "testDocs": {
-    "doc1": ["Lorems.js", "Lorem Ipsum", "Who knows the whole words....", ["Project Manager", "Team Lead", "Senior Dev"]],
-    "doc2": ["Staples.json", "Staple Foods", "These are classes of group...", ["Product Owner", "Project Manager", "Team Lead"]]
-  },
+  "testDocs": ["Lorems.js", "Lorem Ipsum", "Who knows the whole words....", ["Project Manager", "Team Lead", "Senior Dev"]],
   "seedDocs": {
+    "doc2": ["DAdams", "Staples.json", "Staple Foods", "These are classes of group...", ["Product Owner", "Project Manager", "Team Lead"]],
     "doc3": ["CRSalt", "Techie.txt", "Life of a developer", "We can\"t stand bugs, we write and kill...", ["Project Manager", "Team Lead", "Senior Dev"]],
     "doc4": ["DAdams", "Clothes.doc", "Winter is coming", "John Snow likes to say, winter is coming...", ["Team Lead"]],
     "doc5": ["ACside", "API.txt", "Value for money", "I have money, I want value for it...", ["Project Manager", "Team Lead", "Senior Dev", "Mid Dev", "Trainee", "Product Owner"]],

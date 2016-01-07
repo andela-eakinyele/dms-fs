@@ -3,7 +3,9 @@ machine:
     version: 4.1
   services:
     - mongodb
-
+test:
+  post:
+    - cp -r ./coverage $CIRCLE_ARTIFACTS
 dependencies:
   cache_directories:
     - "node_modules"
