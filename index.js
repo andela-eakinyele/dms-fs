@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var app = require('./config/express');
+  var app = require('./server');
 
   var port = process.env.PORT || 9876;
   app.listen(port);
