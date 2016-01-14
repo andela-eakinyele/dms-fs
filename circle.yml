@@ -1,11 +1,19 @@
 machine:
-  node:
-    version: 4.1
   services:
     - mongodb
 test:
+  override:
+    - gulp build
+    - npm test
   post:
     - cp -r ./coverage $CIRCLE_ARTIFACTS
 dependencies:
   cache_directories:
     - "node_modules"
+  pre:
+    - bower install
+  post:
+    - npm install module-deps
+    - npm install gulp -g
+    - npm install mocha -g
+  
