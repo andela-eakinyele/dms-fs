@@ -51,7 +51,7 @@
   // copy static files
   gulp.task('static-files', function() {
     return gulp.src(paths.staticFiles)
-      .pipe(gulp.dest('./public'));
+      .pipe(gulp.dest('./public/'));
   });
 
   // build stylesheet
@@ -83,7 +83,7 @@
   // install front-end dependencies
   gulp.task('bower', function() {
     return bower()
-      .pipe(gulp.dest('./public/lib/'));
+      .pipe(gulp.dest('public/lib/'));
   });
 
   // build custom scripts
@@ -137,7 +137,7 @@
 
   gulp.task('nodemon', function() {
     nodemon({
-      script: './server/server.js',
+      script: 'index.js',
       ext: 'js',
       ignore: ['public/', 'node_modules/']
     }).on('restart', function() {
@@ -169,7 +169,7 @@
   //  gulp.task('test', ['test:fend', 'test:bend']);
 
   gulp.task('build', ['jade', 'less', 'static-files',
-    'buildjs', 'bower'
+    'buildjs', 'bower', 'images'
   ]);
 
   gulp.task('default', ['nodemon', 'watch', 'build']);

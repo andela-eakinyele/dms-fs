@@ -1,0 +1,28 @@
+div.signup(layout="column")
+  h1 Register
+  form.register(name="registerForm" method="post" enctype="multipart/data" ng-submit="addUser()")
+    div.input-field(layout="column")
+      md-input-container
+        label First Name
+        input(type="text" placeholder="First Name" ng-model="signform.firstname" name="firstname" required)
+        div(ng-messages="registerForm.firstname.$error" ng-show="registerForm.firstname.$dirty")
+          div(ng-if="registerForm.firstname.required") Firstname is required
+      md-input-container
+        label Last Name
+        input(type="text" placeholder=" Last Name" ng-model="signform.lastname" name="lastname" required)
+        div(ng-messages="registerForm.lastname.$error" ng-show="registerForm.lastname.$dirty")
+          div(ng-if="registerForm.lastname.required") Lastname is required
+      md-input-container
+        label Email
+        input(type="email" placeholder=" firstname.lastname@prodcs.com" ng-model="signform.email" name="email" required)
+        div(ng-messages="registerForm.email.$error" ng-show="registerForm.email.$dirty")
+          div(ng-messages="registerForm.email.required") email is required
+          div(ng-messages="registerForm.email.$error.email") Invalid email address
+      md-input-container
+        label Password
+        input(type="password" name="password" ng-model="signform.password" required minlength="6")
+        div(ng-messages="registerForm.password.$inavlid" ng-show="registerForm.password.$dirty")
+          div(ng-messages="registerForm.password.required") Password is required
+          div(ng-messages="minlength") Password must be at Least Six Characters
+    md-button(ng-disabled="registerForm.$invalid") Submit
+

@@ -1,0 +1,12 @@
+div.overlay(layout="row" layout-padding flex)
+  div(flex="{{login? 50 : 100}}" layout="column" layout-margin layout-padding)
+    span ProDocs
+    h3 Create, Share and Manage Documents
+    div.md-padding(layout layout-align="center center")
+      md-button.md-accent.md-raised(md-ink-ripple ui-sref="home.login" ng-click="setView(\"login\")") Login
+      md-button.md-primary.md-raised(md-ink-ripple ui-sref="home.adduser" ng-click="setView(\"adduser\")") Add User
+    md-content.features(layout-gt-xs="row" layout="column" layout-padding layout-margin)
+      div(ng-repeat="feature in features")
+        h3.md-subheadline {{feature.title}}
+        span {{feature.content}}
+  div(flex="50" ui-view="inner-view" ng-if="login")

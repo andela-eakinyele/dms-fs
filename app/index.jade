@@ -1,8 +1,7 @@
 doctype html
-html(lang='en')
+html(lang="en" ng-app="prodocs")
   head
     include shared/head
   body
     main
-      include shared/header
-      md-content(ui-view)
+      div(ui-view)
