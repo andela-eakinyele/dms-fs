@@ -3,12 +3,12 @@
   var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
-  var roleSchema = new Schema({
+  var projectSchema = new Schema({
     _id: {
       type: Number,
-      min: 1,
+      min: 113,
       required: true,
-      default: 1,
+      default: 113,
       unique: true
     },
     title: {
@@ -24,14 +24,13 @@
       type: Number,
       ref: 'Documents'
     }],
-    projectId: [{
-      type: Number,
-      ref: 'Projects',
-      required: (true, 'Project ID not specified')
-    }]
+    roles: {
+      type: [String],
+      required: (true, 'Provide project roles')
+    }
   });
 
-  roleSchema.statics.getMaxId = function() {
+  projectSchema.statics.getMaxId = function() {
     var query = this.find({}, '_id');
     return new Promise(function(resolve, reject) {
       query.exec(function(err, ids) {
@@ -43,5 +42,5 @@
     });
   };
 
-  module.exports = mongoose.model('Roles', roleSchema);
+  module.exports = mongoose.model('Projects', projectSchema);
 })();

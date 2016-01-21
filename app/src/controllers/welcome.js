@@ -1,50 +1,56 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('StartPageCtrl', ['$rootScope', '$scope', 'Users',
-      function($rootScope, $scope, Users) {
-        $scope.signform = {};
-        $scope.isRegistered = false;
+    .controller('StartPageCtrl', ['$mdMedia', '$rootScope', '$scope',
+      '$state',
+      function($mdMedia, $rootScope, $scope, $state) {
 
-        $scope.addUser = function() {
-          Users.save($scope.signform, function(user, getResponseHeaders) {
-            if (user) {
-              $scope.isRegistered = true;
-              $scope.responseHeaders = getResponseHeaders;
-            }
-          });
+        $scope.init = function() {
+          $scope.nextView = false;
+          $scope.newProject = false;
         };
 
-        $scope.setView = function(viewName) {
-          if (viewName === 'login') {
-            $scope.login = true;
-          }
-          if (viewName === 'adduser') {
-            $scope.login = true;
-          }
+        $scope.$watch(function() {
+          return $mdMedia('gt-sm');
+        }, function(big) {
+          $scope.bigScreen = big;
+        });
+
+
+        // $scope.bigScreen = $mdMedia('gt-sm');
+
+        $scope.setView = function() {
+          $scope.nextView = true;
+        };
+
+        $scope.projectNew = function() {
+          $scope.newProject = true;
+          $scope.nextView = true;
+          $state.go('home.project');
         };
 
         $scope.features = [{
+          action: true,
           title: 'Start a new Project',
-          img_url: '',
           content: 'Create a new Project for sharing ' +
             'documents with Team members \n' +
             'Add team roles for access control'
         }, {
           title: 'Add Team Members/Users',
-          img_url: '',
           content: 'Team members can be added by Admin ' +
             'or by Teammates using project authorization code'
         }, {
           title: 'Create and Share Documents',
-          img_url: '',
           content: 'Team members can create and share documents' +
             ' with other team members'
         }, {
           title: 'Manage your Documents',
-          img_url: '',
-          content: 'Documents are managed by role assignment and owner'
+          content: 'Documents are managed by role assignment ' +
+            ' and ownership'
         }];
+
+        $scope.init();
+
       }
     ]);
 })();

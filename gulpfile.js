@@ -20,7 +20,7 @@
 
   var paths = {
     public: 'public/**',
-    jade: ['!app/shared/**', 'app/**/*.jade'],
+    jade: ['app/**/*.jade'],
     scripts: 'app/**/*.js',
     images: 'app/images/**/*',
     staticFiles: [

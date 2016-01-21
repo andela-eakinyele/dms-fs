@@ -43,6 +43,7 @@
         if (data.length) {
           modelData._id = getNextId(data);
         }
+        console.log(modelData, "Speak to me");
         // exceute existing document query 
         query.then(function(rstfind) {
           // if no document exists
@@ -61,7 +62,7 @@
           } else { // document exists
             var msg = modelName + ' already exist \n Change unique data';
             resolve({
-              'status': 400,
+              'status': 409,
               'message': msg,
               'data': []
             });

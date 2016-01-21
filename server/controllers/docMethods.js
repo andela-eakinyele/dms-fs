@@ -6,7 +6,9 @@
   var _ = require('lodash');
 
   var cMthds = require('./helpers');
-  var docKeys = ['username', 'documentName', 'title', 'content', 'role'];
+  var docKeys = ['username', 'documentName', 'title', 'content',
+    'role', 'projectTitle'
+  ];
   var typeArray = ['txt', 'js', 'json', 'jsx', 'doc'];
 
   function getCmp(id, username, cb) {

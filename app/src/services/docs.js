@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('docs', ['$resource', function docFactory($resource) {
+    .factory('Docs', ['$resource', function docFactory($resource) {
       return $resource('/api/documents/:id', {
         id: '@id'
       }, {

@@ -2,13 +2,14 @@
   'use strict';
   var routeMethods = require('./helpers');
   // define create request body
-  var bKeys = ['firstname', 'lastname', 'username', 
-  'password', 'role', 'email'];
+  var bKeys = ['firstname', 'lastname', 'username',
+    'password', 'role', 'email', 'projectTitle'
+  ];
   // require controller
   var userFunc = require('./../controllers').userFunc;
 
   var userRoutes = {
-    createUser: function(req, res) {
+    create: function(req, res) {
       // generate object for new user data
       var userData = routeMethods.parseReq(bKeys, req.body);
       userFunc.createUser(userData).then(function(result) {

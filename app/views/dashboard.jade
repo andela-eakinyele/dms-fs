@@ -1,0 +1,16 @@
+div(layout="row")
+  div(layout="column")
+    div(layout="row")
+      md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left" md-is-locked-open="$mdMedia(\"gt-md\")")
+        md-toolbar
+          h3.md-toolbar-tools Prodocs Project Name 
+        md-content(layout-padding)
+          md-button(md-ink-ripple ng-repeat="item in menu") {{item.name}}
+          md-divider
+          md-button(md-ink-ripple hide-gt-md ng-click="close()") Close Navbar
+  div.header(layout ="row")
+    h3 Logo - Document Management System
+    h3 User Dashboard
+    h3 Update Information - Logout - Settings
+    h3 Project Name
+    h3  

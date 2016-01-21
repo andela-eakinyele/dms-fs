@@ -2,6 +2,8 @@
   'use strict';
   var User = require('./../models/user');
   var roleFunc = require('./roleMethods');
+  var projectFunc = require('./projectMethods');
+
   var cmMethods = require('./helpers');
 
   /**
@@ -11,26 +13,30 @@
    */
   module.exports = function(userData) {
     return new Promise(function(resolve, reject) {
-      var query = User.findOne({
+      var query = User.findOne().and([{
         role: 1
-      });
+      }, {
+        projectTitle: userData.projectTitle
+      }]);
       // check for admin user
       query.then(function(user) {
           if (user) {
             resolve({
               'status': true,
-              'message': 'Admin exists',
+              'message': 'Admin exists for this project',
               'data': []
             });
           } else {
-            // create admin if userData is admin
+            // create admin and project if userData is admin
             if (userData.role === 'Admin') {
               roleFunc.createAdmin().then(function() {
+
                 resolve({
                   'status': true,
                   'message': 'Create User as Admin',
                   'data': []
                 });
+
               }).catch(function(err) {
                 resolve(err);
               });

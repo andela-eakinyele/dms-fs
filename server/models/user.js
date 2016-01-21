@@ -40,6 +40,10 @@
       type: Number,
       ref: 'Roles'
     }],
+    projectId: [{
+      type: Number,
+      ref: 'Projects'
+    }],
     active: {
       type: Boolean,
       default: false

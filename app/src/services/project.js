@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Roles', ['$resource', function roleFactory($resource) {
-      return $resource('/api/roles/:id', {
+    .factory('Projects', ['$resource', function roleFactory($resource) {
+      return $resource('/api/projects/:id', {
         id: '@id'
       }, {
         update: {

@@ -9,6 +9,7 @@
   var userRoute = require('./userRoute');
   var docRoute = require('./docRoute');
   var roleRoute = require('./roleRoute');
+  var projectRoute = require('./projectRoute');
   /*
    Routes that can be accessed by all users
    */
@@ -19,7 +20,10 @@
   });
 
   router.post('/users/login', auth.login);
-  router.post('/users', validate.adminUser, userRoute.createUser);
+  router.post('/users', validate.adminUser, userRoute.create);
+  router.route('/projects')
+    .post(projectRoute.create)
+    .get(projectRoute.all);
 
   /*
   Routes that can be accessed only by authenticated users

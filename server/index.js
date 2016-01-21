@@ -9,13 +9,15 @@
   var path = require('path');
   require('./config/initdb')();
 
-  app.use('/api', apiRoutes);
   // configure middleware
   app.use(logger('dev'));
   app.use(bodyParser.urlencoded({
     extended: false
   }));
   app.use(bodyParser.json());
+
+  app.use('/api', apiRoutes);
+
   app.use(express.static(path.join(__dirname, './../public')));
 
   app.get('/*', function(req, res) {

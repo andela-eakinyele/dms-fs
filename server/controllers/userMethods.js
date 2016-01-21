@@ -6,7 +6,7 @@
 
   var cMthds = require('./helpers');
   var uKeys = ['name.first', 'name.last', 'username',
-    'password', 'role', 'email'
+    'password', 'role', 'email', 'projectId'
   ];
 
   function getCompareRoles(username, cb) {
@@ -56,6 +56,7 @@
             }, '_id').then(function(_role) {
                 if (_role) {
                   userData.role = _role._id;
+
                   resolve(cMthds.gCreate('Users', userData, User, query));
                 } else {
                   resolve({

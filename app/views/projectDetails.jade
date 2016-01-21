@@ -1,0 +1,23 @@
+div.login(layout="column" layout-padding)
+  h3.md-headline Enter Project Details
+  span.md-warn {{projectErr}}
+  form.register(name="projectForm" method="post" enctype="multipart/data" ng-submit="addProject()")
+    div.options(layout="column")
+      md-input-container
+        label(for="title") Project Name
+        input(type="text" ng-model="pform.title" name="title" required)
+        div(ng-messages="projectForm.title.$error" ng-show="projectForm.title.$dirty")
+          div(ng-message="required") Project Name is required
+      md-input-container
+        label(for="description") Description
+        input(type="text" name="description" ng-model="pform.description" required)
+        div(ng-messages="projectForm.description.$error" ng-show="projectForm.description.$dirty")
+          div(ng-message="required") Description is required
+      md-input-container  
+        label(for="roles") Roles
+        textarea(type="text" ng-model="pform.roles" name="roles" ng-required="true" rows="3" columns="10" placeholder="Enter comma separated roles")
+        div(ng-messages="projectForm.roles.$error" ng-show="projectForm.roles.$dirty")
+          div(ng-message="required") Roles are required
+    div(layout layout-align="center center")
+      md-button.long.md-primary.md-raised(ng-disabled="projectForm.$invalid" md-ink-ripple type="submit") Save and Create Admin
+      md-button.md-accent.md-raised(md-ink-ripple ui-sref="home") Cancel
