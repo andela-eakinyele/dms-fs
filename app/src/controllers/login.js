@@ -4,12 +4,13 @@
     .controller('LoginCtrl', ['$rootScope', '$scope', '$window',
       '$state', '$stateParams', 'Users', 'Auth',
 
-      function($rootScope, $scope, $state, $stateParams, $window, Users, Auth) {
-
+      function($rootScope, $scope, $state, $stateParams,
+        $window, Users, Auth) {
 
         $scope.loginForm = {};
 
         $scope.login = function() {
+          console.log('test');
           Users.login({
             username: $scope.loginForm.userdata,
             password: $scope.loginForm.password
@@ -28,14 +29,14 @@
         };
 
 
-        $state.reload = function reload() {
-          console.log($stateParams);
-          return $state.transitionTo($state.current, $stateParams, {
-            reload: false,
-            inherit: false,
-            notify: true
-          });
-        };
+        // $state.reload = function reload() {
+        //   console.log($stateParams);
+        //   return $state.transitionTo($state.current, $stateParams, {
+        //     reload: false,
+        //     inherit: false,
+        //     notify: true
+        //   });
+        // };
 
         $scope.facebook = function() {
           $window.location.href = '/auth/facebook';

@@ -7,12 +7,11 @@ div.overlay(layout="column" layout-gt-sm="row" layout-padding flex-gt-sm layout-
       md-button.md-primary.md-raised(md-ink-ripple ui-sref=".adduser" ng-click="setView()") Add User
 
     md-content(layout-gt-sm="row" layout="column" layout-padding layout-margin  ng-if="!nextView")
-      div(ng-repeat="feature in features" ng-class="{\"side-border\" : (bigScreen && !$last)}" layout="column" layout-align="center center")
+      div(ng-repeat="feature in features" ng-class="{\"side-border\" : (bigScreen && !$last), \"bottom\" : !$last && !bigScreen}" layout="column" layout-align="center center")
         h3.md-subheadline {{feature.title}}
         span {{feature.content}}
         md-button.md-raised.addProject(ng-if="feature.action" ng-click="projectNew()" aria-label="Start Project")
           i.fa.fa-plus
-        md-divider(ng-if="!$last && !bigScreen")
 
     md-content(layout="column" ng-show="nextView")
       div(ui-view="a")

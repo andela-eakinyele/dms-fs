@@ -35,21 +35,29 @@
   ]);
 
   window.app.config(['$stateProvider', '$httpProvider', '$urlRouterProvider',
-    '$locationProvider', '$mdThemingProvider',
+    '$locationProvider', '$mdThemingProvider', '$mdIconProvider',
     function($stateProvider, $httpProvider, $urlRouterProvider,
-      $locationProvider, $mdThemingProvider) {
+      $locationProvider, $mdThemingProvider, $mdIconProvider) {
+
+      $mdIconProvider.fontSet('fa', 'fontawesome');
 
       $httpProvider.interceptors.push('TokenInjector');
 
 
-      var RedMap = $mdThemingProvider.extendPalette('teal', {
-        '500': 'd61e1e'
+      var RedMap = $mdThemingProvider.extendPalette('blue', {
+        '500': 'D65233'
       });
+
+
 
       $mdThemingProvider.definePalette('dmsPalette', RedMap);
 
+
       $mdThemingProvider.theme('default')
-        .primaryPalette('dmsPalette');
+        .primaryPalette('dmsPalette')
+        .accentPalette('green', {
+          'default': '500'
+        });
 
       // For any unmatched url, redirect to /state1
       $urlRouterProvider.otherwise('/404');
@@ -89,12 +97,12 @@
           }
         })
         .state('dashboard', {
-          url: '/andela/prodocs/{projectId}/dashboard',
+          url: '/prodocs/{projectId}/dashboard',
           templateUrl: 'views/dashboard.html',
           controller: 'DashBoardCtrl'
         })
         .state('loginerror', {
-          url: '/andela/prodocs/error',
+          url: '/prodocs/error',
           templateUrl: '',
           controller: ''
         });

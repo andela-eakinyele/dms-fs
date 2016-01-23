@@ -24,11 +24,10 @@
       return cMthds.gCreate('Roles', roleData, Role, query);
     },
 
-    getAllRoles: function(limit) {
-      var query = Role.find({});
-      if (limit) {
-        query = query.limit(limit);
-      }
+    getAllRoles: function(projectId) {
+      var query = Role.find({
+        projectId: projectId
+      });
       return cMthds.gGetAll('Roles', query);
     },
 
@@ -39,25 +38,26 @@
       return cMthds.gGetOne('Roles', query, id);
     },
 
-    getDocsByRole: function(id) {
+    getDocsByRole: function(id, projectId) {
       return new Promise(function(resolve, reject) {
-        Doc.getDocsByRole(id).then(function(data) {
-          if (data.length) {
-            resolve({
-              'status': 200,
-              'message': 'Document for role-' + id,
-              'data': data
-            });
-          } else {
-            resolve({
-              'status': 200,
-              'message': 'No Document exist for role-' + id,
-              'data': []
-            });
-          }
-        }).catch(function(err) {
-          cMthds.dberrors(reject, 'querying database', err);
-        });
+        Doc.getDocsByRole(id, projectId)
+          .then(function(data) {
+            if (data.length) {
+              resolve({
+                'status': 200,
+                'message': 'Document for role-' + id,
+                'data': data
+              });
+            } else {
+              resolve({
+                'status': 200,
+                'message': 'No Document exist for role-' + id,
+                'data': []
+              });
+            }
+          }).catch(function(err) {
+            cMthds.dberrors(reject, 'querying database', err);
+          });
       });
     },
 

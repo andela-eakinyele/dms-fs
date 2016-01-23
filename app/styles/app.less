@@ -3,7 +3,8 @@
       font-size: 1em;
       width: 100%;
       text-transform: none;
-      background-color: rgba(54, 117, 136, 0.3);
+      background-color: #80d8ff;
+      // 416E82
       > main {
         height: inherit;
         > div {
@@ -37,6 +38,9 @@
       div.side-border {
         border-right: 2px solid #50dfff;
       }
+      div.bottom {
+        border-bottom: 2px solid #50dfff;
+      }
       div.signup {
         /*background-color: #50dfff;*/
         width: 500px;
@@ -62,4 +66,23 @@
     
     div.header {
       border: 2px solid #efe;
+      height: 54px;
+    }
+    
+    div.dashboard {
+      height: inherit;
+      & > div.sidenav {
+        height: inherit;
+      }
+      md-content.contentheader {
+        height: 40px;
+      }
+      .md-button {
+        width: 120px;
+        margin: 5px;
+        >span {
+          color: white;
+          margin: 5px;
+        }
+      }
     }
