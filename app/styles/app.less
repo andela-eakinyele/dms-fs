@@ -1,88 +1,177 @@
-    body {
-      font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
-      font-size: 1em;
-      width: 100%;
-      text-transform: none;
-      background-color: #80d8ff;
-      // 416E82
-      > main {
-        height: inherit;
-        > div {
-          height: inherit;
-        }
-      }
-    }
-    
-    .md-button {
-      text-transform: none;
-      width: 80px;
-      text-align: center;
-      &.long {
-        width: 200px;
-      }
-    }
-    
-    div.overlay {
-      text-align: center;
-    }
-    
-    .addProject {
-      padding: 5px;
-      margin: 5px;
-      font-size: 24px;
-      border-radius: 15px 5px;
-      border: 2px solid #50dfff;
-    }
-    
-    md-content {
-      div.side-border {
-        border-right: 2px solid #50dfff;
-      }
-      div.bottom {
-        border-bottom: 2px solid #50dfff;
-      }
-      div.signup {
-        /*background-color: #50dfff;*/
-        width: 500px;
-      }
-      div.login {
-        width: 400px;
-        /*background-color: #50dfff;*/
-      }
-      div.options {
-        text-align: left;
-      }
-    }
-    
-    .redirect {
-      > h2.md-subheadline {
-        font-size: 1em;
-      }
-      .md-button {
-        font-size: 1.1em;
-        padding: 5px;
-      }
-    }
-    
-    div.header {
-      border: 2px solid #efe;
-      height: 54px;
-    }
-    
-    div.dashboard {
+body {
+  font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
+  font-size: 1em;
+  width: 100%;
+  text-transform: none;
+  background-color: #fff;
+  // 416E82
+  > main {
+    height: inherit;
+    > div {
       height: inherit;
-      & > div.sidenav {
-        height: inherit;
-      }
-      md-content.contentheader {
-        height: 40px;
-      }
-      .md-button {
-        width: 120px;
-        margin: 5px;
-        >span {
-          color: white;
-          margin: 5px;
-        }
+    }
+  }
+}
+
+.md-button {
+  text-transform: none;
+  width: 80px;
+  text-align: center;
+  &.long {
+    width: 200px;
+  }
+}
+
+div.overlay {
+  text-align: center;
+}
+
+.addProject {
+  padding: 5px;
+  margin: 5px;
+  font-size: 24px;
+  border-radius: 15px 5px;
+  border: 2px solid #50dfff;
+}
+
+md-content {
+  div.side-border {
+    border-right: 2px solid #50dfff;
+  }
+  div.bottom {
+    border-bottom: 2px solid #50dfff;
+  }
+  div.signup {
+    /*background-color: #50dfff;*/
+    width: 500px;
+  }
+  div.login {
+    width: 400px;
+    /*background-color: #50dfff;*/
+  }
+  div.options {
+    text-align: left;
+  }
+}
+
+.redirect {
+  > h2.md-subheadline {
+    font-size: 1em;
+  }
+  .md-button {
+    font-size: 1.1em;
+    padding: 5px;
+  }
+}
+
+div.header {
+  height: 60px;
+  opacity: 0.7;
+  div .md-button {
+    width: 120px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+    span {
+      color: white;
+      font-size: 1.1em;
+      margin-left: 5px;
+    }
+  }
+  .md-button.md-icon-button {
+    padding: 0;
+  }
+  .right-border {
+    height: 80%;
+    border-right: 1px solid #fff;
+  }
+  md-menu {
+    font-size: 36px;
+    > .md-button {
+      width: 150px;
+      margin: 2px;
+      span {
+        color: white;
+        font-size: 1.1em;
+        margin-left: 10px;
       }
     }
+  }
+}
+
+div.dashboard {
+  height: inherit;
+  & > div.sidenav {
+    height: inherit;
+  }
+  .sectionTitle {
+    h3 {
+      font-size: 1.4em;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+    >.md-button {
+      width: 150px;
+      > md-icon {
+        vertical-align: middle;
+        font-size: 24px;
+      }
+    }
+  }
+  .iconImage {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.listDocs {
+  table {
+    width: 100%;
+  }
+  .mdl-data-table {
+    th {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    tr {
+      font-size: 14px;
+    }
+    td.docMenu {
+      text-align: left
+    }
+  }
+}
+
+.sidenav {
+  md-content {
+    > div {
+      >h3 {
+        font-size: 18px;
+        color: indigo;
+        margin: 0;
+      }
+      md-checkbox {
+        font-size: 16px;
+        margin-top: 5px;
+      }
+      font-style: italic;
+      width: 100%;
+      padding: 0;
+    }
+  }
+}
+
+.btn-style {
+  margin: 0;
+  font-size: 16px;
+  text-align: left;
+  width: 100%;
+  padding: 10px 0 10px 15px;
+  text-transform: none;
+}
+
+a {
+  text-decoration: none;
+}

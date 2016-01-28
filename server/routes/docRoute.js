@@ -41,7 +41,7 @@
         });
     },
 
-    getAllDocs: function(req, res) {
+    all: function(req, res) {
       docFunc.getAllDocuments(req.body.limit).then(function(result) {
         res.status(result.status).json(result);
       }).catch(function(err) {

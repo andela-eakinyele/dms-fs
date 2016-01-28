@@ -4,6 +4,7 @@
   angular.module('prodocs.controllers', []);
   angular.module('prodocs.services', []);
 
+
   //Require Services
   require('./services/roles');
   require('./services/users');
@@ -24,6 +25,8 @@
 
 
 
+
+
   window.app = angular.module('prodocs', [
     'prodocs.controllers',
     'prodocs.services',
@@ -31,7 +34,9 @@
     'ngMessages',
     'ngResource',
     'ui.router',
-    'ngMaterial'
+    'ngMaterial',
+    'ngAria',
+    'ngAnimate'
   ]);
 
   window.app.config(['$stateProvider', '$httpProvider', '$urlRouterProvider',
@@ -39,7 +44,14 @@
     function($stateProvider, $httpProvider, $urlRouterProvider,
       $locationProvider, $mdThemingProvider, $mdIconProvider) {
 
-      $mdIconProvider.fontSet('fa', 'fontawesome');
+      $mdIconProvider.fontSet('fa', 'fontawesome')
+        .defaultIconSet('./assets/mdi.svg', 128)
+        .icon('menu', './assets/assets.svg', 24);
+      // .icon('share', './assets/svg/share.svg', 24)
+      // .icon('google_plus', './assets/svg/google_plus.svg', 512)
+      // .icon('hangouts', './assets/svg/hangouts.svg', 512)
+      // .icon('twitter', './assets/svg/twitter.svg', 512)
+      // .icon('phone', './assets/svg/phone.svg', 512);
 
       $httpProvider.interceptors.push('TokenInjector');
 
@@ -54,10 +66,9 @@
 
 
       $mdThemingProvider.theme('default')
-        .primaryPalette('dmsPalette')
-        .accentPalette('green', {
-          'default': '500'
-        });
+        .primaryPalette('orange')
+        .accentPalette('indigo');
+
 
       // For any unmatched url, redirect to /state1
       $urlRouterProvider.otherwise('/404');
