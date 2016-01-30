@@ -1,4 +1,4 @@
-div.signup(layout="column" layout-padding)
+div.signup(layout="column" layout-padding layout-align="center center")
   h3.md-headline Register
   span.md-warn {{signupErr}}
   form.register(name="registerForm" method="post" enctype="multipart/data" ng-submit="createUser()")
@@ -44,4 +44,5 @@ div.signup(layout="column" layout-padding)
     md-button.md-accent.md-raised(ng-disabled="registerForm.$invalid" type="submit") Submit 
   div.redirect(layout layout-align="center center")
     h2.md-subheadline Existing User? 
-    md-button.md-accent(ui-sref="home.login") Login
+    md-button.md-primary.md-raised(ui-sref="home.login") Login
+    md-button.md-warn.md-raised(ui-sref="home.features") Cancel

@@ -9,7 +9,7 @@
   var docKeys = ['username', 'documentName', 'title', 'content',
     'role', 'projectTitle'
   ];
-  var typeArray = ['txt', 'js', 'json', 'jsx', 'doc'];
+  var typeArray = ['txt', 'js', 'json', 'doc'];
 
   function getCmp(id, username, cb) {
     // query for document

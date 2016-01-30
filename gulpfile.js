@@ -26,7 +26,8 @@
     staticFiles: [
       '!app/**/*.+(less|css|js|jade)',
       '!app/images/**/*',
-      'app/**/*.*'
+      'app/**/*.*',
+      'app/styles/*.css'
     ],
     unitTests: [
       'public/lib/angular/angular.min.js',
@@ -69,9 +70,9 @@
   // render jade to html files
   gulp.task('jade', function() {
     gulp.src(paths.jade)
-      .pipe(changed('./public', {
-        extension: '.html'
-      }))
+      // .pipe(changed('./public', {
+      //   extension: '.html'
+      // }))
       .pipe(jade())
       .pipe(gulp.dest('./public/'));
   });

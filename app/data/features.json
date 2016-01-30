@@ -1,0 +1,14 @@
+[{
+  "action": "true",
+  "title": "Start a new Group",
+  "content": "Create a new Group for sharing documents with Team members Add team roles for access control "
+}, {
+  "title": "Add Team Members/Users",
+  "content": "Team members can be added by Admin or by Teammates using group authorization code "
+}, {
+  "title": "Create and Share Documents",
+  "content": "Team members can create and share documents with other team members "
+}, {
+  "title": "Manage your Documents",
+  "content": "Documents are managed by role assignment and ownership "
+}]

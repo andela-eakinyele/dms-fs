@@ -37,7 +37,7 @@
   router.get('/users/:id/documents', docRoute.getDocsById);
   router.get('/users', userRoute.getAllUsers);
   router.get(roleRoute.getAllRoles);
-  router.get('/documents', docRoute.getAllDocs);
+  router.get('/documents', docRoute.all);
 
   /*
   Routes that require owner/access validation

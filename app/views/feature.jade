@@ -1,0 +1,5 @@
+div(ng-repeat="feature in features" ng-class="{\"side-border\" : (bigScreen && !$last), \"bottom\" : !$last && !bigScreen}" layout="column" layout-align="center center")
+  h3.md-subheadline {{feature.title}}
+  span {{feature.content}}
+  md-button.md-raised.addProject(ng-if="feature.action" ui-sref="home.group" aria-label="Start Project")
+    i.fa.fa-plus

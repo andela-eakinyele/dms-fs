@@ -1,51 +1,12 @@
-div.dashboard(layout="column")
-  div.header(layout ="row")
-    md-button.show-sm.hide-gt-xs(ng-click="openLeftMenu()", aria-label="openLeftMenu")
-      i.fa.fa-bars.fa-2x
-    h3 Logo - Document Management System
-    span(flex hide-xs)
-    md-button.md-primary
-      md-icon(md-font-set="fa fa-file-text-o fa-2x") 
-      span(hide-xs hide-sm) New Doc
-      md-tooltip New Doc
-    md-button.md-primary
-      md-icon(md-font-set="fa fa-pencil-square-o fa-2x") 
-      span(hide-xs hide-sm) Edit Doc
-      md-tooltip Edit Doc 
-    md-button.md-primary.md-warn
-      md-icon(md-font-set="fa fa-trash fa-2x")  
-      span(hide-xs hide-sm) Delete
-      md-tooltip Delete 
+.dashboard(layout="column" class="mdl-layout mdl-js-layout mdl-layout--fixed-header")
+  md-toolbar.md-accent(ui-view="header")
+  div(layout="row" id="dashContent")
+    div.sidenav(layout="row"  ui-view="sidenav")
+    div(layout="column" layout-margin flex)
+      div(ui-view="table" layout ="column" layout-fill flex="100")
+      div(layout="row" ui-view="docdata" layout-fill)           
+        
 
-    md-button.md-primary.md-raised
-      md-icon(md-font-set="fa fa-cog fa-2x") 
-      span(hide-xs hide-sm) Settings
-      md-tooltip Settings
-    md-button.md-primary
-      md-icon(md-font-set="fa fa-user-plus fa-2x")
-      span(hide-xs hide-sm) Add User/Role
-      md-tooltip Add User/Role
-    
-    md-button.md-primary
-      md-icon(md-font-set="fa fa-sign-out fa-2x")  
-      span(hide-xs hide-sm) Log Out
-      md-tooltip Log Out
-  
-  div.sidenav(layout="row")
-    div(layout="row")
-      md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left" md-is-locked-open="$mdMedia(\"gt-md\")")
-        md-toolbar
-          h3.md-toolbar-tools Username
-        md-content(layout-padding)
-          h3.md-subheader.md-padding 
 
-          md-button(md-ink-ripple ng-repeat="item in menu") {{item.name}}
-          md-divider
-          md-button(md-ink-ripple hide-gt-md ng-click="close()") Close Navbar
-    div(flex layout="column" layout-margin)
-      md-content.contentheader(layout="column" layout-padding layout-align="center")
-        h3.md-subheader Content | FileName | Ownername | Lastmodified | Shared | Roles
-      md-content(layout="column" layout-padding layout-align="center")
-        h3.md-subheader Content | FileName | Ownername | Lastmodified | Shared | Roles
 
 

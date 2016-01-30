@@ -1,0 +1,45 @@
+.header.md-toolbar-tools(layout ="row" layout-align="center center" layout-padding)
+  md-button.md-icon-button(ng-click="openLeft()" aria-label="openLeftMenu" hide-gt-md id="hdrbtn")
+    md-icon(md-font-set="fa fa-bars fa-2x")
+  span Logo 
+  span(hide-xs hide-sm) ProDocs
+  span(flex)
+  md-menu(md-offset="50 50")
+    md-button.md-icon-button(ng-click="openMenu($mdOpenMenu, $event)")
+      md-icon(md-font-set="{{adminMenu.icon}}" md-menu-origin)
+      span {{adminMenu.name}}
+      md-tooltip {{adminMenu.name}}
+    md-menu-content(width="2")
+      md-menu-item(ng-repeat="j in adminMenu.subMenu")
+        md-button
+          md-icon(md-menu-align-target md-font-set="{{j.icon}}")
+          span {{j.name}}
+  .right-border
+
+  div.right-border(hide-xs hide-sm layout-align="center center")
+    md-button.md-icon-button(ng-click="addDocModal($event, \"Save a Document\", \"Save\")")
+      md-icon(md-font-set="fa fa-file-text-o fa-2x") 
+      span(hide-xs hide-sm) New Doc
+      md-tooltip New Doc
+  div.right-border(layout ng-repeat="i in menu" hide-xs hide-sm layout-align="center center")
+    md-button.md-icon-button(ng-click="")
+      md-icon(md-font-set="{{i.icon}}") 
+      span(hide-xs hide-sm) {{i.name}}
+      md-tooltip {{i.name}}
+      
+  md-menu(hide-gt-sm md-offset="-50 50")
+    md-button.md-icon-button(ng-click="openMenu($mdOpenMenu, $event)")
+      span Menu &nbsp;
+      md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
+    md-menu-content(width="2")
+      md-menu-item
+        md-button.md-primary(ng-click="addDocModal($event, \"Save a Document\", \"Save\")")
+          md-icon(md-font-set="fa fa-file-text-o fa-2x" md-menu-align-target) 
+          span New Doc
+          md-tooltip New Doc
+      md-menu-item(ng-repeat="i in menu")
+        md-button.md-primary(ng-click="")
+          md-icon(md-font-set="{{i.icon}}" md-menu-align-target) 
+          span {{i.name}}
+          md-tooltip {{i.name}}
+

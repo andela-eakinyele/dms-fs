@@ -1,0 +1,10 @@
+div.docForm(layout="column" layout-margin) 
+  form(name="docForm" layout-margin layout="column")
+    md-content.formTitle
+      md-input-container
+        label(for="title")
+        input(name="title" ng-model="user.title")
+    md-content.formContent(layout-padding)
+      md-input-container.md-block
+        label
+        textarea(ng-model="user.content" columns="1" rows="21")
