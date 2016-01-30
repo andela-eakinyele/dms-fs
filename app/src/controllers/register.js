@@ -2,14 +2,15 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('SignupCtrl', ['$rootScope', '$scope', '$state',
-      'Users', 'Projects', 'Auth',
-      function($rootScope, $scope, $state, Users, Projects, Auth) {
+      'Users', 'Groups', 'Auth',
+      function($rootScope, $scope, $state, Users, Groups, Auth) {
 
         $scope.init = function() {
-          $scope.signupErr = "Start up";
+
+          $scope.signupErr = 'Start up';
           $scope.signform = {};
           $scope.signupErr = '';
-          $scope.projects = Projects.query();
+          $scope.projects = Groups.query();
         };
 
         $scope.getRoles = function() {
@@ -38,7 +39,7 @@
               }
             });
           }, function(err) {
-            console.log(err, "Plice");
+            console.log(err, 'Plice');
             $scope.signupErr = 'Error creating User';
           });
         };

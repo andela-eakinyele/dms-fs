@@ -6,11 +6,12 @@
 
       function($rootScope, $scope, $state, $stateParams,
         $window, Users, Auth) {
-
         $scope.loginForm = {};
 
+
+
+
         $scope.login = function() {
-          console.log('test');
           Users.login({
             username: $scope.loginForm.userdata,
             password: $scope.loginForm.password

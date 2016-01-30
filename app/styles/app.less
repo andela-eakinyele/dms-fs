@@ -3,8 +3,7 @@ body {
   font-size: 1em;
   width: 100%;
   text-transform: none;
-  background-color: #fff;
-  // 416E82
+  background: url('./../images/homeBckgrd.jpg') center no-repeat;
   > main {
     height: inherit;
     > div {
@@ -24,6 +23,10 @@ body {
 
 div.overlay {
   text-align: center;
+  >md-content {
+    background-color: #D2C2BE;
+    opacity: 0.9;
+  }
 }
 
 .addProject {
@@ -35,6 +38,8 @@ div.overlay {
 }
 
 md-content {
+  color: #1258C7;
+  background-color: #D2C2BE;
   div.side-border {
     border-right: 2px solid #50dfff;
   }
@@ -42,12 +47,21 @@ md-content {
     border-bottom: 2px solid #50dfff;
   }
   div.signup {
-    /*background-color: #50dfff;*/
     width: 500px;
+    >form {
+      min-width: 400px;
+      font-size: 18px;
+    }
   }
   div.login {
     width: 400px;
-    /*background-color: #50dfff;*/
+    >form {
+      min-width: 300px;
+      font-size: 18px;
+      >input {
+        color: red;
+      }
+    }
   }
   div.options {
     text-align: left;
@@ -102,8 +116,14 @@ div.header {
 
 div.dashboard {
   height: inherit;
-  & > div.sidenav {
+  > div {
     height: inherit;
+    > div.sidenav {
+      height: inherit;
+      >md-sidenav {
+        background-color: #D2C2BE;
+      }
+    }
   }
   .sectionTitle {
     h3 {
@@ -124,6 +144,16 @@ div.dashboard {
     width: 20px;
     height: 20px;
   }
+  md-whiteframe {
+    > div.head {
+      width: 100%;
+    }
+  }
+}
+
+md-fab-speed-dial md-fab-trigger {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
 }
 
 .listDocs {
@@ -139,7 +169,9 @@ div.dashboard {
       font-size: 14px;
     }
     td.docMenu {
-      text-align: left
+      padding: 0;
+      text-align: left;
+      vertical-align: middle;
     }
   }
 }
@@ -174,4 +206,34 @@ div.dashboard {
 
 a {
   text-decoration: none;
+}
+
+md-dialog.forms {
+  min-width: 80%;
+  min-height: 100%;
+  background-color: #D2C2BE;
+}
+
+md-dialog-actions {
+  >.md-button {
+    width: 100px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+  }
+}
+
+.docForm {
+  height: inherit;
+  /*min-width: 600px;*/
+  >form md-content {
+    background-color: white;
+  }
+  .formTitle {
+    border: none;
+  }
+  .formContent {
+    min-height: 550px;
+  }
 }

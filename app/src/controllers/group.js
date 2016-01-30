@@ -2,8 +2,8 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('ProjectCtrl', ['$rootScope', '$scope', '$state',
-      'Projects',
-      function($rootScope, $scope, $state, Projects) {
+      'Groups',
+      function($rootScope, $scope, $state, Groups) {
         $scope.init = function() {
           $scope.pform = {};
           $scope.projectErr = '';
@@ -13,7 +13,7 @@
           $scope.pform.roles = $scope.pform.roles.split(', ');
           $scope.pform.roles.push('Admin');
 
-          Projects.save($scope.pform, function(project) {
+          Groups.save($scope.pform, function(project) {
             $rootScope.rootProject = project;
             $scope.projectErr = 'Project saved';
             $state.go('home.adduser');
