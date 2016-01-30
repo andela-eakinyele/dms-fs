@@ -2,9 +2,24 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$scope', '$mdMedia',
-      '$mdSidenav', 'Docs',
-      function($scope, $mdMedia, $mdSidenav, Docs) {
+      '$mdSidenav', '$timeout', 'Utils', 'Docs',
+      function($scope, $mdMedia, $mdSidenav, $timeout, Utils, Docs) {
 
+        $scope.viewing = false;
+
+        $scope.newDoc = false;
+        $scope.fabisOpen = false;
+        $scope.tooltipVisible = false;
+
+        $scope.$watch('fabisOpen', function(isOpen) {
+          if (isOpen) {
+            $timeout(function() {
+              $scope.tooltipVisible = $scope.fabisOpen;
+            }, 600);
+          } else {
+            $scope.tooltipVisible = $scope.fabisOpen;
+          }
+        });
         // side navigation bar control
         $scope.openLeft = function() {
           $mdSidenav('lefty').toggle();
@@ -19,65 +34,35 @@
           $mdOpenMenu(ev);
         };
 
-        $scope.getExt = function(name) {
-          var extStart = name.lastIndexOf('.');
-          return {
-            name: name.substring(0, extStart),
-            ext: name.substring(extStart + 1)
-          };
+        $scope.addDocModal = function(ev, title, answer) {
+          Utils.custom(ev, title, answer,
+            'views/doc-modal.html',
+            function(ans) {
+              if (ans === answer) {
+                $scope.saveDoc(ev, 'French');
+              }
+            });
         };
 
 
-        $scope.viewing = false;
-
-        $scope.viewDoc = function(id) {
-          $scope.viewing = true;
+        $scope.saveDoc = function(ev, name) {
+          Utils.showAlert(ev, 'Save Document', name +
+            'successfully saved');
         };
 
-        $scope.testDocs = [{
-          name: '1.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          name: '2.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }, {
-          name: '3.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          name: '4.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }, {
-          name: '5.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          name: '6.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }];
+        $scope.update = function(ev, name) {
+          Utils.showAlert(ev, 'Updated Document', name +
+            'successfully updated');
+        };
 
-        $scope.filterExt = window._
-          .chain($scope.testDocs)
-          .map('name')
-          .map(function(name) {
-            return $scope.getExt(name).ext;
-          }).uniq().value();
+        $scope.delete = function(ev, name) {
+          Utils.showConfirm(ev, 'Delete Documents', name +
+            'will be deleted', 'Delete',
+            function() {
+
+            });
+        };
+
 
         $scope.sideBarMenu = [{
           name: 'View Documents',
@@ -87,23 +72,18 @@
           subMenu: $scope.filterExt
         }];
 
-        $scope.docMenu = [{
-          name: 'Edit Doc',
-          icon: 'fa fa-pencil-square-o fa-2x'
-        }, {
-          name: 'Delete',
-          icon: 'fa fa-trash fa-2x'
-        }];
+        $scope.adminSideBarMenu = [
+          'List Users', 'List Roles', 'Report'
+        ];
+
+
 
         $scope.menu = [{
-          name: 'New Doc',
-          icon: 'fa fa-file-text-o fa-2x'
-        }, {
           name: 'User Profile',
-          icon: 'fa fa-cog fa-2x'
+          icon: 'fa fa-cog fa-2x',
         }, {
           name: 'Log Out',
-          icon: 'fa fa-sign-out fa-2x'
+          icon: 'fa fa-sign-out fa-2x',
         }];
 
         $scope.adminMenu = {
@@ -121,29 +101,6 @@
 
 
 
-
-
-
-        $scope.toggleSearch = false;
-        $scope.headers = [{
-          name: 'FileName',
-          field: 'filename'
-        }, {
-          name: 'Title',
-          field: 'title'
-        }, {
-          name: 'Owner',
-          field: 'owner'
-        }, {
-          name: 'Last Modified',
-          field: 'lastModified'
-        }, {
-          name: 'Shared',
-          field: 'shared'
-        }, {
-          name: 'Type',
-          field: 'ext'
-        }];
 
 
       }

@@ -10,22 +10,23 @@
   require('./services/users');
   require('./services/docs');
   require('./services/auth');
-  require('./services/project');
+  require('./services/group');
+  require('./services/utils');
+
 
   require('./services/token');
   require('./services/token-injector');
 
 
   // Require Controllers
-  require('./controllers/welcome');
+  require('./controllers/home');
+  require('./controllers/features');
   require('./controllers/login');
   require('./controllers/register');
   require('./controllers/dashboard');
-  require('./controllers/project');
+  require('./controllers/table');
 
-
-
-
+  require('./controllers/group');
 
   window.app = angular.module('prodocs', [
     'prodocs.controllers',
@@ -37,21 +38,15 @@
     'ngMaterial',
     'ngAria',
     'ngAnimate'
-  ]);
+  ])
 
-  window.app.config(['$stateProvider', '$httpProvider', '$urlRouterProvider',
+
+  .config(['$stateProvider', '$httpProvider', '$urlRouterProvider',
     '$locationProvider', '$mdThemingProvider', '$mdIconProvider',
     function($stateProvider, $httpProvider, $urlRouterProvider,
       $locationProvider, $mdThemingProvider, $mdIconProvider) {
 
-      $mdIconProvider.fontSet('fa', 'fontawesome')
-        .defaultIconSet('./assets/mdi.svg', 128)
-        .icon('menu', './assets/assets.svg', 24);
-      // .icon('share', './assets/svg/share.svg', 24)
-      // .icon('google_plus', './assets/svg/google_plus.svg', 512)
-      // .icon('hangouts', './assets/svg/hangouts.svg', 512)
-      // .icon('twitter', './assets/svg/twitter.svg', 512)
-      // .icon('phone', './assets/svg/phone.svg', 512);
+      $mdIconProvider.fontSet('fa', 'fontawesome');
 
       $httpProvider.interceptors.push('TokenInjector');
 
@@ -61,12 +56,11 @@
       });
 
 
-
       $mdThemingProvider.definePalette('dmsPalette', RedMap);
 
 
       $mdThemingProvider.theme('default')
-        .primaryPalette('orange')
+        .primaryPalette('pink')
         .accentPalette('indigo');
 
 
@@ -75,15 +69,34 @@
 
       $stateProvider
         .state('home', { // route for home page
+          abstract: true,
           url: '/prodocs',
-          templateUrl: 'views/welcome.html',
+          templateUrl: 'views/home.html',
           controller: 'StartPageCtrl'
         })
 
-      .state('home.adduser', {
+      .state('home.features', {
+          url: '',
+          views: {
+            'feature@home': {
+              templateUrl: 'views/feature.html',
+              controller: 'featCtrl'
+            }
+          }
+        })
+        .state('home.group', {
+          url: '/project',
+          views: {
+            'nextView@home': {
+              templateUrl: 'views/group.html',
+              controller: 'ProjectCtrl'
+            }
+          }
+        })
+        .state('home.adduser', {
           url: '/newuser',
           views: {
-            'a@home': {
+            'nextView@home': {
               controller: 'SignupCtrl',
               templateUrl: 'views/register.html'
             }
@@ -92,25 +105,38 @@
         .state('home.login', {
           url: '/login',
           views: {
-            'b@home': {
+            'nextView@home': {
               controller: 'LoginCtrl',
               templateUrl: 'views/login.html'
             }
           }
         })
-        .state('home.project', {
-          url: '/project',
+        .state('dashboard', {
+          url: '/prodocs/{projectId}/dashboard/:userId',
           views: {
-            'c@home': {
-              controller: 'ProjectCtrl',
-              templateUrl: 'views/projectDetails.html'
+            '': {
+              templateUrl: 'views/dashboard.html',
+              controller: 'DashBoardCtrl'
+            },
+            'header@dashboard': {
+              templateUrl: 'views/dashheader.html'
+            },
+            'sidenav@dashboard': {
+              templateUrl: 'views/dashsidenav.html'
+            },
+            'docdata@dashboard': {
+              templateUrl: 'views/dashdoc.html'
+            },
+            'table@dashboard': {
+              templateUrl: 'views/table.html',
+              controller: 'tableCtrl'
             }
           }
         })
-        .state('dashboard', {
-          url: '/prodocs/{projectId}/dashboard',
-          templateUrl: 'views/dashboard.html',
-          controller: 'DashBoardCtrl'
+        .state('dashboard.users', {
+          url: '/prodocs/{projectId}/dashboard/:userId/users',
+          templateUrl: 'views/dashboardAdminUsers.html',
+          controller: 'DashBoardAdminCtrl'
         })
         .state('loginerror', {
           url: '/prodocs/error',
