@@ -1,5 +1,5 @@
-div.login(layout="column" layout-padding)
-  h1 LogIn
+div.login(layout="column" layout-padding layout-align="center center")
+  h3 LogIn
   form.login(name="loginForm" method="post" enctype="multipart/data" ng-submit="login()")
     div(layout="column")
       md-input-container
@@ -19,4 +19,5 @@ div.login(layout="column" layout-padding)
     md-button.md-accent.md-raised(ng-disabled="loginForm.$invalid" type="submit") Submit 
   div.redirect(layout layout-align="center center")
     h2.md-subheadline Not Registered ? 
-    md-button.md-accent(ui-sref="home.adduser") SignUp
+    md-button.md-primary.md-raised(ui-sref="home.adduser") SignUp
+    md-button.md-warn.md-raised(ui-sref="home.features") Cancel

@@ -1,6 +1,7 @@
 doctype html
 html(lang="en" ng-app="prodocs")
   head
+    title(ng-bind="\"Prodocs\" +$state.current.name")
     include shared/head
   body
     main

@@ -1,107 +1,11 @@
 .dashboard(layout="column" class="mdl-layout mdl-js-layout mdl-layout--fixed-header")
-  md-toolbar.md-accent
-    .header.md-toolbar-tools(layout ="row" layout-align="center center" layout-padding)
-      md-button.md-icon-button(ng-click="openLeft()" aria-label="openLeftMenu" hide-gt-md id="hdrbtn")
-        md-icon(md-font-set="fa fa-bars fa-2x")
-      span Logo 
-      span(hide-xs hide-sm) ProDocs
-      span(flex)
-      md-menu(md-offset="50 50")
-        md-button.md-icon-button(ng-click="openMenu($mdOpenMenu, $event)")
-          md-icon(md-font-set="{{adminMenu.icon}}" md-menu-origin)
-          span {{adminMenu.name}}
-          md-tooltip {{adminMenu.name}}
-        md-menu-content(width="2")
-          md-menu-item(ng-repeat="j in adminMenu.subMenu")
-            md-button
-              md-icon(md-menu-align-target md-font-set="{{j.icon}}")
-              span {{j.name}}
-      .right-border
-
-      div.right-border(layout ng-repeat="i in menu" hide-xs hide-sm layout-align="center center")
-        md-button.md-icon-button
-          md-icon(md-font-set="{{i.icon}}") 
-          span(hide-xs hide-sm) {{i.name}}
-          md-tooltip {{i.name}}
-          
-
-
-      md-menu(hide-gt-sm md-offset="-50 50")
-        md-button.md-icon-button(ng-click="openMenu($mdOpenMenu, $event)")
-          span Menu &nbsp;
-          md-icon(md-font-set="fa fa-caret-square-o-down fa-2x" md-menu-origin) 
-        md-menu-content(width="2")
-          md-menu-item(ng-repeat="i in menu")
-            md-button.md-primary
-              md-icon(md-font-set="{{i.icon}}" md-menu-align-target) 
-              span {{i.name}}
-              md-tooltip {{i.name}}
-
-  
-  div(layout="row")
-    div.sidenav(layout="row")
-      md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
-        md-toolbar
-          h3.md-toolbar-tools Username
-        md-content(layout-margin)
-          div(layout="column") 
-            h3 {{sideBarMenu[0].name}}
-            md-button.btn-style(md-ink-ripple ng-repeat="itemN in sideBarMenu[0].subMenu") {{itemN}}
-            md-divider
-          div(layout="column") 
-            h3 {{sideBarMenu[1].name}}
-            md-checkbox(ng-repeat="itemN in sideBarMenu[1].subMenu" ng-checked="true" ng-click="") {{itemN}}
-            md-divider
-
-
-
-    div(layout="row" layout-margin flex)
-      div(layout ="column" ng-if="!viewing" flex="100")
-        md-content(layout="column" layout-align="center")
-          div.sectionTitle(layout="row" layout-padding)
-            h3.md-subheader Shared Documents
-            span(flex)
-            md-button.md-raised
-              md-icon(md-font-set="fa fa-trash fa-2x") 
-              span View Selected
-            md-button.md-warn.md-raised
-              md-icon(md-font-set="fa fa-trash fa-2x") 
-              span Delete Selected
-        md-content.listDocs(layout="column" ng-click="toggleSearch=false")
-          table(class="mdl-data-table mdl-data-table--selectable")
-            thead
-              tr
-                th
-                  label(class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="table-header")
-                    input(type="checkbox" id="table-header" class="mdl-checkbox__input")
-                th(class="mdl-data-table__cell--non-numeric" ng-repeat="h in headers") {{h.name}} 
-                th(class="mdl-data-table__cell--non-numeric") Action
-
-            tbody
-              tr(ng-repeat="doc in testDocs" ng-click="viewDoc(doc.name)")
-                td
-                  label(class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[{{$index}}]")
-                    input(type="checkbox" id="row[{{$index}}]" class="mdl-checkbox__input")
-                td(class="mdl-data-table__cell--non-numeric" ng-repeat="(key, value) in doc" ng-if="key !== \"shared\"")  {{(key === "name")? getExt(value).name : value}}
-                td(class="mdl-data-table__cell--non-numeric")
-                  md-icon(md-font-set="fa fa-group" ng-if="doc.shared")
-                td(class="mdl-data-table__cell--non-numeric")
-                  img.iconImage(ng-src="./images/{{getExt(doc.name).ext}}.png")
-                  span {{getExt(doc.name).ext}}
-                td.docMenu
-                  md-menu
-                    md-button.md-icon-button(ng-click="openMenu($mdOpenMenu, $event)")
-                      md-icon(md-font-set="fa fa-caret-down fa-2x" md-menu-origin) 
-                    md-menu-content(width="1")
-                      md-menu-item(ng-repeat="i in docMenu")
-                        md-button.md-primary
-                          md-icon(md-font-set="{{i.icon}}" md-menu-align-target) 
-                          span {{i.name}}
-
-      div(layout="row" ng-if="viewing" flex="100")
-        div.viewing
-          section(class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp")
-        div.sideList(layout layout-padding)
+  md-toolbar.md-accent(ui-view="header")
+  div(layout="row" id="dashContent")
+    div.sidenav(layout="row"  ui-view="sidenav")
+    div(layout="column" layout-margin flex)
+      div(ui-view="table" layout ="column" layout-fill flex="100")
+      div(layout="row" ui-view="docdata" layout-fill)           
+        
 
 
 
