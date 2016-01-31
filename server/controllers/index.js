@@ -3,13 +3,13 @@
   var docFunc = require('./docMethods');
   var roleFunc = require('./roleMethods');
   var userFunc = require('./userMethods');
-  var projectFunc = require('./projectMethods');
+  var groupFunc = require('./groupMethods');
 
 
   module.exports = {
     userFunc: userFunc,
     roleFunc: roleFunc,
     docFunc: docFunc,
-    projectFunc: projectFunc
+    groupFunc: groupFunc
   };
 })();

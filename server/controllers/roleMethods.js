@@ -2,45 +2,51 @@
   'use strict';
   var Role = require('./../models/role');
   var Doc = require('./../models/document');
-  var cMthds = require('./helpers');
-  var roleKeys = ['title'];
+  var cm = require('./helpers');
 
 
   var roleFunctions = {
-    createAdmin: function() {
-      var adminQuery = Role.find({
-        title: 'Admin'
-      });
-      return cMthds.gCreate('Roles', {
-        title: 'Admin'
-      }, Role, adminQuery);
-    },
 
-    createRole: function(title) {
-      var roleData = cMthds.parseData(roleKeys, title);
+    create: function(req, res) {
       var query = Role.find({
-        title: roleData.title
+        title: req.body.title,
+        groupId: req.body.groupId
       });
-      return cMthds.gCreate('Roles', roleData, Role, query);
+      cm.gCreate('Roles', req.body, Role, query)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    getAllRoles: function(projectId) {
+    all: function(req, res) {
       var query = Role.find({
-        projectId: projectId
+        groupId: req.headers.groupid
       });
-      return cMthds.gGetAll('Roles', query);
+      cm.gGetAll('Roles', query)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    getRole: function(id) {
+    get: function(req, res) {
       var query = Role.findOne({
-        _id: id
+        _id: req.params.id
       });
-      return cMthds.gGetOne('Roles', query, id);
+      cm.gGetOne('Roles', query, req.params.id)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    getDocsByRole: function(id, projectId) {
+    getDocsByRole: function(id, groupId) {
       return new Promise(function(resolve, reject) {
-        Doc.getDocsByRole(id, projectId)
+        Doc.getDocsByRole(id, groupId)
           .then(function(data) {
             if (data.length) {
               resolve({
@@ -56,22 +62,32 @@
               });
             }
           }).catch(function(err) {
-            cMthds.dberrors(reject, 'querying database', err);
+            cm.dberrors(reject, 'querying database', err);
           });
       });
     },
 
-    updateRole: function(title, id) {
-      var roleData = cMthds.parseData(roleKeys, title);
-      var query = Role.findByIdAndUpdate(id, roleData, {
-        new: true
-      });
-      return cMthds.gUpdate('Roles', id, query);
+    update: function(req, res) {
+      var query = Role.findByIdAndUpdate(req.params.id,
+        req.body, {
+          new: true
+        });
+      cm.gUpdate('Roles', req.params.id, query)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    deleteRole: function(id) {
-      var query = Role.findByIdAndRemove(id);
-      return cMthds.gDelete('Roles', query, id);
+    delete: function(req, res) {
+      var query = Role.findByIdAndRemove(req.params.id);
+      cm.gDelete('Roles', query, req.params.id)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     }
 
   };

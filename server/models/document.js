@@ -15,9 +15,9 @@
       type: Number,
       ref: 'Users'
     }],
-    documentName: {
+    fileName: {
       type: String,
-      required: (true, 'Document name is invalid')
+      required: (true, 'File name is invalid')
     },
     title: {
       type: String,
@@ -27,7 +27,11 @@
       type: String,
       required: (true, 'content is invalid')
     },
-    role: [{
+    groupId: [{
+      type: Number,
+      ref: 'Groups'
+    }],
+    roles: [{
       type: Number,
       ref: 'Roles'
     }],

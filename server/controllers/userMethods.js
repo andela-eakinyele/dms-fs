@@ -1,159 +1,105 @@
 (function() {
   'use strict';
   var User = require('./../models/user');
-  var Role = require('./../models/role');
-  var checkAdmin = require('./checkAdmin');
-
-  var cMthds = require('./helpers');
-  var uKeys = ['name.first', 'name.last', 'username',
-    'password', 'role', 'email', 'projectId'
-  ];
-
-  function getCompareRoles(username, cb) {
-    // query for user access
-    var queryUser = User.findOne({
-      username: username
-    }).populate({
-      path: 'role',
-      select: 'title'
-    });
-    return new Promise(function(resolve, reject) {
-      cMthds.gGetOne('Users', queryUser, '').then(function(userResult) {
-        if (userResult.status) {
-          // find matching role for user and document
-          var userRoles = userResult.data.role;
-          var matchFind = userRoles.filter(function(value) {
-            return value.title === 'Admin';
-          });
-          resolve(cb(matchFind, userResult.data));
-        } else {
-          resolve(userResult);
-        }
-      }).catch(function(errUser) {
-        cMthds.dberrors(reject, 'querying database', errUser);
-      });
-    });
-  }
+  var cm = require('./helpers'); // common methods
 
   var userFunctions = {
-    createUser: function(_userData) {
-      var userData = cMthds.parseData(uKeys, _userData);
-      // query definition for existing user data
+    create: function(req, res) {
+      // check for existing user data
       var query = User.find({}).or(
-        [{
-          email: userData.email
-        }, {
-          username: userData.username
-        }]).select('username name').populate({
-        path: 'role',
-        select: 'title'
-      });
-      return new Promise(function(resolve, reject) {
-        checkAdmin(userData).then(function(result) {
-          if (result.status === true) {
-            Role.findOne({
-              title: userData.role
-            }, '_id').then(function(_role) {
-                if (_role) {
-                  userData.role = _role._id;
+          [{
+            email: req.body.email
+          }, {
+            username: req.body.username
+          }])
+        .select('username name')
+        .populate('roles');
 
-                  resolve(cMthds.gCreate('Users', userData, User, query));
-                } else {
-                  resolve({
-                    'status': 406,
-                    'message': 'Invalid role specified \'' + userData.role +
-                      '\' does not exist',
-                    'data': []
-                  });
-                }
-              },
-              function(err) {
-                cMthds.dberrors(reject, 'querying database', err);
-              });
-          } else {
-            resolve(result);
-          }
+      cm.gCreate('Users',
+          req.body, User, query)
+        .then(function(result) {
+
+          res.status(result.status).json(result);
         }).catch(function(err) {
-          cMthds.dberrors(reject, 'querying database', err);
+          res.status(err.status).json(err);
         });
-      });
     },
 
-    getAllUsers: function(limit) {
-      var query = User.find({}).select('username email role name').populate({
-        path: 'role',
-        select: 'title'
-      });
-      if (limit) {
-        query = query.limit(limit);
-      }
-      return cMthds.gGetAll('Users', query);
-    },
-
-    getUser: function(id) {
+    get: function(req, res) {
       var query = User.findOne({
-        _id: id
-      }).select('username email role name').populate({
-        path: 'role',
-        select: 'title'
-      });
-      return cMthds.gGetOne('Users', query, id);
+          _id: req.params.id
+        })
+        .select('username email role name groupId')
+        .populate('roles')
+        .populate({
+          path: 'groupId',
+          select: 'title description'
+        });
+      cm.gGetOne('Users', query, req.params.id)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    updateUser: function(_userData, hid, username) {
-      var userData = cMthds.parseData(uKeys, _userData);
-      return new Promise(function(resolve, reject) {
-        Role.findOne({
-          title: userData.role
-        }, '_id').then(function(_role) {
-            if (_role) {
-              userData.role = _role._id;
-              resolve(getCompareRoles(username, function(matchFind, user) {
-                if (matchFind.length !== 0 || user._id === parseInt(hid)) {
-                  var query = User.findByIdAndUpdate(hid, userData, {
-                    new: true
-                  });
-                  return cMthds.gUpdate('Users', hid, query);
-                } else {
-                  return {
-                    'status': 403,
-                    'message': 'Not authorized to update user',
-                    'data': []
-                  };
-                }
-              }));
-            } else {
-              resolve({
-                'status': 406,
-                'message': 'Invalid role specified \'' + userData.role +
-                  '\' does not exist',
-                'data': []
-              });
-            }
-          },
-          function(err) {
-            cMthds.dberrors(reject, 'querying database', err);
-          });
-      });
+    update: function(req, res) {
+      var query = User.findByIdAndUpdate(req.params.id,
+        req.body, {
+          new: true
+        });
+      cm.gUpdate('Users', req.params.id, query)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
 
-    deleteUser: function(id) {
-      var query = User.findByIdAndRemove(id);
-      return cMthds.gDelete('Users', query, id);
+    all: function(req, res) {
+      var query = User.find({
+          groupId: req.headers.groupid
+        })
+        .select('username email role name')
+        .populate({
+          path: 'roles',
+          select: 'title'
+        });
+      if (req.params.limit) {
+        query = query.limit(req.params.limit);
+      }
+      cm.gGetAll('Users', query)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
     },
+
+    delete: function(req, res) {
+      var query = User.findByIdAndRemove(req.params.id);
+      cm.gDelete('Users', query, req.params.id)
+        .then(function(result) {
+          res.status(result.status).json(result);
+        }).catch(function(err) {
+          res.status(err.status).json(err);
+        });
+    },
+
 
     retrieveAllData: function(search) {
-      var query = User.find(search).populate('role');
-      return cMthds.gFind('Users', query);
+      var query = User.find(search)
+        .populate('roles');
+      return cm.gFind('Users', query);
     },
 
     retrieveData: function(search) {
-      var query = User.findOne(search).populate({
-        path: 'role',
-        select: 'title'
-      }).select('username role email firstname lastname');
-      return cMthds.gFind('Users', query);
+      var query = User.findOne(search)
+        .populate('roles')
+        .select('username roles name email firstname lastname groupId');
+      return cm.gFind('Users', query);
     }
+
   };
 
   module.exports = userFunctions;

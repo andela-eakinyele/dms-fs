@@ -12,7 +12,6 @@
     },
     username: {
       type: String,
-      unique: true,
       required: (true, ' username is invalid')
     },
     name: {
@@ -27,7 +26,6 @@
     },
     email: {
       type: String,
-      unique: true,
       required: true,
       match: /.+\@.+\..+/,
       message: 'Enter a valid email'
@@ -36,13 +34,13 @@
       type: String,
       required: true
     },
-    role: [{
+    roles: [{
       type: Number,
       ref: 'Roles'
     }],
-    projectId: [{
+    groupId: [{
       type: Number,
-      ref: 'Projects'
+      ref: 'Groups'
     }],
     active: {
       type: Boolean,

@@ -6,10 +6,11 @@
   var auth = require('./auth');
   var validate = require('./validate');
 
-  var userRoute = require('./userRoute');
-  var docRoute = require('./docRoute');
-  var roleRoute = require('./roleRoute');
-  var projectRoute = require('./projectRoute');
+  var userRoute = require('./../controllers/userMethods');
+  var docRoute = require('./../controllers/docMethods');
+  var roleRoute = require('./../controllers/roleMethods');
+  var groupRoute = require('./../controllers/groupMethods');
+
   /*
    Routes that can be accessed by all users
    */
@@ -20,45 +21,56 @@
   });
 
   router.post('/users/login', auth.login);
+
   router.post('/users', validate.adminUser, userRoute.create);
-  router.route('/projects')
-    .post(projectRoute.create)
-    .get(projectRoute.all);
 
-  /*
-  Routes that can be accessed only by authenticated users
-   */
+  // /*
+  // Routes that can be accessed only by authenticated users
+  //  */
   router.all('/*', validate.authenticate);
+
   router.route('/users/:id')
-    .get(userRoute.getUser)
-    .put(userRoute.updateUser);
-  router.post('/documents', docRoute.createDoc);
-  router.put('/documents/:id', docRoute.updateDoc);
-  router.get('/users/:id/documents', docRoute.getDocsById);
-  router.get('/users', userRoute.getAllUsers);
-  router.get(roleRoute.getAllRoles);
+    .get(userRoute.get)
+    .put(userRoute.update);
+
+
+  router.route('/groups')
+    .post(groupRoute.create)
+    .get(groupRoute.all);
+
+
+  router.post('/documents', docRoute.create);
+  router.put('/documents/:id', docRoute.update);
+
+  // router.get('/users/:id/documents', docRoute.getDocsById);
+  router.get('/users', userRoute.all);
   router.get('/documents', docRoute.all);
+  router.get('/roles', roleRoute.all);
 
-  /*
-  Routes that require owner/access validation
-  */
+
+  // Routes that require owner/access validation
+
   router.route('/documents/:id')
-    .get(docRoute.getDoc)
-    .delete(docRoute.deleteDoc);
+    .get(docRoute.get)
+    .delete(docRoute.delete);
 
-  /*
-  Routes that can be accessed only by authenticated and authorized users
-   */
+  // /*
+  // Routes that can be accessed only by authenticated and authorized users
+  //  */
   router.all('/*', validate.authorize);
-  router.delete('/users/:id', userRoute.deleteUser);
+  router.delete('/users/:id', userRoute.delete);
+
   router.route('/roles')
-    .post(roleRoute.createRole);
+    .post(roleRoute.create);
+
   router.route('/roles/:id')
-    .get(roleRoute.getRole)
-    .put(roleRoute.updateRole)
-    .delete(roleRoute.deleteRole);
-  router.get('/roles/:id/documents', roleRoute.getDocsById);
-  router.get('/documents/date', docRoute.getDocsByDate);
+    .get(roleRoute.get)
+    .put(roleRoute.update)
+    .delete(roleRoute.delete);
+
+  // router.get('/roles/:id/documents', roleRoute.getDocsById);
+  // router.get('/documents/date', docRoute.getDocsByDate);
+
 
   module.exports = router;
 })();

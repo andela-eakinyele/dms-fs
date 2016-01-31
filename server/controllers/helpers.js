@@ -15,6 +15,15 @@
   };
   exports.getNextId = getNextId;
 
+  var resdberrors = function(res, dbaction, err) {
+    res.status(500).json({
+      'status': false,
+      'message': 'Error ' + dbaction,
+      'error': err
+    });
+  };
+  exports.resdberrors = resdberrors;
+
   var dberrors = function(cb, dbaction, err) {
     cb({
       'status': 500,
@@ -43,13 +52,15 @@
         if (data.length) {
           modelData._id = getNextId(data);
         }
-        console.log(modelData, "Speak to me");
         // exceute existing document query 
         query.then(function(rstfind) {
           // if no document exists
           if (!rstfind.length) {
             // create document
             model.create(modelData).then(function(rstcreate) {
+              if (modelName === 'Users') {
+                rstcreate.password = null;
+              }
               resolve({
                 'status': 201,
                 'message': 'Created new ' + modelName,
