@@ -13,7 +13,6 @@
     },
     title: {
       type: String,
-      unique: true,
       required: (true, ' title is invalid')
     },
     users: [{
@@ -24,10 +23,9 @@
       type: Number,
       ref: 'Documents'
     }],
-    projectId: [{
+    groupId: [{
       type: Number,
-      ref: 'Projects',
-      required: (true, 'Project ID not specified')
+      ref: 'Groups'
     }]
   });
 

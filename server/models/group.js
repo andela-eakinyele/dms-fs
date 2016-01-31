@@ -3,7 +3,7 @@
   var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
-  var projectSchema = new Schema({
+  var groupSchema = new Schema({
     _id: {
       type: Number,
       min: 113,
@@ -16,6 +16,14 @@
       unique: true,
       required: (true, ' title is invalid')
     },
+    description: {
+      type: String,
+      required: (true, ' Description is invalid')
+    },
+    passphrase: {
+      type: String,
+      required: (true, ' Enter a passphrase')
+    },
     users: [{
       type: Number,
       ref: 'Users'
@@ -24,13 +32,13 @@
       type: Number,
       ref: 'Documents'
     }],
-    roles: {
-      type: [String],
-      required: (true, 'Provide project roles')
-    }
+    roles: [{
+      type: Number,
+      ref: 'Roles'
+    }]
   });
 
-  projectSchema.statics.getMaxId = function() {
+  groupSchema.statics.getMaxId = function() {
     var query = this.find({}, '_id');
     return new Promise(function(resolve, reject) {
       query.exec(function(err, ids) {
@@ -42,5 +50,5 @@
     });
   };
 
-  module.exports = mongoose.model('Projects', projectSchema);
+  module.exports = mongoose.model('Groups', groupSchema);
 })();

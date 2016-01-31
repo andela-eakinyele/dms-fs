@@ -3,6 +3,8 @@
   var jwt = require('jwt-simple');
   var _ = require('lodash');
   var userFunc = require('./../controllers').userFunc;
+  var groupFunc = require('./../controllers').groupFunc;
+
 
   var authenticate = function(req, res, next) {
     var token = req.headers.access_token;
@@ -10,23 +12,23 @@
       try {
         var decoded = jwt.decode(token, require('./../config/secret.js')());
         if (decoded.exp <= Date.now()) {
-          res.status(400).json({
+          res.status(400).json({ // expired token
             'status': 400,
             'message': 'Token Expired, redirect to login',
             'error': 'Token expired'
           });
           return;
-        } else {
+        } else { // token is valid
           next();
         }
-      } catch (err) {
+      } catch (err) { //error validating token
         res.status(500).json({
           'status': false,
           'message': 'Token not validated',
           'error': err
         });
       }
-    } else {
+    } else { // invalid token
       res.status(400).json({
         'status': 400,
         'message': 'Invalid Token or Key'
@@ -38,23 +40,26 @@
 
   exports.authorize = function(req, res, next) {
     var query = {
-      username: req.headers.username
+      _id: req.headers.userid
     };
+    // retrieve user details
     userFunc.retrieveData(query).then(function(user) {
       if (user) {
-        var admin = _.filter(user.role, function(role) {
-          return role.title === 'Admin';
+        var admin = _.filter(user.role, {
+          title: 'Admin',
+          groupId: [parseInt(req.headers.groupid)]
         });
+        // check for admin role
         if (admin.length) {
           next();
-        } else {
+        } else { // user found not admin role for group
           res.status(403).json({
             'status': 403,
             'message': 'Not authorized',
             'error': 'Unauthorized user'
           });
         }
-      } else {
+      } else { // user not found 
         res.status(400).json({
           'status': 400,
           'message': 'User is not logged in/does not exists',
@@ -67,25 +72,28 @@
   };
 
   exports.adminUser = function(req, res, next) {
-    if (req.body.role === 'Admin') {
+    var userRole = req.body.role ? req.body.role.title === 'Admin' : false;
+    if (userRole) {
       var query = {
-        role: 1
+        _id: req.body.groupId
       };
-      userFunc.retrieveData(query).then(function(user) {
-        if (user) {
-          if (user.username === req.headers.username) {
-            authenticate(req, res, next);
-          } else {
-            res.status(403).json({
-              'status': 403,
-              'message': 'Not authorized to create Admin user',
-              'error': 'Unauthorized user action'
-            });
-          }
-        } else {
-          next();
+      // retrieve group admin user
+      groupFunc.retrieveData(query).then(function(group) {
+        var adminId = _.filter(group.roles, {
+          title: 'Admin'
+        });
+        // compare group admin and user id
+        if (adminId[0].users[0] === parseInt(req.headers.userid)) {
+          authenticate(req, res, next);
+        } else { // userid is not admin
+          res.status(403).json({
+            'status': 403,
+            'message': 'Not authorized to create Admin user',
+            'error': 'Unauthorized user action'
+          });
         }
-      }, function(err) {
+      }, function(err) { // db error
+        console.log(err);
         res.status(500).json({
           'status': 500,
           'message': 'Database error',
