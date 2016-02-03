@@ -21,38 +21,48 @@
           };
         };
 
+        $scope.openDoc = function(id) {
+
+        };
+
 
         $scope.testDocs = [{
+          id: 1,
           name: '1.jsx',
           title: 'Shake and Bake',
           ownerId: 'Emmy Akin',
           shared: true,
           date: '12-11-1654'
         }, {
+          id: 2,
           name: '2.js',
           title: 'Trust and Obey',
           ownerId: 'Emmy Akin',
           shared: false,
           date: '12-11-1654'
         }, {
+          id: 3,
           name: '3.jsx',
           title: 'Shake and Bake',
           ownerId: 'Emmy Akin',
           shared: true,
           date: '12-11-1654'
         }, {
+          id: 4,
           name: '4.js',
           title: 'Trust and Obey',
           ownerId: 'Emmy Akin',
           shared: false,
           date: '12-11-1654'
         }, {
+          id: 5,
           name: '5.jsx',
           title: 'Shake and Bake',
           ownerId: 'Emmy Akin',
           shared: true,
           date: '12-11-1654'
         }, {
+          id: 6,
           name: '6.js',
           title: 'Trust and Obey',
           ownerId: 'Emmy Akin',

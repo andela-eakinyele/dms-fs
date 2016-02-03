@@ -1,10 +1,21 @@
-div.docForm(layout="column" layout-margin) 
-  form(name="docForm" layout-margin layout="column")
-    md-content.formTitle
-      md-input-container
+div.docForm(layout="column") 
+  md-toolbar.md-primary
+    .md-toolbar-tools
+      h3 {{title}}
+      span(flex="")   
+      div(layout="row")
+        md-button.md-accent.md-raised(aria-label="Action dialog" )
+          md-icon(md-font-set="fa fa-floppy-o fa-2x")
+          span Save
+        md-button.md-warn.md-raised(aria-label="Close dialog" )
+          md-icon(md-font-set="fa fa-times fa-2x")
+          span Cancel
+  form(name="docForm" layout="column")
+    .formTitle
+      md-input-container.md-block
         label(for="title")
-        input(name="title" ng-model="user.title")
-    md-content.formContent(layout-padding)
+        input(name="title" ng-model="user.title" placeholder="Enter Document Title")
+    .formContent(layout-padding)
       md-input-container.md-block
         label
-        textarea(ng-model="user.content" columns="1" rows="21")
+        textarea(ng-model="user.content" columns="1" rows="21" placeholder="Enter Text")

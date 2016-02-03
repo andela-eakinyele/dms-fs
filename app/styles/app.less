@@ -51,6 +51,10 @@ md-content {
     >form {
       min-width: 400px;
       font-size: 18px;
+      > md-input-container .md-input {
+        color: red;
+        border-left: 1px solid orange;
+      }
     }
   }
   div.login {
@@ -58,8 +62,9 @@ md-content {
     >form {
       min-width: 300px;
       font-size: 18px;
-      >input {
+      > md-input-container .md-input {
         color: red;
+        border-left: 1px solid orange;
       }
     }
   }
@@ -225,15 +230,60 @@ md-dialog-actions {
 }
 
 .docForm {
+  div .md-button {
+    width: 120px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+    span {
+      color: white;
+      font-size: 1.1em;
+      margin-left: 5px;
+    }
+  }
   height: inherit;
-  /*min-width: 600px;*/
-  >form md-content {
+  margin-left: 5%;
+  max-width: 90%;
+  min-width: 400px;
+  >form {
     background-color: white;
   }
   .formTitle {
-    border: none;
+    border-bottom: 2px solid #000;
+    margin: 0;
+    padding: 0;
+    height: 54px;
+    vertical-align: middle;
+    >md-input-container {
+      .md-input {
+        text-align: center;
+        border: none;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
   }
   .formContent {
     min-height: 550px;
+  }
+}
+
+.group {
+  md-checkbox {
+    text-align: left;
+  }
+  span {
+    font-size: 18px;
+  }
+  > fieldset {
+    border: 2px solid orange;
+    > legend {
+      font-size: 18px;
+    }
+    md-input-container {
+      margin: 5px;
+    }
   }
 }

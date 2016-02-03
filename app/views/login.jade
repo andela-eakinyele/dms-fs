@@ -12,10 +12,6 @@ div.login(layout="column" layout-padding layout-align="center center")
         input(type="password" name="npassword" ng-model="loginForm.password" required)
         div(ng-messages="loginForm.npassword.$error" ng-show="loginForm.npassword.$dirty")
           div(ng-message="required") Password is required
-      md-input-container
-          label(for="project") Project Name
-          md-select( ng-model="loginForm.project" class="select" aria-label="Project Name")
-            md-option(ng-value="project.id" ng-repeat="project in projects") {{project.title}}
     md-button.md-accent.md-raised(ng-disabled="loginForm.$invalid" type="submit") Submit 
   div.redirect(layout layout-align="center center")
     h2.md-subheadline Not Registered ? 

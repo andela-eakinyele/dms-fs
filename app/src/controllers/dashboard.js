@@ -98,6 +98,16 @@
           }]
         };
 
+        $scope.userGroups = [{
+          name: 'Vikings',
+          id: 3
+        }, {
+          name: 'SpyKIngs',
+          id: 1
+        }, {
+          name: 'Hooters',
+          id: 2
+        }];
 
 
 
