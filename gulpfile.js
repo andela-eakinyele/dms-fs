@@ -11,12 +11,15 @@
   var changed = require('gulp-changed');
   var jshint = require('gulp-jshint');
   var imagemin = require('gulp-imagemin');
+  var reporter = require('gulp-codeclimate-reporter');
+
   var watchify = require('watchify');
   var assign = require('lodash.assign');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');
   var babelify = require('babelify');
+
 
   var paths = {
     public: 'public/**',
@@ -156,7 +159,15 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-
+  gulp.task('codeclimate', function() {
+    return gulp
+      .src(['path/to/your/lcov.info'], {
+        read: false
+      })
+      .pipe(reporter({
+        token: '...'
+      }));
+  });
   // // var envOptions = {
   //  //   string: 'env',
   //  //   default: {
