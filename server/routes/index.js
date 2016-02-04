@@ -38,6 +38,10 @@
     .post(groupRoute.create)
     .get(groupRoute.all);
 
+  router.route('/groups/:id')
+    .put(groupRoute.update)
+    .get(groupRoute.get);
+
 
   router.post('/documents', docRoute.create);
   router.put('/documents/:id', docRoute.update);

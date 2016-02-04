@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var _ = require('lodash');
-  var apiTest = require('./specMod');
+  var apiTest = require('./specVar');
   var assert = require('assert');
   var agent = apiTest.agent;
   var data = apiTest.testdata;

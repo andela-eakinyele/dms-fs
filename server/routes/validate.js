@@ -45,7 +45,7 @@
     // retrieve user details
     userFunc.retrieveData(query).then(function(user) {
       if (user) {
-        var admin = _.filter(user.role, {
+        var admin = _.filter(user.roles, {
           title: 'Admin',
           groupId: [parseInt(req.headers.groupid)]
         });
@@ -72,10 +72,10 @@
   };
 
   exports.adminUser = function(req, res, next) {
-    var userRole = req.body.role ? req.body.role.title === 'Admin' : false;
+    var userRole = req.body.roles ? req.body.roles[0].title === 'Admin' : false;
     if (userRole) {
       var query = {
-        _id: req.body.groupId
+        _id: req.headers.groupid
       };
       // retrieve group admin user
       groupFunc.retrieveData(query).then(function(group) {
@@ -93,7 +93,6 @@
           });
         }
       }, function(err) { // db error
-        console.log(err);
         res.status(500).json({
           'status': 500,
           'message': 'Database error',

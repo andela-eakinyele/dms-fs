@@ -2,6 +2,9 @@
   'use strict';
   var Role = require('./../models/role');
   var Doc = require('./../models/document');
+  var group = require('./groupMethods');
+  var Group = require('./../models/group');
+
   var cm = require('./helpers');
 
 
@@ -13,8 +16,29 @@
         groupId: req.body.groupId
       });
       cm.gCreate('Roles', req.body, Role, query)
-        .then(function(result) {
-          res.status(result.status).json(result);
+        .then(function(role) {
+          var query = {
+            _id: req.body.groupId
+          };
+          group.retrieveData(query).then(function(gr) {
+            gr.roles.push(role.data);
+            var query2 = Group.findByIdAndUpdate(req.body.groupId,
+              gr, {
+                new: true
+              });
+            cm.gUpdate('Groups', req.body.groupId, query2)
+              .then(function() {
+                res.status(role.status).json(role);
+              }).catch(function(err) {
+                res.status(err.status).json(err);
+              }).catch(function(err) {
+                res.status(err.status).json(err);
+              });
+          }).catch(function(err) {
+            res.status(err.status).json(err);
+          }).catch(function(err) {
+            res.status(err.status).json(err);
+          });
         }).catch(function(err) {
           res.status(err.status).json(err);
         });

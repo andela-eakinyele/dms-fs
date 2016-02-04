@@ -1,5 +1,6 @@
 (function() {
   'use strict';
+
   var User = require('./../models/user');
   var cm = require('./helpers'); // common methods
 
@@ -18,7 +19,6 @@
       cm.gCreate('Users',
           req.body, User, query)
         .then(function(result) {
-
           res.status(result.status).json(result);
         }).catch(function(err) {
           res.status(err.status).json(err);
@@ -27,7 +27,8 @@
 
     get: function(req, res) {
       var query = User.findOne({
-          _id: req.params.id
+          _id: req.params.id,
+          groupId: req.query.groupId
         })
         .select('username email role name groupId')
         .populate('roles')

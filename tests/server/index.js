@@ -5,16 +5,21 @@
   var userSpec = require('./userSpec');
   var docSpec = require('./docSpec');
   var adminSpec = require('./adminSpec');
-  var apiTest = require('./specMod');
+  var groupSpec = require('./group.spec');
+
+  var apiTest = require('./specVar');
 
   describe('Testing API Routes', function() {
     after(function(done) {
       apiTest.seed.deleteModels(done);
     });
+
     initSpec();
-    roleSpec();
+    groupSpec();
+    // roleSpec();
     userSpec();
-    docSpec();
-    adminSpec();
+    // docSpec();
+    // adminSpec();
+
   });
 })();
