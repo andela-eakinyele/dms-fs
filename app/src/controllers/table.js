@@ -21,7 +21,7 @@
           };
         };
 
-        $scope.openDoc = function(id) {
+        $scope.openDoc = function() {
 
         };
 
