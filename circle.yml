@@ -5,6 +5,7 @@ test:
   override:
     - gulp build
     - npm test
+    - CODECLIMATE_REPO_TOKEN=$CodeClimateToken ./node_modules/.bin/codeclimate < reports/coverage/lcov.info
   post:
     - cp -r ./coverage $CIRCLE_ARTIFACTS
 dependencies:

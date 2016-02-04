@@ -17,7 +17,7 @@
   .right-border
 
   div.right-border(hide-xs hide-sm layout-align="center center")
-    md-button.md-icon-button(ng-click="addDocModal($event, \"Save a Document\", \"Save\")")
+    md-button.md-icon-button(ui-sref="dashboard.new")
       md-icon(md-font-set="fa fa-file-text-o fa-2x") 
       span(hide-xs hide-sm) New Doc
       md-tooltip New Doc
@@ -33,7 +33,7 @@
       md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
     md-menu-content(width="2")
       md-menu-item
-        md-button.md-primary(ng-click="addDocModal($event, \"Save a Document\", \"Save\")")
+        md-button.md-primary(ui-sref="dashboard.new")
           md-icon(md-font-set="fa fa-file-text-o fa-2x" md-menu-align-target) 
           span New Doc
           md-tooltip New Doc

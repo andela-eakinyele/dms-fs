@@ -3,7 +3,7 @@
 
   angular.module('prodocs.services')
     .factory('Groups', ['$resource', function roleFactory($resource) {
-      return $resource('/api/projects/:id', {
+      return $resource('/api/groups/:id', {
         id: '@id'
       }, {
         update: {

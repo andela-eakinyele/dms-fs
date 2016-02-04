@@ -1,6 +1,9 @@
 md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
   md-toolbar
-    h3.md-toolbar-tools Username
+    div(layout="row" layout-margin)
+      h3.md-toolbar-tools Username -
+      md-select( ng-model="selectGroup" class="select" aria-label="View Group" ng-selected="userGroups[0]")
+        md-option(ng-value="group.id" ng-repeat="group in userGroups" placeholder="") {{group.name}}
   md-content(layout-margin)
     div(layout="column")
       h3 Admin Menu

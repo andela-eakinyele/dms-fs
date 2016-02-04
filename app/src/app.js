@@ -52,7 +52,7 @@
 
 
       var RedMap = $mdThemingProvider.extendPalette('blue', {
-        '500': 'D65233'
+        '500': '014D9A'
       });
 
 
@@ -60,7 +60,7 @@
 
 
       $mdThemingProvider.theme('default')
-        .primaryPalette('pink')
+        .primaryPalette('dmsPalette')
         .accentPalette('indigo');
 
 
@@ -81,15 +81,15 @@
             'feature@home': {
               templateUrl: 'views/feature.html',
               controller: 'featCtrl'
-            }
+            },
           }
         })
         .state('home.group', {
-          url: '/project',
+          url: '/users/:id/group',
           views: {
             'nextView@home': {
               templateUrl: 'views/group.html',
-              controller: 'ProjectCtrl'
+              controller: 'GroupCtrl'
             }
           }
         })
@@ -112,7 +112,7 @@
           }
         })
         .state('dashboard', {
-          url: '/prodocs/{projectId}/dashboard/:userId',
+          url: '/prodocs/users/:userId/dashboard/:groupId/documents',
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
@@ -123,26 +123,41 @@
             },
             'sidenav@dashboard': {
               templateUrl: 'views/dashsidenav.html'
-            },
-            'docdata@dashboard': {
-              templateUrl: 'views/dashdoc.html'
-            },
-            'table@dashboard': {
+            }
+          }
+        })
+        .state('dashboard.new', {
+          url: '/new',
+          views: {
+            'inner@dashboard': {
+              templateUrl: 'views/doc.html',
+            }
+          }
+        })
+        .state('dashboard.list', {
+          url: '/list',
+          views: {
+            'inner@dashboard': {
               templateUrl: 'views/table.html',
               controller: 'tableCtrl'
             }
           }
         })
-        .state('dashboard.users', {
-          url: '/prodocs/{projectId}/dashboard/:userId/users',
-          templateUrl: 'views/dashboardAdminUsers.html',
-          controller: 'DashBoardAdminCtrl'
+        .state('dashboard.doc', {
+          url: '/:id',
+          views: {
+            'inner@dashboard': {
+              templateUrl: 'views/dashdoc.html',
+              // controller: 'docCtrl'
+            },
+          }
         })
-        .state('loginerror', {
-          url: '/prodocs/error',
-          templateUrl: '',
-          controller: ''
-        });
+
+      .state('loginerror', {
+        url: '/prodocs/error',
+        templateUrl: '',
+        controller: ''
+      });
 
       $locationProvider.html5Mode(true);
     }

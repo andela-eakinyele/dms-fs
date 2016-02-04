@@ -26,21 +26,14 @@ div.signup(layout="column" layout-padding layout-align="center center")
           input(type="text" name="username" ng-model="signform.username" required)
           div(ng-messages="registerForm.username.$error" ng-show="registerForm.username.$dirty")
             div(ng-message="required") Username is required
+        md-divider
         md-input-container.md-block(flex="50")
           label(for="npassword") Password
           input(type="password" name="npassword" ng-model="signform.password" ng-minlength="6" required)
           div(ng-messages="registerForm.npassword.$error" ng-show="registerForm.npassword.$dirty")
             div(ng-message="required") Password is required
             div(ng-message="minlength") Password must be at Least Six Characters
-      div.options(layout="column" layout-gt-xs="row" flex-gt-xs)
-        md-input-container(flex="40")
-          label(for="role") Role
-          md-select( ng-model="signform.role" class="select" aria-label="signform.role")
-            md-option(ng-value="role" ng-repeat="role in roles" placeholder="Admin") {{role}}
-        md-input-container(flex="60")
-          label(for="project") Project Name
-          md-select(ng-change= "getRoles()" ng-model="signform.projectTitle" class="select" aria-label="Project Name" placeholder="{{rootProject.title || '' }}")
-            md-option(ng-value="project._id" ng-repeat="project in projects") {{project.title}}
+      
     md-button.md-accent.md-raised(ng-disabled="registerForm.$invalid" type="submit") Submit 
   div.redirect(layout layout-align="center center")
     h2.md-subheadline Existing User? 
