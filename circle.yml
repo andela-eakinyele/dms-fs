@@ -5,9 +5,6 @@ test:
   override:
     - gulp build
     - npm test
-    - CODECLIMATE_REPO_TOKEN=$CodeClimateToken ./node_modules/.bin/codeclimate < reports/coverage/lcov.info
-  post:
-    - cp -r ./coverage $CIRCLE_ARTIFACTS
 dependencies:
   cache_directories:
     - "node_modules"
@@ -17,4 +14,3 @@ dependencies:
     - npm install module-deps
     - npm install gulp -g
     - npm install mocha -g
-  

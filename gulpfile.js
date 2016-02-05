@@ -119,7 +119,7 @@
 
   // test runners
   // server api tests
-  gulp.task('mocha', function() {
+  gulp.task('test:bend', function() {
     return gulp.src(['tests/server/index.js'], {
         read: false
       })
@@ -168,13 +168,15 @@
 
   gulp.task('codeclimate', function() {
     return gulp
-      .src(['path/to/your/lcov.info'], {
+      .src(['./reports/coverage.lcov'], {
         read: false
       })
       .pipe(reporter({
-        token: '...'
+        token: process.env.CODECLIMATE_REPO_TOKEN
       }));
   });
+
+  gulp.task('test', ['test:bend', 'codeclimate']);
   // // var envOptions = {
   //  //   string: 'env',
   //  //   default: {
@@ -190,6 +192,7 @@
   gulp.task('build', ['jade', 'less', 'static-files',
     'buildjs', 'bower', 'images'
   ]);
+
 
   gulp.task('default', ['nodemon', 'watch', 'build']);
 })();
