@@ -9,8 +9,6 @@
   console.log(admin);
   var userSeed = apiTest.testdata.users;
 
-  var keys = ['label', 'title', 'content', 'groupId', 'ownerId', 'roles'];
-
   module.exports = function() {
     // seed roles and users
     describe('Admin users CRUD users and documents\n', function() {
@@ -210,7 +208,7 @@
 
         it('- Should be able to update other users data', function(done) {
           var userdata = users[1];
-          userdata.username = 'Altered username'
+          userdata.username = 'Altered username';
           agent
             .put('/api/users/' + ids[1])
             .set({
