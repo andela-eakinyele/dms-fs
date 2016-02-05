@@ -9,7 +9,6 @@
       if (err) {
         console.log('Unable to connect', err);
         return;
-        process.exit(1);
       }
       init();
       console.log('Connected to database');

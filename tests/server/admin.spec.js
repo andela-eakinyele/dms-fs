@@ -9,9 +9,6 @@
   console.log(admin);
   var userSeed = apiTest.testdata.users;
 
-  var uKey = ['name.first', 'name.last', 'username', 'password',
-    'email'
-  ];
   var keys = ['label', 'title', 'content', 'groupId', 'ownerId', 'roles'];
 
   module.exports = function() {
@@ -69,7 +66,7 @@
                   var response = res.body;
                   users = response.data;
                   var name = _.pluck(response.data, 'username').slice(0, 4);
-                  ids = _.pluck(response.data, '_id')
+                  ids = _.pluck(response.data, '_id');
                   assert.equal(response.message, 'Existing Users');
                   assert.deepEqual(name, ['EAbbott', 'TPerox', 'PNishi',
                     'SPolls'
@@ -80,7 +77,7 @@
 
           it('- Should not be able to update other users data', function(done) {
             var userdata = users[1];
-            userdata.username = "Altered username"
+            userdata.username = 'Altered username';
 
             agent
               .put('/api/users/' + ids[1])
@@ -129,7 +126,7 @@
           });
         });
 
-      //  should be able to get, getall, update and delete all documents in group
+      //  should be able to get, update and delete documents in group
       describe('Should be able to CRUD documents\n', function() {
 
         //  should be able to get all documents
@@ -213,7 +210,7 @@
 
         it('- Should be able to update other users data', function(done) {
           var userdata = users[1];
-          userdata.username = "Altered username"
+          userdata.username = 'Altered username'
           agent
             .put('/api/users/' + ids[1])
             .set({

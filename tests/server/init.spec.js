@@ -3,7 +3,6 @@
 
   var apiTest = require('./specVar');
   var agent = apiTest.agent;
-  var mock = apiTest.seed;
 
   module.exports = function() {
 

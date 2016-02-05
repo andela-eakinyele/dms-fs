@@ -6,7 +6,6 @@
   var _ = require('lodash');
   var mock = apiTest.seed;
   var data = apiTest.testdata.groups;
-  var roleSeed = apiTest.testdata.roles;
   var userSeed = apiTest.testdata.users;
   var keys = ['title', 'description', 'passphrase'];
   var ukeys = ['name.first', 'name.last', 'username', 'password',
@@ -17,7 +16,7 @@
 
 
     describe('Group Spec', function() {
-      var token, userData, usersId, testGroup, testRole, adminUser;
+      var token, userData, usersId, testGroup, adminUser;
 
       describe(' - Create Group and Group Admin', function() {
 
@@ -93,7 +92,7 @@
           userdata.roles = [{
             title: 'Admin',
             _id: 1
-          }]
+          }];
           userdata.groupId = [113];
 
           agent
