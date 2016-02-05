@@ -1,0 +1,36 @@
+div.group(layout="column" layout-padding)
+  span.md-warn {{groupErr}}
+  md-checkbox
+    span New Group
+  fieldset
+    legend Fill the fields below
+    form.register(name="groupForm" method="post" enctype="multipart/data" ng-submit="addgroup()")
+      div.options(layout="column")
+        md-input-container
+          label(for="title") Group Name
+          input(type="text" ng-model="pform.title" name="title" required)
+          div(ng-messages="groupForm.title.$error" ng-show="groupForm.title.$dirty")
+            div(ng-message="required") Group Name is required
+        md-input-container
+          label(for="description") Description
+          input(type="text" name="description" ng-model="pform.description" required)
+          div(ng-messages="groupForm.description.$error" ng-show="groupForm.description.$dirty")
+            div(ng-message="required") Description is required
+  md-checkbox
+    span Join Group
+  fieldset
+    legend Select a Group and Role below
+    form.register(name="groupForm" method="post" enctype="multipart/data" ng-submit="addgroup()")
+      div.options(layout="column" layout-gt-xs="row" flex-gt-xs)
+        md-input-container(flex="60")
+          label(for="group") Group Name
+          md-select(ng-change= "getRoles()" ng-model="signform.groupTitle" class="select" aria-label="group Name" placeholder="{{rootgroup.title || '' }}")
+            md-option(ng-value="project._id" ng-repeat="group in groups") {{group.title}}
+        md-input-container(flex="40")
+          label(for="role") Role
+          md-select( ng-model="signform.role" class="select" aria-label="signform.role")
+            md-option(ng-value="role" ng-repeat="role in roles" placeholder="Admin") {{role}}
+
+  div(layout layout-align="center center")
+    md-button.long.md-primary.md-raised(ng-disabled="groupForm.$invalid" md-ink-ripple type="submit") {{selected}}
+    md-button.md-accent.md-raised(md-ink-ripple ui-sref="home.features") Cancel

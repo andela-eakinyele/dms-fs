@@ -1,0 +1,20 @@
+md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
+  md-toolbar
+    div(layout="row" layout-margin)
+      h3.md-toolbar-tools Username -
+      md-select( ng-model="selectGroup" class="select" aria-label="View Group" ng-selected="userGroups[0]")
+        md-option(ng-value="group.id" ng-repeat="group in userGroups" placeholder="") {{group.name}}
+  md-content(layout-margin)
+    div(layout="column")
+      h3 Admin Menu
+      md-button.btn-style(md-ink-ripple ng-repeat="itemN in adminSideBarMenu" aria-label="admin menu item") {{itemN}}
+      md-divider
+    div(layout="column") 
+      h3 {{sideBarMenu[0].name}}
+      md-button.btn-style(md-ink-ripple ng-repeat="itemN in sideBarMenu[0].subMenu" aria-label="Own Docs") {{itemN}}
+      md-divider
+    div(layout="column") 
+      h3 {{sideBarMenu[1].name}}
+      md-checkbox(ng-repeat="itemN in sideBarMenu[1].subMenu" ng-checked="true" ng-click="" aria-label="Shared Docs") {{itemN}}
+      md-divider
+

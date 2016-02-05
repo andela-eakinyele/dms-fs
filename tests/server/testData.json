@@ -1,0 +1,49 @@
+{
+  "groups": {
+    "testGroup": ["Hooters", "Hooters don't talk, we hoot our words louder than an owl shrill cry", "Hoot hoot, hooted hoots"],
+    "seedGroups": {
+      "group1": ["Superstars", "Superstars show supernatural abilities via their written words", "I got Magic in Me"],
+      "group2": ["Vikings", "Vikings are relentless, we brace the cold and hardship of time by creating pieces of words from our strength", "Hold up your swords"]
+    }
+  },
+  "users": {
+    "seedUsers": {
+      "user1": ["Douglas", "Adams", "DAdams", "dadams", "dadams@project.com"],
+      "user2": ["Crystal", "Rocksalt", "CRSalt", "crsalt", "crsalt@project.com"],
+      "user3": ["John", "Craig", "JCraig", "jcraig", "jcraig@project.com"],
+      "user4": ["Maureen", "Bridgewater", "MBridge", "mbridge", "mbridge@project.com"],
+      "user5": ["AndOne", "Courtside", "ACside", "acside", "acside@api.com"]
+    },
+    "testUsers": {
+      "tuser1": ["Humayun", "Ahmed", "HAhmed", "hahmed", "hahmed@project.com"],
+      "groupuser": ["Toluene", "Perox", "TPerox", "tperox", "tperox@project.com"]
+    },
+    "groupUsers": {
+      "tuser2": ["Edwin", "Abbott", "EAbbott", "eabbott", "eabbott@project.com"]
+    },
+    "docUsers": {
+      "tuser3": ["Prackett", "Nishi", "PNishi", "pnishi", "pnishi@project.com"],
+      "tuser4": ["Silas", "Polls", "SPolls", "spolls", "spolls@project.com"]
+    },
+    "invalidData": ["Enrico", "Benneti", "EBenneti", "ebenneti", "ebenneti@project.com"]
+  },
+  "roles": {
+    "seedRoles": {
+      "role1": ["Librarian", 113],
+      "role2": ["Editor", 113],
+      "role3": ["Copywriter", 114],
+      "role4": ["Writers", 114],
+      "role5": ["Publisher", 113]
+    },
+    "testRole": "Manager"
+  },
+  "docs": {
+    "testDocs": ["Fiction", "Lorem Ipsum", "Who knows the whole words....", [3, 4]],
+    "seedDocs": {
+      "doc2": ["Foods", "Staple Foods", "These are classes of group...", 113, 203, [3, 4]],
+      "doc3": ["Technology", "Life of a developer", "We can\"t stand bugs, we write and kill...", 113, 203, [3]],
+      "doc4": ["Money", "Value for money", "I have money, I want value for it...", 113, 204, [3, 4]]
+    }
+  }
+
+}

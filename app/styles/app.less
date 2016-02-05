@@ -1,0 +1,289 @@
+body {
+  font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
+  font-size: 1em;
+  width: 100%;
+  text-transform: none;
+  background: url('./../images/homeBckgrd.jpg') center no-repeat;
+  > main {
+    height: inherit;
+    > div {
+      height: inherit;
+    }
+  }
+}
+
+.md-button {
+  text-transform: none;
+  width: 80px;
+  text-align: center;
+  &.long {
+    width: 200px;
+  }
+}
+
+div.overlay {
+  text-align: center;
+  >md-content {
+    background-color: #D2C2BE;
+    opacity: 0.9;
+  }
+}
+
+.addProject {
+  padding: 5px;
+  margin: 5px;
+  font-size: 24px;
+  border-radius: 15px 5px;
+  border: 2px solid #50dfff;
+}
+
+md-content {
+  color: #1258C7;
+  background-color: #D2C2BE;
+  div.side-border {
+    border-right: 2px solid #50dfff;
+  }
+  div.bottom {
+    border-bottom: 2px solid #50dfff;
+  }
+  div.signup {
+    width: 500px;
+    >form {
+      min-width: 400px;
+      font-size: 18px;
+      > md-input-container .md-input {
+        color: red;
+        border-left: 1px solid orange;
+      }
+    }
+  }
+  div.login {
+    width: 400px;
+    >form {
+      min-width: 300px;
+      font-size: 18px;
+      > md-input-container .md-input {
+        color: red;
+        border-left: 1px solid orange;
+      }
+    }
+  }
+  div.options {
+    text-align: left;
+  }
+}
+
+.redirect {
+  > h2.md-subheadline {
+    font-size: 1em;
+  }
+  .md-button {
+    font-size: 1.1em;
+    padding: 5px;
+  }
+}
+
+div.header {
+  height: 60px;
+  opacity: 0.7;
+  div .md-button {
+    width: 120px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+    span {
+      color: white;
+      font-size: 1.1em;
+      margin-left: 5px;
+    }
+  }
+  .md-button.md-icon-button {
+    padding: 0;
+  }
+  .right-border {
+    height: 80%;
+    border-right: 1px solid #fff;
+  }
+  md-menu {
+    font-size: 36px;
+    > .md-button {
+      width: 150px;
+      margin: 2px;
+      span {
+        color: white;
+        font-size: 1.1em;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+div.dashboard {
+  height: inherit;
+  > div {
+    height: inherit;
+    > div.sidenav {
+      height: inherit;
+      >md-sidenav {
+        background-color: #D2C2BE;
+      }
+    }
+  }
+  .sectionTitle {
+    h3 {
+      font-size: 1.4em;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+    >.md-button {
+      width: 150px;
+      > md-icon {
+        vertical-align: middle;
+        font-size: 24px;
+      }
+    }
+  }
+  .iconImage {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+  }
+  md-whiteframe {
+    > div.head {
+      width: 100%;
+    }
+  }
+}
+
+md-fab-speed-dial md-fab-trigger {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+.listDocs {
+  table {
+    width: 100%;
+  }
+  .mdl-data-table {
+    th {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    tr {
+      font-size: 14px;
+    }
+    td.docMenu {
+      padding: 0;
+      text-align: left;
+      vertical-align: middle;
+    }
+  }
+}
+
+.sidenav {
+  md-content {
+    > div {
+      >h3 {
+        font-size: 18px;
+        color: indigo;
+        margin: 0;
+      }
+      md-checkbox {
+        font-size: 16px;
+        margin-top: 5px;
+      }
+      font-style: italic;
+      width: 100%;
+      padding: 0;
+    }
+  }
+}
+
+.btn-style {
+  margin: 0;
+  font-size: 16px;
+  text-align: left;
+  width: 100%;
+  padding: 10px 0 10px 15px;
+  text-transform: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+md-dialog.forms {
+  min-width: 80%;
+  min-height: 100%;
+  background-color: #D2C2BE;
+}
+
+md-dialog-actions {
+  >.md-button {
+    width: 100px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+  }
+}
+
+.docForm {
+  div .md-button {
+    width: 120px;
+    > md-icon {
+      vertical-align: middle;
+      font-size: 24px;
+    }
+    span {
+      color: white;
+      font-size: 1.1em;
+      margin-left: 5px;
+    }
+  }
+  height: inherit;
+  margin-left: 5%;
+  max-width: 90%;
+  min-width: 400px;
+  >form {
+    background-color: white;
+  }
+  .formTitle {
+    border-bottom: 2px solid #000;
+    margin: 0;
+    padding: 0;
+    height: 54px;
+    vertical-align: middle;
+    >md-input-container {
+      .md-input {
+        text-align: center;
+        border: none;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+  .formContent {
+    min-height: 550px;
+  }
+}
+
+.group {
+  md-checkbox {
+    text-align: left;
+  }
+  span {
+    font-size: 18px;
+  }
+  > fieldset {
+    border: 2px solid orange;
+    > legend {
+      font-size: 18px;
+    }
+    md-input-container {
+      margin: 5px;
+    }
+  }
+}

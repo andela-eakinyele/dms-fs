@@ -1,0 +1,41 @@
+div.signup(layout="column" layout-padding layout-align="center center")
+  h3.md-headline Register
+  span.md-warn {{signupErr}}
+  form.register(name="registerForm" method="post" enctype="multipart/data" ng-submit="createUser()")
+    div(layout="column")
+      div(layout="column" layout-gt-xs="row" flex-gt-xs)
+        md-input-container.md-block(flex="50")
+          label(for="firstname") First Name
+          input(type="text" ng-model="signform.firstname" name="firstname" required)
+          div(ng-messages="registerForm.firstname.$error" ng-show="registerForm.firstname.$dirty")
+            div(ng-message="required") Firstname is required
+        md-input-container.md-block(flex="50")
+          label(for="lastname") Last Name
+          input(type="text" ng-model="signform.lastname" name="lastname" required)
+          div(ng-messages="registerForm.lastname.$error" ng-show="registerForm.lastname.$dirty")
+            div(ng-message="required") Lastname is required
+      md-input-container
+        label(for="email") Email
+        input(type="email" ng-model="signform.email" name="email" required)
+        div(ng-messages="registerForm.email.$error" ng-show="registerForm.email.$dirty")
+          div(ng-message="required") email is required
+          div(ng-message="email") Invalid email address
+      div.options(layout="column" layout-gt-xs="row" flex-gt-xs)
+        md-input-container.md-block(flex="50")
+          label(for="username") Username
+          input(type="text" name="username" ng-model="signform.username" required)
+          div(ng-messages="registerForm.username.$error" ng-show="registerForm.username.$dirty")
+            div(ng-message="required") Username is required
+        md-divider
+        md-input-container.md-block(flex="50")
+          label(for="npassword") Password
+          input(type="password" name="npassword" ng-model="signform.password" ng-minlength="6" required)
+          div(ng-messages="registerForm.npassword.$error" ng-show="registerForm.npassword.$dirty")
+            div(ng-message="required") Password is required
+            div(ng-message="minlength") Password must be at Least Six Characters
+      
+    md-button.md-accent.md-raised(ng-disabled="registerForm.$invalid" type="submit") Submit 
+  div.redirect(layout layout-align="center center")
+    h2.md-subheadline Existing User? 
+    md-button.md-primary.md-raised(ui-sref="home.login") Login
+    md-button.md-warn.md-raised(ui-sref="home.features") Cancel

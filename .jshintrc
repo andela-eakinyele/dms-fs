@@ -40,5 +40,6 @@
   "trailing": true,
   "undef": true,
   "unused": true,
-  "globalstrict": true
+  "globalstrict": true,
+  "esnext": true
 }
