@@ -2,13 +2,15 @@
   'use strict';
   module.exports = function() {
 
+    var init = require('./initApi');
     var mongoose = require('mongoose');
     // connect database
-    mongoose.connect('mongodb://localhost/test', function(err) {
+    mongoose.connect(process.env.DATABASE_URL, function(err) {
       if (err) {
         console.log('Unable to connect', err);
         return;
       }
+      init();
       console.log('Connected to database');
     });
   };

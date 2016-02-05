@@ -11,12 +11,15 @@
   var changed = require('gulp-changed');
   var jshint = require('gulp-jshint');
   var imagemin = require('gulp-imagemin');
+  var reporter = require('gulp-codeclimate-reporter');
+
   var watchify = require('watchify');
   var assign = require('lodash.assign');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');
   var babelify = require('babelify');
+
 
   var paths = {
     public: 'public/**',
@@ -130,10 +133,17 @@
           assert: require('assert')
         }
       }))
-      .on('error', gutil.log)
+      .once('error', (err) => {
+        gutil.log(err);
+        process.exit(1);
+      })
       .pipe(cover.gather())
-      .pipe(cover.format())
-      .pipe(gulp.dest('./reports'));
+      .pipe(cover.format(
+        ['lcov', 'html', 'json']))
+      .pipe(gulp.dest('./reports'))
+      .once('end', () => {
+        process.exit();
+      });
   });
 
   gulp.task('nodemon', function() {
@@ -156,7 +166,15 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-
+  gulp.task('codeclimate', function() {
+    return gulp
+      .src(['path/to/your/lcov.info'], {
+        read: false
+      })
+      .pipe(reporter({
+        token: '...'
+      }));
+  });
   // // var envOptions = {
   //  //   string: 'env',
   //  //   default: {

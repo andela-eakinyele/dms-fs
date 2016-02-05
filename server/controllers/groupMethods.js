@@ -42,7 +42,7 @@
                   .then(function(newData) {
                     // retrieve user and update group, role with admin for group
                     user.retrieveData(query2).then(function(resUser) {
-                      resUser.role.push(resRole.data._id);
+                      resUser.roles.push(resRole.data._id);
                       resUser.groupId.push(result.data._id);
                       var query5 = User.findByIdAndUpdate(req.body.id,
                         resUser, {
@@ -118,9 +118,11 @@
         });
     },
 
+
+
     retrieveData: function(search) {
       var query = Group.findOne(search)
-        .populate('roles');
+        .populate('roles users');
       return cm.gFind('Groups', query);
     }
 

@@ -15,10 +15,8 @@
     // query for user access
     var queryUser = User.findOne({
       _id: userId
-    }).populate({
-      path: 'role',
-      select: 'title'
-    });
+    }).populate('roles');
+
     return new Promise(function(resolve, reject) {
 
       cm.gGetOne('Documents', queryDoc, id)
@@ -27,20 +25,20 @@
             .then(function(users) {
               if (docs.status !== 400) {
                 // find matching role for user and document
-                var userRoles = users.data.role;
-                var docRoles = docs.data.role;
+                var userRoles = users.data.roles;
+                var docRoles = docs.data.roles;
                 var matchFind = userRoles.filter(function(value) {
                   return (docRoles.indexOf(value._id)) !== -1;
                 });
-                resolve(matchFind, docs, users);
+                resolve([matchFind, docs, users]);
               } else {
-                resolve(docs);
+                resolve([docs]);
               }
             }).catch(function(errUser) {
-              cm.dberrors(reject, 'querying database', errUser);
+              cm.dberrors(reject, 'querying database', errUser, 500);
             });
         }).catch(function(errDoc) {
-          cm.dberrors(reject, 'querying database', errDoc);
+          cm.dberrors(reject, 'querying database', errDoc, 500);
         });
     });
 
@@ -52,11 +50,9 @@
       var userid = parseInt(req.headers.userid),
         groupid = parseInt(req.headers.groupid);
       // query for existing document
-      var query = Doc.find({}).or([{
+      var query = Doc.find({
         title: req.body.title
-      }, {
-        filename: req.body.filename
-      }]);
+      });
 
       req.body.ownerId = userid;
       req.body.groupId = [groupid];
@@ -72,7 +68,6 @@
 
     all: function(req, res) {
       var groupid = parseInt(req.headers.groupid);
-
       var query = Doc.find({})
         .where('groupId')
         .in([groupid])
@@ -97,11 +92,11 @@
         groupid = parseInt(req.headers.groupid);
 
       getCmp(req.params.id, userid, groupid)
-        .then(function(a, b) {
-          if (a.length && !a.status) {
-            res.status(b.status).json(b);
-          } else if (a.status) {
-            res.status(a.status).json(a);
+        .then(function(a) {
+          if (a[0].length && !a[0].status) {
+            res.status(a[1].status).json(a[1]);
+          } else if (a[0].status) {
+            res.status(a[0].status).json(a[0]);
           } else {
             res.status(403).json({
               'status': 403,
@@ -121,12 +116,9 @@
         groupid = parseInt(req.headers.groupid);
 
       getCmp(req.params.id, userid, groupid)
-        .then(function(a, b) {
-          if (a.length && !a.status) {
-
-            req.body.ownerId = b.data.ownerId;
-
-            req.body.role = req.body.role.concat(b.role);
+        .then(function(a) {
+          if (a[0].length && !a[0].status) {
+            req.body.ownerId = a[1].data.ownerId;
             req.body.lastModified = Date.now();
             var query = Doc.findByIdAndUpdate(req.params.id, req.body, {
               new: true
@@ -137,8 +129,8 @@
               }).catch(function(err) {
                 res.status(err.status).json(err);
               });
-          } else if (a.status) {
-            res.status(a.status).json(a);
+          } else if (a[0].status) {
+            res.status(a[0].status).json(a[0]);
           } else {
             res.status(403).json({
               'status': 403,
@@ -152,60 +144,59 @@
 
     },
 
-    // getDocsByOwnerId: function(id) {
-    //   var ownerId = id;
-    //   return new Promise(function(resolve, reject) {
-    //     Doc.getDocsByOwnerId(ownerId).then(function(data) {
-    //       if (data.length) {
-    //         resolve({
-    //           'status': 200,
-    //           'message': 'Document for id ' + id,
-    //           'data': data
-    //         });
-    //       }
-    //       resolve({
-    //         'status': 200,
-    //         'message': 'No Document exist for id ' + id,
-    //         'data': []
-    //       });
-    //     }).catch(function(err) {
-    //       cm.dberrors(reject, 'querying database', err);
-    //     });
-    //   });
-    // },
+    getDocsById: function(req, res) {
+      var ownerId = req.params.id;
+      Doc.getDocsByOwnerId(ownerId).then(function(data) {
+        if (data.length) {
+          res.status(200).json({
+            'status': 200,
+            'message': 'Document for id ' + req.params.id,
+            'data': data
+          });
+        } else {
+          res.status(200).json({
+            'message': 'No Document exist for id ' + req.params.id,
+            'data': []
+          });
+        }
+      }).catch(function(err) {
+        cm.resdberrors(res, 'querying database', err);
+      });
+    },
 
-    // getDocsByDate: function(date) {
-    //   return new Promise(function(resolve, reject) {
-    //     Doc.getDocsByDate(date).then(function(data) {
-    //       if (data.length) {
-    //         resolve({
-    //           'status': 200,
-    //           'message': 'Document for ' + date,
-    //           'data': data
-    //         });
-    //       } else {
-    //         resolve({
-    //           'status': 200,
-    //           'message': 'No Document exist for date ',
-    //           'data': []
-    //         });
-    //       }
-    //     }).catch(function(err) {
-    //       cm.dberrors(reject, 'querying database', err);
-    //     });
-    //   });
-    // },
+    getDocsByDate: function(req, res) {
+      Doc.getDocsByDate(req.query.date).then(function(data) {
+        if (data.length) {
+          res.status(200).json({
+            'status': 200,
+            'message': 'Document for ' + req.query.date,
+            'data': data
+          });
+        } else {
+          res.status(200).json({
+            'status': 200,
+            'message': 'No Document exist for date ',
+            'data': []
+          });
+        }
+      }).catch(function(err) {
+        cm.resdberrors(res, 'querying database', err);
+      });
+    },
 
     delete: function(req, res) {
       var userid = parseInt(req.headers.userid),
         groupid = parseInt(req.headers.groupid);
 
       getCmp(req.params.id, userid, groupid)
-        .then(function(a, b, c) {
-          if (a.length && !a.status && b.data.role.length === 2 &&
-            c.data._id === b.data.ownerId[0] ||
-            (_.pluck(c.data.role, 'title').indexOf('Admin') > -1 &&
-              _.pluck(c.data.role, 'groupId') === req.headers.groupid)) {
+        .then(function(a) {
+          if (a[0].length && !a[0].status && a[1].data.roles.length === 1 &&
+            a[2].data._id === a[1].data.ownerId[0] ||
+
+            (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1 &&
+
+              _.pluck(a[2].data.roles, 'groupId') === req.headers.groupid)) {
+
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)
               .then(function(result) {
@@ -213,8 +204,8 @@
               }).catch(function(err) {
                 res.status(err.status).json(err);
               });
-          } else if (a.status) {
-            res.status(a.status).json(a);
+          } else if (a[0].status) {
+            res.status(a[0].status).json(a[0]);
           } else {
             res.status(403).json({
               'status': 403,

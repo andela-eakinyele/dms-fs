@@ -1,12 +1,19 @@
 (function() {
   'use strict';
 
+  var env = process.env.NODE_ENV || 'development';
+  if (env === 'development') {
+    require('dotenv').load();
+  }
+
   var express = require('express');
   var bodyParser = require('body-parser');
   var logger = require('morgan');
   var apiRoutes = require('./routes');
   var app = express();
   var path = require('path');
+
+
   require('./config/initdb')();
 
   // configure middleware

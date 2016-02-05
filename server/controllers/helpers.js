@@ -24,9 +24,9 @@
   };
   exports.resdberrors = resdberrors;
 
-  var dberrors = function(cb, dbaction, err) {
+  var dberrors = function(cb, dbaction, err, code) {
     cb({
-      'status': 500,
+      'status': code,
       'message': 'Error ' + dbaction,
       'error': err
     });
@@ -67,8 +67,8 @@
                 'data': rstcreate
               });
             }, function(err) { // db error
-              dberrors(reject, 'creating ' + modelData.title + ' ' +
-                modelName, err);
+              dberrors(reject, 'creating ' + modelData + ' ' +
+                modelName, err, 400);
             });
           } else { // document exists
             var msg = modelName + ' already exist \n Change unique data';
@@ -79,10 +79,10 @@
             });
           }
         }, function(err) { // db error
-          dberrors(reject, 'querying database', err);
+          dberrors(reject, 'querying database', err, 500);
         });
       }).catch(function(err) {
-        dberrors(reject, 'querying database', err);
+        dberrors(reject, 'querying database', err, 500);
       });
     });
   };
@@ -103,7 +103,7 @@
         },
         function(err) { // db error
           // console.log('Error querying database');
-          dberrors(reject, 'querying database', err);
+          dberrors(reject, 'querying database', err, 500);
         });
     });
   };
@@ -129,7 +129,7 @@
           notExist(modelName, id, resolve);
         }
       }, function(err) {
-        dberrors(reject, 'querying database', err);
+        dberrors(reject, 'querying database', err, 500);
       });
     });
   };
@@ -157,7 +157,7 @@
           }
         },
         function(err) {
-          dberrors(reject, 'querying database', err);
+          dberrors(reject, 'querying database', err, 500);
         });
     });
   };
@@ -184,7 +184,7 @@
           }
         },
         function(err) { // db error
-          dberrors(reject, 'querying database', err);
+          dberrors(reject, 'querying database', err, 500);
         });
     });
   };
@@ -199,7 +199,7 @@
           resolve(false);
         }
       }, function(err) { // db error
-        dberrors(reject, 'querying database', err);
+        dberrors(reject, 'querying database', err, 500);
       });
     });
   };

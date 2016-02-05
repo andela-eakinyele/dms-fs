@@ -2,26 +2,35 @@
   'use strict';
   var promise = require('bluebird');
   var _ = require('lodash');
-  var ModelFunc = require('./../../server/controllers');
   var User = require('./../../server/models/user');
   var Doc = require('./../../server/models/document');
   var Role = require('./../../server/models/role');
+  var Group = require('./../../server/models/group');
 
-  exports.roleMock = function(testRoles) {
-    return promise.mapSeries(testRoles, function(role) {
-      return ModelFunc.roleFunc.createRole(new Array(role));
+  exports.seedCreate = function(model, keys, seedData, minId) {
+    keys.push('_id');
+    return promise.mapSeries(_.values(seedData), function(data, index) {
+      data.push(minId + index);
+      return model.create(_.zipObject(keys, data))
+        .then(function(created) {
+          return created;
+        }, function(err) {
+          return err;
+        });
     });
   };
 
-  exports.userMock = function(testUsers) {
-    return promise.mapSeries(_.values(testUsers), function(userdata) {
-      return ModelFunc.userFunc.createUser(userdata);
-    });
-  };
-
-  exports.docMock = function(testDocs) {
-    return promise.mapSeries(_.values(testDocs), function(doc) {
-      return ModelFunc.docFunc.createDocument(doc);
+  exports.seedUpdate = function(model, seedData) {
+    return promise.mapSeries(seedData, function(data) {
+      return model.findByIdAndUpdate(data._id,
+          data, {
+            new: true
+          })
+        .then(function(updated) {
+          return updated;
+        }, function(err) {
+          return err;
+        });
     });
   };
 
@@ -45,7 +54,13 @@
             console.log('Users not removed');
             return;
           }
-          cb();
+          Group.remove().exec(function(err) {
+            if (err) {
+              console.log('Groups not removed');
+              return;
+            }
+            cb();
+          });
         });
       });
     });
