@@ -3,6 +3,31 @@
 
   var User = require('./../models/user');
   var cm = require('./helpers'); // common methods
+  var _ = require('lodash');
+
+
+  function superAdmin(id, userid) {
+    var query = User.findOne({
+      _id: id
+    }).populate('roles');
+
+    return new Promise(function(resolve, reject) {
+      cm.gGetOne('Users', query, id)
+        .then(function(user) {
+          if (user) {
+            var superAdmin = _.filter(user.data.roles, {
+              title: 'superAdmin'
+            });
+            resolve((superAdmin.length > 0 || userid === id) ? true : false);
+          } else {
+            resolve(false);
+          }
+        }).catch(function(err) {
+          reject(err);
+        });
+    });
+  }
+
 
   var userFunctions = {
     create: function(req, res) {
@@ -30,7 +55,7 @@
           _id: req.params.id,
           groupId: req.query.groupId
         })
-        .select('username email role name groupId')
+        .select('username email roles name groupId')
         .populate('roles')
         .populate({
           path: 'groupId',
@@ -45,23 +70,34 @@
     },
 
     update: function(req, res) {
-      var query = User.findByIdAndUpdate(req.params.id,
+      var query2 = User.findByIdAndUpdate(req.params.id,
         req.body, {
           new: true
         });
-      cm.gUpdate('Users', req.params.id, query)
-        .then(function(result) {
-          res.status(result.status).json(result);
-        }).catch(function(err) {
-          res.status(err.status).json(err);
-        });
+
+      superAdmin(req.headers.userid).then(function(result) {
+        if (result) {
+          cm.gUpdate('Users', req.params.id, query2)
+            .then(function(result) {
+              res.status(result.status).json(result);
+            }).catch(function(err) {
+              res.status(err.status).json(err);
+            });
+        } else {
+          res.status(403).json({
+            'status': 403,
+            'message': 'Not authorized to update user',
+            'data': []
+          });
+        }
+      });
     },
 
     all: function(req, res) {
       var query = User.find({
           groupId: req.headers.groupid
         })
-        .select('username email role name')
+        .select('username email roles name')
         .populate({
           path: 'roles',
           select: 'title'
@@ -85,13 +121,6 @@
         }).catch(function(err) {
           res.status(err.status).json(err);
         });
-    },
-
-
-    retrieveAllData: function(search) {
-      var query = User.find(search)
-        .populate('roles');
-      return cm.gFind('Users', query);
     },
 
     retrieveData: function(search) {

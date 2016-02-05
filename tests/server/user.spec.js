@@ -6,23 +6,20 @@
   var _ = require('lodash');
   var mock = apiTest.seed;
   var data = apiTest.testdata.users;
+  var groupSeed = apiTest.testdata.groups;
   var keys = ['name.first', 'name.last', 'username', 'password',
     'email'
   ];
 
   module.exports = function() {
-    // seed roles and users
-    describe('Users CRUD\n', function() {
-      var testuser = '';
-      var userData = '';
-      var token = '';
-      var usersId = '';
-      var seedGroupdata = '';
-      var groupIds = '';
 
+    describe('Users CRUD\n', function() {
+      var testuser, userData, token, usersId, seedGroupdata, groupIds;
+
+      // seed users
       before(function(done) {
         mock.seedCreate(apiTest.model.user, keys,
-            data.seedUsers, 100)
+            data.seedUsers, 101)
           .then(function(users) {
             userData = users;
             usersId = _.pluck(users, '_id');
@@ -208,9 +205,10 @@
 
         var groupKeys = ['title', 'description', 'passphrase'];
 
+        // seed groups 
         before(function(done) {
           mock.seedCreate(apiTest.model.group, groupKeys,
-              apiTest.testdata.groups.seedGroups, 114)
+              groupSeed.seedGroups, 114)
             .then(function(groups) {
               seedGroupdata = groups;
               groupIds = _.pluck(groups, '_id');
@@ -381,7 +379,49 @@
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
                 assert.equal(response.message, 'Existing Users');
-                assert.deepEqual(_.pluck(response.data, '_id'), [100, 102, 104]);
+                assert.deepEqual(_.pluck(response.data,
+                  '_id'), [101, 103, 105]);
+                done();
+              });
+          });
+
+        // should be able to retrieve all group
+        it('- Should be able to retrieve all group',
+          function(done) {
+            agent
+              .get('/api/groups')
+              .set({
+                access_token: token,
+              })
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Existing Groups');
+                assert.deepEqual(_.pluck(response.data,
+                  '_id'), [113, 114, 115]);
+                done();
+              });
+          });
+
+        // should be able to retrieve a group
+        it('- Should be able to retrieve a group',
+          function(done) {
+            agent
+              .get('/api/groups/' + groupIds[0])
+              .set({
+                access_token: token
+              })
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Groups data:');
+                assert.deepEqual(response.data._id, 114);
                 done();
               });
           });
@@ -414,17 +454,21 @@
           agent
             .put('/api/groups/' + groupIds[1])
             .set({
-              access_token: token
+              access_token: token,
+              userid: usersId[0]
             })
             .type('json')
-            .send(seedGroupdata[1])
+            .send({
+              users: seedGroupdata[1].users,
+              passphrase: groupSeed.seedGroups.group2[2]
+            })
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
               assert.equal(response.message, 'Updated Groups');
-              assert.deepEqual(response.data.users, [100]);
+              assert.deepEqual(response.data.users, [101]);
               done();
             });
         });

@@ -15,9 +15,8 @@
       type: Number,
       ref: 'Users'
     }],
-    fileName: {
-      type: String,
-      required: (true, 'File name is invalid')
+    label: {
+      type: String
     },
     title: {
       type: String,
@@ -94,11 +93,13 @@
     });
   };
 
-  documentSchema.statics.getDocsByRole = function(roleId) {
+  documentSchema.statics.getDocsByRole = function(roleId, groupId) {
     var doc = this;
     return new Promise(function(resolve, reject) {
-      var query = doc.find().where('role').in([roleId]).populate({
-        path: 'role',
+      var query = doc.find({
+        groupId: groupId
+      }).where('roles').in([roleId]).populate({
+        path: 'roles',
         select: 'title'
       }).sort('dateCreated');
       query.then(function(docs) {

@@ -10,7 +10,7 @@
     ndate = ndate.setHours(ndate.getHours() + sessionLength);
     var token = jwt.encode({
       exp: ndate
-    }, require('../config/secret')());
+    }, require('../config/secret')().encode);
     return {
       token: token,
       expires: ndate,

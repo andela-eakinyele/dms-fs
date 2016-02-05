@@ -8,9 +8,6 @@
   module.exports = function() {
 
     describe('Initialization of API\n', function() {
-      beforeEach(function(done) {
-        mock.deleteModels(done);
-      });
 
       // should respond to root route
       it('- API should respond to root', function(done) {

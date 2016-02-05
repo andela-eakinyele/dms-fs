@@ -16,25 +16,34 @@
     },
     "testUsers": {
       "tuser1": ["Humayun", "Ahmed", "HAhmed", "hahmed", "hahmed@project.com"],
-      "tuser": ["Silas", "Polls", "SPolls", "spolls", "spolls@project.com"]
+      "groupuser": ["Toluene", "Perox", "TPerox", "tperox", "tperox@project.com"]
     },
-    "groupAdmin": {
+    "groupUsers": {
       "tuser2": ["Edwin", "Abbott", "EAbbott", "eabbott", "eabbott@project.com"]
+    },
+    "docUsers": {
+      "tuser3": ["Prackett", "Nishi", "PNishi", "pnishi", "pnishi@project.com"],
+      "tuser4": ["Silas", "Polls", "SPolls", "spolls", "spolls@project.com"]
     },
     "invalidData": ["Enrico", "Benneti", "EBenneti", "ebenneti", "ebenneti@project.com"]
   },
   "roles": {
-    "seedRoles": ["Builder", "Editor", "Copywriter", "Writers", "Publisher"],
+    "seedRoles": {
+      "role1": ["Librarian", 113],
+      "role2": ["Editor", 113],
+      "role3": ["Copywriter", 114],
+      "role4": ["Writers", 114],
+      "role5": ["Publisher", 113]
+    },
     "testRole": "Manager"
   },
   "docs": {
-    "testDocs": ["Lorems.js", "Lorem Ipsum", "Who knows the whole words....", ["Project Manager", "Team Lead", "Senior Dev"]],
+    "testDocs": ["Fiction", "Lorem Ipsum", "Who knows the whole words....", [3, 4]],
     "seedDocs": {
-      "doc2": ["DAdams", "Staples.json", "Staple Foods", "These are classes of group...", ["Product Owner", "Project Manager", "Team Lead"]],
-      "doc3": ["CRSalt", "Techie.txt", "Life of a developer", "We can\"t stand bugs, we write and kill...", ["Project Manager", "Team Lead", "Senior Dev"]],
-      "doc4": ["DAdams", "Clothes.doc", "Winter is coming", "John Snow likes to say, winter is coming...", ["Team Lead"]],
-      "doc5": ["ACside", "API.txt", "Value for money", "I have money, I want value for it...", ["Project Manager", "Team Lead", "Senior Dev", "Mid Dev", "Trainee", "Product Owner"]],
-      "doc6": ["MBridge", "Hardware.jsx", "Memory, Processing and Crunching", "I have no Idea what an IC Chip does...", ["Team Lead", "Mid Dev", "Trainee"]]
+      "doc2": ["Foods", "Staple Foods", "These are classes of group...", 113, 203, [3, 4]],
+      "doc3": ["Technology", "Life of a developer", "We can\"t stand bugs, we write and kill...", 113, 203, [3]],
+      "doc4": ["Money", "Value for money", "I have money, I want value for it...", 113, 204, [3, 4]]
     }
   }
+
 }

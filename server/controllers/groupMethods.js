@@ -118,9 +118,11 @@
         });
     },
 
+
+
     retrieveData: function(search) {
       var query = Group.findOne(search)
-        .populate('roles');
+        .populate('roles users');
       return cm.gFind('Groups', query);
     }
 

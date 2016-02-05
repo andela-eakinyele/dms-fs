@@ -1,10 +1,10 @@
 (function() {
   'use strict';
-  var initSpec = require('./initSpec');
-  var roleSpec = require('./roleSpec');
-  var userSpec = require('./userSpec');
-  var docSpec = require('./docSpec');
-  var adminSpec = require('./adminSpec');
+  var initSpec = require('./init.spec');
+  var roleSpec = require('./role.spec');
+  var userSpec = require('./user.spec');
+  var docSpec = require('./doc.spec');
+  var adminSpec = require('./admin.spec');
   var groupSpec = require('./group.spec');
 
   var apiTest = require('./specVar');
@@ -14,12 +14,13 @@
       apiTest.seed.deleteModels(done);
     });
 
+
     initSpec();
     groupSpec();
-    // roleSpec();
+    roleSpec();
     userSpec();
-    // docSpec();
-    // adminSpec();
+    docSpec();
+    adminSpec();
 
   });
 })();
