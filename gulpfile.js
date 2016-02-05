@@ -133,7 +133,7 @@
           assert: require('assert')
         }
       }))
-      .once('error', (err) => {
+      .once('error', function(err) {
         gutil.log(err);
         process.exit(1);
       })
@@ -141,7 +141,7 @@
       .pipe(cover.format(
         ['lcov', 'html', 'json']))
       .pipe(gulp.dest('./reports'))
-      .once('end', () => {
+      .once('end', function() {
         process.exit();
       });
   });
