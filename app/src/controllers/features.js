@@ -1,8 +1,8 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('featCtrl', ['$mdMedia', '$scope', 'Utils',
-      function($mdMedia, $scope, Utils) {
+    .controller('featCtrl', ['$mdMedia', '$scope',
+      function($mdMedia, $scope) {
 
         $scope.init = function() {
           console.log('test');

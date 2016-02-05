@@ -3,7 +3,7 @@
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$scope', '$mdMedia',
       '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      function($scope, $mdMedia, $mdSidenav, $timeout, Utils, Docs) {
+      function($scope, $mdMedia, $mdSidenav, $timeout, Utils) {
 
         $scope.viewing = false;
 

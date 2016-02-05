@@ -45,7 +45,7 @@
 
   // generate lint report
   gulp.task('lint', function() {
-    return gulp.src(['./app/**/*.js', './index.js', +
+    return gulp.src(['./app/**/*.js', './index.js',
         './server/**/*.js', './tests/**/*.js'
       ])
       .pipe(jshint())

@@ -1,9 +1,8 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('tableCtrl', ['$scope', '$mdMedia',
-      '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      function($scope, $mdMedia, $mdSidenav, $timeout, Utils, Docs) {
+    .controller('tableCtrl', ['$scope',
+      function($scope) {
 
         $scope.viewing = false;
 
