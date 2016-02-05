@@ -140,7 +140,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              token.push(response)
+              token.push(response);
               assert(response.token, 'Token not generated');
               assert.equal(typeof response.expires, 'number');
               assert.equal(response.user.username, user.username);
