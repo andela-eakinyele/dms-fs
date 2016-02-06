@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var apiTest = require('./specVar');
+  var apiTest = require('./specVar')();
   var agent = apiTest.agent;
 
   module.exports = function() {
