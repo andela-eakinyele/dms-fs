@@ -12,7 +12,7 @@
       var query = Group.find({
         title: req.body.title
       });
-      req.body.users = req.body.id || '';
+      req.body.users = [req.body.id] || [];
 
       var query2 = { // query for user data
         _id: req.body.id
@@ -23,7 +23,7 @@
           if (result.status === 201) {
             var query3 = Role.find({
               title: 'Admin',
-              groupId: result.data._id
+              groupId: [result.data._id]
             });
             // create Admin role for new group
             cm.gCreate('Roles', {
