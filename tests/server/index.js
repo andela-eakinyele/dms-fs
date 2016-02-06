@@ -14,7 +14,6 @@
       apiTest.seed.deleteModels(done);
     });
 
-
     initSpec();
     groupSpec();
     roleSpec();

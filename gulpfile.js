@@ -173,7 +173,7 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-  gulp.task('codeclimate', function() {
+  gulp.task('codeclimate', ['test:bend'], function() {
     return gulp
       .src(['./reports/coverage.lcov'], {
         read: false
@@ -183,7 +183,7 @@
       }));
   });
 
-  gulp.task('test', ['test:bend', 'codeclimate']);
+  gulp.task('test', ['codeclimate']);
   // // var envOptions = {
   //  //   string: 'env',
   //  //   default: {

@@ -80,7 +80,7 @@
           });
       });
 
-      it('- Should  rollback roles for invalid group', function(done) {
+      it('- Should rollback roles for invalid group', function(done) {
         agent
           .post('/api/roles')
           .type('json')

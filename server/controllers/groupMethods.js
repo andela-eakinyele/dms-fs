@@ -28,8 +28,8 @@
             // create Admin role for new group
             cm.gCreate('Roles', {
                 title: 'Admin',
-                groupId: result.data._id,
-                users: req.body.id || ''
+                groupId: [result.data._id],
+                users: [req.body.id] || []
               }, Role, query3)
               .then(function(resRole) {
                 // update group data with role id

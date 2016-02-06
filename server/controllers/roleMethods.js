@@ -27,7 +27,7 @@
       // query for existing role
       var query = Role.find({
         title: req.body.title,
-        groupId: req.body.groupId
+        groupId: [req.body.groupId]
       });
       // create role or return existing role
       cm.gCreate('Roles', req.body, Role, query)
