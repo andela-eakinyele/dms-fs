@@ -17,9 +17,6 @@
             'message': 'Welcome to the Document Management System'
           }, done);
       });
-
-
-
     });
 
   };

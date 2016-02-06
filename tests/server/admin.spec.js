@@ -6,7 +6,6 @@
   var _ = require('lodash');
 
   var admin = require('./../../server/config/secret.js')().testAd;
-  console.log(admin);
   var userSeed = apiTest.testdata.users;
 
   module.exports = function() {
