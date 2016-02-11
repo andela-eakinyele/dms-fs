@@ -19,7 +19,10 @@
     });
   });
 
+
   router.post('/users/login', auth.login);
+  router.get('/session', validate.session);
+
   router.post('/users', validate.adminUser, userRoute.create);
 
 
@@ -45,7 +48,10 @@
   router.put('/documents/:id', docRoute.update);
 
   router.get('/roles', roleRoute.all);
-  router.get('/roles/:id', roleRoute.get);
+  router.route('/roles/:id')
+    .put(roleRoute.update)
+    .get(roleRoute.get);
+
   router.get('/roles/:id/documents', roleRoute.getDocsByRole);
 
   router.get('/users/:id/documents', docRoute.getDocsById);
@@ -65,7 +71,7 @@
   router.all('/*', validate.authorize);
 
   router.route('/roles')
-    .post(roleRoute.create);
+    .post(roleRoute.bulkCreate);
 
   router.route('/roles/:id')
     .put(roleRoute.update)

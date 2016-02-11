@@ -18,6 +18,7 @@
     };
   };
 
+
   var validateDB = function(username, password, cb) {
     var query = {
       'username': username,
@@ -58,7 +59,10 @@
           }
         });
       }
-    }
+    },
+
+    getToken: getToken
+
   };
 
   module.exports = auth;
