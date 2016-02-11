@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar');
+  var apiTest = require('./specVar')();
   var agent = apiTest.agent;
   var assert = require('assert');
   var _ = require('lodash');
@@ -213,7 +213,7 @@
               seedGroupdata = groups;
               groupIds = _.pluck(groups, '_id');
               // update users with group id
-              userData = _.map(userData, (a, index) => {
+              userData = _.map(userData, function(a, index) {
                 a.groupId.push(groupIds[index % 2]);
                 return a;
               });

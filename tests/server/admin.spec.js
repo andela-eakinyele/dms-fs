@@ -1,12 +1,11 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar');
+  var apiTest = require('./specVar')();
   var agent = apiTest.agent;
   var assert = require('assert');
   var _ = require('lodash');
 
   var admin = require('./../../server/config/secret.js')().testAd;
-  console.log(admin);
   var userSeed = apiTest.testdata.users;
 
   module.exports = function() {

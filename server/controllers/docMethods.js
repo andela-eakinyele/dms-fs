@@ -10,7 +10,7 @@
     // query for document
     var queryDoc = Doc.findOne({
       _id: id,
-      groupId: groupId
+      groupId: [groupId]
     });
     // query for user access
     var queryUser = User.findOne({

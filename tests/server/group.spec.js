@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar');
+  var apiTest = require('./specVar')();
   var agent = apiTest.agent;
   var assert = require('assert');
   var _ = require('lodash');
@@ -71,6 +71,7 @@
               .send(groupData)
               .expect(200)
               .end(function(err, res) {
+                console.log(err);
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
                 testGroup = response.data;

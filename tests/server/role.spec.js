@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var _ = require('lodash');
-  var apiTest = require('./specVar');
+  var apiTest = require('./specVar')();
   var assert = require('assert');
   var agent = apiTest.agent;
   var roleSeed = apiTest.testdata.roles;
@@ -80,7 +80,7 @@
           });
       });
 
-      it('- Should  rollback roles for invalid group', function(done) {
+      it('- Should rollback roles for invalid group', function(done) {
         agent
           .post('/api/roles')
           .type('json')

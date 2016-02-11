@@ -2,9 +2,9 @@
   "name": "dms-fs",
   "version": "1.0.0",
   "description": "Document management system",
-  "main": "app/server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "node index.js \n& gulp test",
+    "test": "gulp test",
     "start": "node index.js"
   },
   "repository": {
