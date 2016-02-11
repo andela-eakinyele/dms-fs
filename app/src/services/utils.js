@@ -35,7 +35,7 @@
       };
 
 
-      this.custom = function(ev, title, action, tmpl, cb) {
+      this.custom = function(ev, title, action, data, tmpl, cb) {
 
         $mdDialog.show({
             controller: DialogController,
@@ -48,6 +48,7 @@
           .then(function(answer) {
             cb(answer);
           }, function() {
+            cb('No Action');
             console.log('Error in Dialog');
           });
 
@@ -55,6 +56,7 @@
 
           $scope.title = title;
           $scope.action = action;
+          $scope.data = data;
 
           $scope.hide = function() {
             $mdDialog.hide();

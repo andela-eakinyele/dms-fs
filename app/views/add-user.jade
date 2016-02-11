@@ -33,9 +33,3 @@ div.signup(layout="column" layout-padding layout-align="center center")
           div(ng-messages="registerForm.npassword.$error" ng-show="registerForm.npassword.$dirty")
             div(ng-message="required") Password is required
             div(ng-message="minlength") Password must be at Least Six Characters
-      
-    md-button.md-primary.md-raised(ng-disabled="registerForm.$invalid" type="submit") Submit 
-  div.redirect(layout layout-align="center center")
-    span Existing User? 
-    md-button.md-primary.md-raised(ui-sref="home.login") Login
-    md-button.md-warn.md-raised(ui-sref="home.features") Cancel

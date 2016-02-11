@@ -201,5 +201,5 @@
   ]);
 
 
-  gulp.task('default', ['nodemon', 'watch']);
+  gulp.task('default', ['nodemon', 'watch', 'build']);
 })();

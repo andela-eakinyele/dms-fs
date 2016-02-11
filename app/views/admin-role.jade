@@ -8,27 +8,24 @@ div.addrole(layout="column" layout-padding ng-init="loadRoles()")
           md-icon(md-font-set="fa fa-minus")
         md-button.md-accent(ng-click="increase()")
           md-icon(md-font-set="fa fa-plus")
-      md-button.md-accent(ng-click="create($event)")
+      md-button.md-accent(ng-click="create($event)" ng-disabled="disableCreateButton(newRoles)")
         span Create
       md-button(ng-click="cancelAdd()")
-        span Cancel
+        span Clear
   md-content(layout="row" layout-wrap layout-margin)
     md-input-container(ng-repeat="i in range(num) track by $index" flex="45")
       label {{$index +1}} 
       md-icon(md-font-set="fa fa-dot-circle-o fa-2x")
       input(type="text" ng-model="newRoles[$index]")
-  span {{newErr}}
   div.viewheader(layout="row" layout-padding)
     div(flex)
       h3.md-subheadline Existing Roles
     div.no-padding(layout="row") 
-      md-button.md-accent(ng-click="inc()")
-        span Edit
-      md-button.md-accent(ng-click="")
+      md-button.md-accent(ng-click="deleteRoles($event)")
         span Delete
       md-button(ng-click="cancelEdit()")
-        span Cancel
+        span Clear
   md-content(layout="row" layout-wrap layout-padding)
-    md-checkbox(ng-checked="editRole[$index].checked" ng-model="editRole[$index]" aria-label="New Group" ng-repeat="role in roles" flex="30" ng-disabled="role.title===\"Admin\"") {{role.title}} [{{role.users.length}} Users]
+    md-checkbox(ng-checked="editRoles.indexOf(role) > -1" aria-label="New Group" ng-repeat="role in roles" flex="30" ng-disabled="role.title===\"Admin\"" ng-click="toggle(role, editRoles)") {{role.title}} [{{role.users.length}} Users]
 
   

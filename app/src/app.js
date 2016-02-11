@@ -26,7 +26,7 @@
   require('./controllers/dashboard');
   require('./controllers/table');
   require('./controllers/group');
-  require('./controllers/admin');
+  require('./controllers/admin-role');
 
 
   window.app = angular.module('prodocs', [
@@ -207,8 +207,8 @@
             url: '/admin/roles',
             views: {
               'add@dashboard': {
-                templateUrl: 'views/add-role.html',
-                controller: 'AdminCtrl'
+                templateUrl: 'views/admin-role.html',
+                controller: 'AdminRoleCtrl'
               },
             }
           })

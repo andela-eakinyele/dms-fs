@@ -44,16 +44,16 @@
       cm.gCreate('Users',
           req.body, User, query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
     get: function(req, res) {
       var query = User.findOne({
           _id: req.params.id,
-          groupId: req.query.groupId
+          groupId: req.headers.groupid
         })
         .select('username email roles name groupId')
         .populate('roles')
@@ -63,9 +63,9 @@
         });
       cm.gGetOne('Users', query, req.params.id)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -74,23 +74,23 @@
         req.body, {
           new: true
         });
-
-      superAdmin(req.headers.userid).then(function(result) {
-        if (result) {
-          cm.gUpdate('Users', req.params.id, query2)
-            .then(function(result) {
-              res.status(result.status).json(result);
-            }).catch(function(err) {
-              res.status(err.status).json(err);
+      superAdmin(req.params.id, req.headers.userid)
+        .then(function(result) {
+          if (result) {
+            cm.gUpdate('Users', req.params.id, query2)
+              .then(function(result) {
+                res.status(result.status).json(result.data);
+              }).catch(function(err) {
+                res.status(err.status).json(err.error);
+              });
+          } else {
+            res.status(403).json({
+              'status': 403,
+              'message': 'Not authorized to update user',
+              'data': []
             });
-        } else {
-          res.status(403).json({
-            'status': 403,
-            'message': 'Not authorized to update user',
-            'data': []
-          });
-        }
-      });
+          }
+        });
     },
 
     all: function(req, res) {
@@ -107,9 +107,9 @@
       }
       cm.gGetAll('Users', query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -117,16 +117,21 @@
       var query = User.findByIdAndRemove(req.params.id);
       cm.gDelete('Users', query, req.params.id)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
+
     retrieveData: function(search) {
       var query = User.findOne(search)
+        .select('username name email firstname lastname groupId roles')
         .populate('roles')
-        .select('username roles name email firstname lastname groupId');
+        .populate({
+          path: 'groupId',
+          select: 'users roles title _id'
+        });
       return cm.gFind('Users', query);
     }
 

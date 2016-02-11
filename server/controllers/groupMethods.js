@@ -9,13 +9,15 @@
 
   var group = {
     create: function(req, res) {
+      console.log(req.body);
+
       var query = Group.find({
         title: req.body.title
       });
-      req.body.users = [req.body.id] || [];
+      req.body.users = [req.body.userid] || [];
 
       var query2 = { // query for user data
-        _id: req.body.id
+        _id: req.body.userid
       };
       // create a new group
       cm.gCreate('Groups', req.body, Group, query)
@@ -29,7 +31,7 @@
             cm.gCreate('Roles', {
                 title: 'Admin',
                 groupId: [result.data._id],
-                users: [req.body.id] || []
+                users: [req.body.userid] || []
               }, Role, query3)
               .then(function(resRole) {
                 // update group data with role id
@@ -40,18 +42,19 @@
                 });
                 cm.gUpdate('Groups', result.data._id, query4)
                   .then(function(newData) {
+                    newData.passphrase = null;
                     // retrieve user and update group, role with admin for group
                     user.retrieveData(query2).then(function(resUser) {
                       resUser.roles.push(resRole.data._id);
                       resUser.groupId.push(result.data._id);
-                      var query5 = User.findByIdAndUpdate(req.body.id,
+                      var query5 = User.findByIdAndUpdate(req.body.userid,
                         resUser, {
                           new: true
                         });
-                      cm.gUpdate('Users', req.body.id, query5)
+                      cm.gUpdate('Users', req.body.userid, query5)
                         .then(function() {
                           // respond with new group details
-                          res.status(newData.status).json(newData);
+                          res.status(newData.status).json(newData.data);
                         }).catch(function(err) { // error with update user
                           res.status(err.status).json(err);
                         });
@@ -76,9 +79,10 @@
       var query = Group.find({});
       cm.gGetAll('Groups', query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          console.log(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -88,9 +92,10 @@
       });
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
-          res.status(result.status).json(result);
+          result.data.passphrase = null;
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -102,9 +107,9 @@
         });
       cm.gUpdate('Groups', req.params.id, query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -114,7 +119,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 

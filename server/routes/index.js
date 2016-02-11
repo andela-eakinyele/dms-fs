@@ -70,8 +70,8 @@
   // Routes that can be accessed only by authenticated and authorized users
   router.all('/*', validate.authorize);
 
-  router.route('/roles')
-    .post(roleRoute.bulkCreate);
+  router.post('/roles', roleRoute.bulkCreate);
+  router.post('/roles/delete', roleRoute.bulkDelete);
 
   router.route('/roles/:id')
     .put(roleRoute.update)

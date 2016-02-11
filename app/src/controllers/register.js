@@ -2,40 +2,40 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('SignupCtrl', ['$rootScope', '$scope', '$state',
-      'Users', 'Groups', 'Auth',
-      function($rootScope, $scope, $state, Users, Groups, Auth) {
+      'Users', 'Auth',
+      function($rootScope, $scope, $state, Users, Auth) {
 
         $scope.init = function() {
 
-          $scope.signupErr = 'Start up';
+          $scope.signupErr = 'Please fill in your details below';
           $scope.signform = {};
-          $scope.signupErr = '';
-          $scope.projects = Groups.query();
-        };
-
-        $scope.getRoles = function() {
-          var title = $scope.signform.projectTitle;
-          var pId = window._.findKey($scope.projects, ['_id', title]);
-          console.log(title, pId, $scope.projects[pId].roles);
-          $scope.roles = $scope.projects[pId].roles;
+          // $scope.signform.name = {};
         };
 
         $scope.createUser = function() {
           console.log($scope.signform);
-          Users.save($scope.signform, function(user) {
+          Users.save($scope.signform, function() {
             $scope.isRegistered = true;
             Users.login({
-              username: user.username,
-              password: user.password
+              username: $scope.signform.username,
+              password: $scope.signform.password
             }, function(err, res) {
+              console.log(res);
               if (err) {
                 $state.go('loginerror');
               } else {
-                Auth.setToken(res.token);
-                $rootScope.activeUser = res;
-                $state.go('dashboard', {
-                  projectId: user.projectId
-                });
+                Auth.setToken(JSON.stringify(res));
+                $rootScope.activeUser = res.user;
+                if ($rootScope.activeUser.groupId.length > 0) {
+                  $state.go('dashboard', {
+                    userId: res.user._id,
+                    groupId: res.user.groupId[0]
+                  });
+                } else {
+                  $state.go('home.group', {
+                    id: res.user._id
+                  });
+                }
               }
             });
           }, function(err) {
