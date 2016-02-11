@@ -2,12 +2,12 @@
   'use strict';
   var jwt = require('jwt-simple');
   var _ = require('lodash');
+  var auth = require('./auth');
   var userFunc = require('./../controllers').userFunc;
   var groupFunc = require('./../controllers').groupFunc;
 
-
-  var authenticate = function(req, res, next) {
-    var token = req.headers.access_token;
+  exports.session = function(req, res) {
+    var token = req.headers.access_token || req.params.token;
     if (token) {
       try {
         var decoded = jwt.decode(token,
@@ -15,7 +15,50 @@
         if (decoded.exp <= Date.now()) {
           res.status(400).json({ // expired token
             'status': 400,
-            'message': 'Token Expired, redirect to login',
+            'message': 'Token/Session Expired, redirect to login',
+            'error': 'Token expired'
+          });
+          return;
+        } else { // token is valid
+          var query = {
+            _id: parseInt(req.headers.userid),
+          };
+          // retrieve user details
+          userFunc.retrieveData(query).then(function(user) {
+            res.json(auth.getToken(user));
+          }).catch(function(err) {
+            res.status(err.status).json(err.error);
+          });
+        }
+
+      } catch (err) { //error validating token
+        res.status(500).json({
+          'status': false,
+          'message': 'Token not validated',
+          'error': err
+        });
+      }
+    } else { // invalid token
+      res.status(400).json({
+        'status': 400,
+        'message': 'Invalid Token or Key'
+      });
+      return;
+    }
+
+  };
+
+
+  var authenticate = function(req, res, next) {
+    var token = req.headers.access_token || req.params.token;
+    if (token) {
+      try {
+        var decoded = jwt.decode(token,
+          require('./../config/secret.js')().encode);
+        if (decoded.exp <= Date.now()) {
+          res.status(400).json({ // expired token
+            'status': 400,
+            'message': 'Token/Session Expired, redirect to login',
             'error': 'Token expired'
           });
           return;
@@ -53,6 +96,7 @@
         });
         // check for admin role
         if (admin.length) {
+          console.log('Sure Amin');
           next();
         } else { // user found not admin role for group
           res.status(403).json({
@@ -144,14 +188,12 @@
     var query = {
       _id: req.params.id
     };
-
     groupFunc.retrieveData(query).then(function(group) {
       if (req.body.users) {
         var adminUser = _.map(group.roles, {
           title: 'Admin'
         }).users;
-        console.log(adminUser);
-        if (req.body.passphrase === group.passphrase ||
+        if (req.body.pass === group.passphrase ||
           req.headers.userid === adminUser) {
           next();
         } else {
