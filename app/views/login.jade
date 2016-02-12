@@ -1,7 +1,7 @@
 div.login(layout="column" layout-padding layout-align="center center")
   h3 LogIn
   span {{loginErr}}
-  form.login(name="loginForm" method="post" enctype="multipart/data" ng-submit="login()")
+  form.login(name="loginForm" method="post" autocomplete="off" ng-submit="login()")
     div(layout="column")
       md-input-container
         label(for="userData") Username or Email
@@ -19,4 +19,4 @@ div.login(layout="column" layout-padding layout-align="center center")
   div.redirect(layout layout-align="center center")
     span Not Registered ? 
     md-button.md-primary.md-raised(ui-sref="home.adduser") SignUp
-    md-button.md-warn.md-raised(ui-sref="home.features") Cancel
+    md-button.md-accent.md-raised(ui-sref="home.features") Cancel

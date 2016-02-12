@@ -1,49 +1,58 @@
-md-dialog(aria-label="Forms", ng-cloak="" class="forms")
+md-dialog(aria-label="Forms", ng-cloak class="forms" ng-init="init()")
   md-toolbar
     .md-toolbar-tools
-      h3 {{title}}
+      h3 User Information
       span(flex="")   
       md-dialog-actions(layout="row")
-        md-button.md-accent.md-raised(ng-click="answer(data.user)" aria-label="Action dialog" )
+        md-button.md-primary.md-raised(ng-click="update()" aria-label="Action dialog" )
           | Save
-        md-button.md-warn.md-raised(ng-click="answer(false)" aria-label="Close dialog" )
+        md-button.md-accent.md-raised(ng-click="cancel()" aria-label="Close dialog" )
           | Cancel
-  md-dialog-content
+  md-dialog-content(layout="column" layout-margin)
     div.update(layout="column" layout-padding layout-align="center center")
-      h3 Update your data
-      form(name="updateForm")
-        div(layout="column")
+      h3.md-header Update your data
+      form(name="updateForm" autocomplete="off")
+        div.updateUser(layout="column")
           div(layout="column" layout-gt-xs="row" flex-gt-xs)
             md-input-container.md-block(flex="50")
               label(for="firstname") First Name
-              input(type="text" ng-model="data.user.name.first" name="firstname" required)
+              md-icon(md-font-set="fa fa-info-circle")
+              input(type="text" ng-model="data.name.first" name="firstname" required)
               div(ng-messages="updateForm.firstname.$error" ng-show="updateForm.firstname.$dirty")
                 div(ng-message="required") Firstname is required
             md-input-container.md-block(flex="50")
               label(for="lastname") Last Name
-              input(type="text" ng-model="data.user.name.last" name="lastname" required)
+              md-icon(md-font-set="fa fa-info-circle")
+              input(type="text" ng-model="data.name.last" name="lastname" required)
               div(ng-messages="updateForm.lastname.$error" ng-show="updateForm.lastname.$dirty")
                 div(ng-message="required") Lastname is required
           md-input-container
             label(for="email") Email
-            input(type="email" ng-model="data.user.email" name="email" required)
+            md-icon(md-font-set="fa fa-envelope")
+            input(type="email" ng-model="data.email" name="email" required)
             div(ng-messages="updateForm.email.$error" ng-show="updateForm.email.$dirty")
               div(ng-message="required") email is required
               div(ng-message="email") Invalid email address
           div.options(layout="column" layout-gt-xs="row" flex-gt-xs)
             md-input-container.md-block(flex="50")
               label(for="username") Username
-              input(type="text" name="username" ng-model="data.user.username" required)
+              md-icon(md-font-set="fa fa-user")
+              input(type="text" name="username" ng-model="data.username" required)
               div(ng-messages="updateForm.username.$error" ng-show="updateForm.username.$dirty")
                 div(ng-message="required") Username is required
             md-divider
             md-input-container.md-block(flex="50")
               label(for="npassword") Password
-              input(type="password" name="npassword" ng-model="data.user.password" ng-minlength="6" required)
+              md-icon(md-font-set="fa fa-key")
+              input(type="password" name="npassword" ng-model="data.password" ng-minlength="6" required)
               div(ng-messages="updateForm.npassword.$error" ng-show="updateForm.npassword.$dirty")
                 div(ng-message="required") Password is required
                 div(ng-message="minlength") Password must be at Least Six Characters
-            md-input-container(flex="40")
-              label(for="role") Role
-              md-select(name="role" ng-model="data.user.roles" class="select" aria-label="update.role" ng-disabled="userRole.length <= 0")
-                md-option(ng-value="role._id" ng-repeat="role in data.grouproles") {{role.title}}
+    md-divider
+    div.update(layout="column" layout-align="start center")
+      h3.md-header Group List
+      md-list
+        md-list-item.md-3-line(ng-repeat="group in data.groupId")
+          div.md-list-item-text(layout="column")
+            h3 {{group.title}}
+            p {{group.description}}

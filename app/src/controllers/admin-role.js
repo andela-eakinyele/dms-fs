@@ -1,8 +1,9 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('AdminRoleCtrl', ['$rootScope', '$scope', 'Utils', 'Roles',
-      function($rootScope, $scope, Utils, Roles) {
+    .controller('AdminRoleCtrl', ['$rootScope', '$scope',
+      '$stateParams', 'Utils', 'Roles', 'Groups',
+      function($rootScope, $scope, $stateParams, Utils, Roles, Groups) {
 
         $scope.num = 0;
         $scope.role = [];
@@ -80,8 +81,8 @@
             if (err) {
               console.log(err);
             } else {
-              $scope.editRoles = [];
               $scope.loadRoles();
+              $scope.editRoles = [];
               Utils.showAlert(ev, 'Delete', 'Roles successfully deleted');
             }
           });

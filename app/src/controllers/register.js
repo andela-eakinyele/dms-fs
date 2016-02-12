@@ -39,8 +39,11 @@
               }
             });
           }, function(err) {
-            console.log(err, 'Plice');
-            $scope.signupErr = 'Error creating User';
+            if (err.status === 409) {
+              $scope.signupErr = 'Username/Email Already Exists';
+            } else {
+              $scope.signupErr = 'Error creating User';
+            }
           });
         };
 

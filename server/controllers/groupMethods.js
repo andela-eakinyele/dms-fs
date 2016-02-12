@@ -9,7 +9,6 @@
 
   var group = {
     create: function(req, res) {
-      console.log(req.body);
 
       var query = Group.find({
         title: req.body.title
@@ -56,21 +55,30 @@
                           // respond with new group details
                           res.status(newData.status).json(newData.data);
                         }).catch(function(err) { // error with update user
+                          console.log(err);
                           res.status(err.status).json(err);
                         });
                     }).catch(function(err) { // error with retrieve user
+                      console.log(err);
+
                       res.status(err.status).json(err);
                     });
                   }).catch(function(err) { // error with update group
+                    console.log(err);
+
                     res.status(err.status).json(err);
                   });
               }).catch(function(err) { // error with create role
+                console.log(err);
+
                 res.status(err.status).json(err);
               });
           } else { // duplicate group or bad request
             res.status(result.status).json(result);
           }
         }).catch(function(err) { // error with create group
+          console.log(err);
+
           res.status(err.status).json(err);
         });
     },

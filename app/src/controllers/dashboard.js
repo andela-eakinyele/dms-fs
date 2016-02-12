@@ -3,26 +3,26 @@
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
       '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      'Groups', 'Users', 'Auth', 'Roles', '$mdDialog',
+      'Groups', 'Users', 'Auth', 'Roles', 'activeUser', 'activeGroup',
       function($rootScope, $scope, $mdMedia, $state, $stateParams,
         $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles,
-        $mdDialog) {
+        activeUser, activeGroup) {
 
         $scope.init = function() {
           $scope.updateForm = {};
           $scope.newDoc = {};
-          $scope.currentUser = $rootScope.activeUser;
-          $scope.currentGroup = $rootScope.group[0];
-          $rootScope.activeGroup = $rootScope.group[0];
+          $scope.currentUser = activeUser;
 
-          $scope.userRole = window._.filter($scope.currentUser.roles, {
-            title: 'Admin',
-            groupId: [$scope.currentGroup._id]
-          });
-
-          $scope.superAdmin = window._.filter($scope.currentUser.roles, {
+          $scope.superAdmin = window._.filter(activeUser.roles, {
             title: 'superAdmin'
           });
+
+          if (activeGroup) {
+            $scope.userRole = window._.filter(activeUser.roles, {
+              title: 'Admin',
+              groupId: [activeGroup._id]
+            });
+          }
 
           $scope.fabisOpen = false;
           $scope.tooltipVisible = false;
@@ -39,71 +39,10 @@
           }
         });
 
-        // update user modal
+        // Load Dialog with form template
         $scope.updateUserModal = function(ev) {
-          var data = {};
-          Roles.query({
-            groupid: $scope.currentGroup._id
-          }, function(role) {
-            data.grouproles = role;
-          });
-          Users.get({
-              id: $stateParams.id
-            }, function(user) {
-              data.user = user;
-              // Load Dialog with form template
-              Utils.custom(ev, 'Edit Your Profile', 'Save', data,
-                'views/update.html',
-                function(ans) {
-                  if (ans) {
-                    $scope.updateForm = ans;
-
-                    // Update user data  
-                    Users.update({
-                      id: $stateParams.id
-                    }, $scope.updateForm, function() {
-                      Utils.showAlert(ev, 'Updated User Profile',
-                        $scope.currentUser.username +
-                        ' \nsuccessfully updated');
-                    }, function() {
-                      Utils.showAlert(ev, 'Error Updating User',
-                        $scope.currentUser.username);
-                    });
-
-                    // User cancelled update form
-                  } else {
-                    $mdDialog.cancel();
-                  }
-                });
-            },
-            function() {
-              Utils.showAlert(ev, 'Error Retrieving User',
-                $scope.currentUser.username);
-            });
-        };
-
-        $scope.addModel = function() {
-
-        };
-
-        // save a new document
-        $scope.saveModel = function(ev, model, data) {
-          model.save(data, function(res) {
-            Utils.showAlert(ev, 'Successfully saved', res);
-          }, function() {
-            Utils.showAlert(ev, 'Error saving data');
-          });
-
-        };
-
-        // Role data
-        $scope.update = function(ev) {
-          Users.update($scope.updateForm, function(user) {
-            console.log(user);
-            Utils.showAlert(ev, 'Updated Document', user.username +
-              'successfully updated');
-          });
-
+          Utils.custom(ev,
+            'views/update.html', 'UserCtrl');
         };
 
         // delete a Document/Role/User
@@ -116,7 +55,7 @@
         // Load roles in a group
         $scope.loadRoles = function() {
           Roles.query({
-            groupid: $scope.currentGroup._id
+            groupid: $stateParams.groupid
           }, function(role) {
             $scope.roles = role;
           });
@@ -129,8 +68,8 @@
 
         // Log out user and delete token
         $scope.logout = function() {
-          $rootScope.activeUser = {};
-          $rootScope.group = {};
+          $rootScope.activeUser = null;
+          $rootScope.activeGroup = null;
           Auth.logout();
           $state.go('home.features');
         };
@@ -145,18 +84,8 @@
           }
           if (ev === 'Join') {
             $state.go('home.group', {
-              id: $rootScope.activeUser._id
+              id: activeUser._id
             });
-          }
-        };
-
-        // Update shared roles array
-        $scope.toggle = function(item, list) {
-          var role = list.indexOf(item);
-          if (role > -1) {
-            list.splice(role, 1);
-          } else {
-            list.push(item);
           }
         };
 
@@ -187,7 +116,6 @@
           'List Users', 'List Roles', 'Report'
         ];
 
-
         // Header menu
         $scope.menu = [{
           name: 'Join Group',
@@ -202,20 +130,6 @@
           icon: 'fa fa-sign-out fa-2x',
           click: 'logout'
         }];
-
-        // Super admin menu
-        $scope.adminMenu = {
-          name: 'Add User/Role',
-          icon: 'fa fa-user-plus fa-2x',
-          subMenu: [{
-            name: 'New Users',
-            icon: 'fa fa-user'
-          }, {
-            name: 'New Role',
-            icon: 'fa fa-briefcase'
-          }]
-        };
-
 
         $scope.init();
 

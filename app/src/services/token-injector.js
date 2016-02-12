@@ -6,22 +6,18 @@
         var tokenInjector = {
           request: function(config) {
             var xtoken = Token.get();
-
-            var userid = JSON.parse(xtoken) ? true : false;
-            var groupid = ($rootScope.activeGroup) ? true : false;
-
+            var userid, groupid;
             if (xtoken) {
+              userid = JSON.parse(xtoken) ? true : false;
+              groupid = ($rootScope.activeGroup) ? true : false;
               config.headers.access_token = JSON.parse(xtoken)['token'];
             }
             if (userid) {
               config.headers.userid = JSON.parse(xtoken).user._id;
             }
             if (groupid) {
-              console.log($rootScope.activeGroup);
-
               config.headers.groupid = $rootScope.activeGroup._id;
             }
-
             return config;
           }
         };

@@ -25,13 +25,21 @@
           };
           // retrieve user details
           userFunc.retrieveData(query).then(function(user) {
-            res.json(auth.getToken(user));
+            if (user) {
+              res.json(auth.getToken(user));
+            } else {
+              res.status(400).json({
+                'status': 400,
+                'message': 'User not found',
+                'error': 'User does not exist'
+              });
+            }
           }).catch(function(err) {
             res.status(err.status).json(err.error);
           });
         }
-
-      } catch (err) { //error validating token
+        //error validating token
+      } catch (err) {
         res.status(500).json({
           'status': false,
           'message': 'Token not validated',
@@ -41,7 +49,8 @@
     } else { // invalid token
       res.status(400).json({
         'status': 400,
-        'message': 'Invalid Token or Key'
+        'message': 'Invalid Token or Key',
+        'error': 'Invalid token'
       });
       return;
     }
@@ -75,7 +84,8 @@
     } else { // invalid token
       res.status(400).json({
         'status': 400,
-        'message': 'Invalid Token or Key'
+        'message': 'Invalid Token or Key',
+        'error': 'Invalid Token'
       });
       return;
     }
@@ -96,7 +106,6 @@
         });
         // check for admin role
         if (admin.length) {
-          console.log('Sure Amin');
           next();
         } else { // user found not admin role for group
           res.status(403).json({
@@ -146,7 +155,7 @@
         });
       }
     }).catch(function(err) {
-      res.json(err);
+      res.status(500).json(err);
     });
   };
 

@@ -1,21 +1,21 @@
-div.docForm(layout="column" layout-margin ng-init="loadRoles()") 
-  form(name="docForm" layout="column" method="post" enctype="multipart/data" ng-submit="saveDoc($event, Docs, newDoc)")
+div.docForm(layout="column" ng-init="loadRoles()") 
+  form(name="docForm" layout="column" method="post" autocomplete="off" ng-submit="saveDoc($event)")
     div(layout='row' flex layout-margin)
       div(layout="column" flex="70")
         md-toolbar
           .md-toolbar-tools.docheader
-            h3 {{newDoc.label}} - {{newDoc.title}}
+            h3 {{newDoc.label || "New Document"}} - {{newDoc.title}} 
             span(flex)
             md-button.md-primary.md-raised(aria-label="Save" type="submit" ng-disabled="docForm.$invalid")
               | Save
-            md-button.md-warn.md-raised(aria-label="Close dialog" ng-click="upState()")
+            md-button.md-accent.md-raised(aria-label="Close dialog" ng-click="upState()")
               | Cancel
        
         .formTitle
           div(layout="row" layout-margin)
             md-input-container(flex="30")
               label(for="label")
-              input(name="label" ng-model="newDoc.label" ng-maxlength="10" type="text" placeholder="Enter a label") 
+              input(name="label" ng-model="newDoc.label" ng-maxlength="20" type="text" placeholder="Enter a label") 
               div(ng-messages="docForm.label.$error" ng-show="docForm.label.$dirty")
                 div(ng-message="maxlength") Label Exceeds maximum character length
             md-input-container.md-block(flex="70")
@@ -32,5 +32,5 @@ div.docForm(layout="column" layout-margin ng-init="loadRoles()")
           .md-toolbar-tools
             h3 Share with Group
             span(flex="") 
-        .md-padding.Share
+        .md-padding.share
           md-checkbox(ng-repeat="role in roles" ng-click="toggle(role._id, newDoc.roles)" aria-label="Share Role") {{role.title}}

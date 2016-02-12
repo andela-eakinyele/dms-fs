@@ -53,10 +53,13 @@
     get: function(req, res) {
       var query = User.findOne({
           _id: req.params.id,
-          groupId: req.headers.groupid
+          groupId: req.headers.groupid || req.query.groupid
         })
         .select('username email roles name groupId')
-        .populate('roles')
+        .populate({
+          path: 'roles',
+          select: 'title _id groupId users'
+        })
         .populate({
           path: 'groupId',
           select: 'title description'
@@ -65,6 +68,7 @@
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
+          console.log(err);
           res.status(err.status).json(err.error);
         });
     },
@@ -130,7 +134,7 @@
         .populate('roles')
         .populate({
           path: 'groupId',
-          select: 'users roles title _id'
+          select: 'users title _id'
         });
       return cm.gFind('Users', query);
     }
