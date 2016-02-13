@@ -2,8 +2,8 @@ md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked
   md-toolbar
     div(layout="row" layout-margin)
       h3.md-toolbar-tools {{currentUser.username}} -
-      md-select(ng-model="activeGroup" class="select" aria-label="View Group" ng-selected="activeUser.groupId[0]")
-        md-option(ng-value="group" ng-repeat="gr in activeUser.groupId" placeholder="") {{gr.title}}
+      md-select(ng-model="activeGroup" ng-change="init()" class="select" aria-label="View Group")
+        md-option(ng-value="group" ng-repeat="gr in activeUser.groupId" placeholder="" ng-selected="activeUser.groupId[0]") {{gr.title}}
   md-content(layout-margin)
     div(layout="column" ng-if="superAdmin.length > 0 || userRole.length > 0")
       h3 Admin Menu
@@ -15,6 +15,6 @@ md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked
       md-divider
     div(layout="column") 
       h3 {{sideBarMenu[1].name}}
-      md-checkbox(ng-repeat="itemN in sideBarMenu[1].subMenu" ng-checked="true" ng-click="" aria-label="Shared Docs") {{itemN}}
+      md-checkbox(ng-repeat="itemN in sideBarMenu[1].subMenu" ng-click="" aria-label="Shared Docs") {{itemN}}
       md-divider
 

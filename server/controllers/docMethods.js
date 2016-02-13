@@ -40,6 +40,7 @@
         }).catch(function(errDoc) {
           cm.dberrors(reject, 'querying database', errDoc, 500);
         });
+
     });
 
   }
@@ -61,6 +62,7 @@
           // respond with new document details
           res.status(result.status).json(result.data);
         }).catch(function(err) {
+          console.log(err);
           res.status(err.status).json(err.error);
         });
 
@@ -69,13 +71,13 @@
     all: function(req, res) {
       var groupid = parseInt(req.headers.groupid);
       var query = Doc.find({})
-        .where('groupId')
-        .in([groupid])
+        .where('groupId').in([groupid])
+        .populate('groupId')
+        .populate('roles')
         .populate({
           path: 'ownerId',
-          select: 'username'
-        }).populate('roles')
-        .sort('dateCreated');
+          select: 'username name'
+        }).sort('dateCreated');
       if (req.params.limt) {
         query = query.limit(req.params.limit);
       }
@@ -93,7 +95,8 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status) {
+          if ((a[0].length && !a[0].status) ||
+            (a[2].data._id === a[1].data.ownerId[0])) {
             res.status(a[1].status).json(a[1].data);
           } else if (a[0].status) {
             res.status(a[0].status).json(a[0].data);
@@ -117,7 +120,8 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status) {
+          if ((a[0].length && !a[0].status) ||
+            (a[2].data._id === a[1].data.ownerId[0])) {
             req.body.ownerId = a[1].data.ownerId;
             req.body.lastModified = Date.now();
             var query = Doc.findByIdAndUpdate(req.params.id, req.body, {
@@ -146,22 +150,24 @@
 
     getDocsById: function(req, res) {
       var ownerId = req.params.id;
-      Doc.getDocsByOwnerId(ownerId).then(function(data) {
-        if (data.length) {
-          res.status(200).json({
-            'status': 200,
-            'message': 'Document for id ' + req.params.id,
-            'data': data
-          });
-        } else {
-          res.status(200).json({
-            'message': 'No Document exist for id ' + req.params.id,
-            'data': []
-          });
-        }
-      }).catch(function(err) {
-        cm.resdberrors(res, 'querying database', err);
-      });
+      var groupid = req.headers.groupid;
+      Doc.getDocsByOwnerId(ownerId, groupid)
+        .then(function(data) {
+          res.status(200).json(data);
+        }).catch(function(err) {
+          cm.resdberrors(res, 'querying database', err);
+        });
+    },
+
+    getDocsByRole: function(req, res) {
+      var ownerId = req.params.id;
+      var groupid = req.headers.groupid;
+      Doc.getDocsByOwnerId(ownerId, groupid)
+        .then(function(data) {
+          res.status(200).json(data);
+        }).catch(function(err) {
+          cm.resdberrors(res, 'querying database', err);
+        });
     },
 
     getDocsByDate: function(req, res) {
@@ -190,13 +196,11 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status &&
-            a[1].data.roles.length === 1 &&
+          if (!a[0].status &&
+            a[1].data.roles.length === 0 &&
             a[2].data._id === a[1].data.ownerId[0] ||
 
-            (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1 &&
-
-              _.pluck(a[2].data.roles, 'groupId') === req.headers.groupid)) {
+            (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1)) {
 
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)

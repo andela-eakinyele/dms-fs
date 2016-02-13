@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Docs', ['$resource', function docFactory($resource) {
-      return $resource('/api/documents/:id', {
+    .factory('Docs', ['$resource', '$http', function docFactory($resource, $http) {
+      var obj = $resource('/api/documents/:id', {
         id: '@id'
       }, {
         update: {
@@ -13,5 +13,15 @@
       }, {
         stripTrailingSlashes: false
       });
+
+      obj.getUserDocs = function(id, cb) {
+        return $http.get('/api/users/' + id + '/documents')
+          .then(function(data) {
+            cb(null, data);
+          }, function(err) {
+            cb(err, null);
+          });
+      };
+      return obj;
     }]);
 })();

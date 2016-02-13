@@ -58,15 +58,20 @@
     });
   };
 
-  documentSchema.statics.getDocsByOwnerId = function(ownerId) {
+  documentSchema.statics.getDocsByOwnerId = function(ownerId, groupid) {
     var query = this.find({
-      ownerId: ownerId
-    }).populate({
-      path: 'ownerId',
-      select: 'username'
-    }).sort('dateCreated');
+        ownerId: ownerId
+      })
+      .where('groupId').in([groupid])
+      .populate('groupId')
+      .populate('roles')
+      .populate({
+        path: 'ownerId',
+        select: 'username name'
+      }).sort('dateCreated');
     return new Promise(function(resolve, reject) {
       query.then(function(docs) {
+          console.log(docs);
           resolve(docs);
         },
         function(err) {
@@ -97,11 +102,12 @@
     var doc = this;
     return new Promise(function(resolve, reject) {
       var query = doc.find({
-        groupId: groupId
-      }).where('roles').in([roleId]).populate({
-        path: 'roles',
-        select: 'title'
-      }).sort('dateCreated');
+          groupId: groupId
+        }).where('roles').in([roleId])
+        .populate({
+          path: 'roles',
+          select: 'title'
+        }).sort('dateCreated');
       query.then(function(docs) {
           resolve(docs);
         },

@@ -1,0 +1,81 @@
+div(layout="column" layout-margin)
+  md-content(layout ="column" flex="100" layout-margin)
+
+    md-toolbar.table
+      .md-toolbar-tools.sectionTitle(layout="row")
+        span(flex) Group Documents - Access
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="init()")
+          md-icon(md-font-set="fa fa-refresh fa-2x") 
+          span Refresh
+
+
+    md-toolbar.table.alternate(ng-if="selectedDocs.length > 0")
+      .md-toolbar-tools.sectionTitle(layout="row")
+        span(flex) {{selectedDocs.length}} Selected
+        md-button.md-primary.md-raised(aria-label="View Selected")
+          md-icon(md-font-set="fa fa-external-link fa-2x") 
+          span View
+        md-button.md-warn.md-raised(aria-label="Delete Selected")
+          md-icon(md-font-set="fa fa-trash fa-2x") 
+          span Delete
+
+    md-content.listDocs(layout="column" layout-margin)
+      md-table-container
+        table.md-table(md-row-select="true" md-progress="promise")
+          thead.md-head(md-order="query.order")
+            tr.headerSection.md-row
+              th.md-column.md-checkbox-cell
+                md-checkbox(aria-label="Select Column" ng-click="selectAll()" role="checkbox")
+              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header.name}}
+          tbody.md-body
+            tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="accessDoc(doc)")
+              td.md-cell.md-checkbox-cell
+                md-checkbox(aria-label="Select Row" ng-click="toggle(doc._id, selectedDocs)" role="checkbox")
+              td.md-cell {{doc.label}}
+              td.md-cell(ui-sref="dashboard.doc.view({docId:doc._id})") {{doc.title}}
+              td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
+              td.md-cell {{getTime(doc.dateCreated).day}}
+              td.md-cell {{getTime(doc.lastModified).day}}
+              td.md-cell
+                md-icon(ng-if="doc.roles.length > 0" md-font-set="fa fa-group")
+              td.md-cell
+                md-menu
+                  md-button(aria-label="doc options" ng-click="openMenu($mdOpenMenu, $event)")
+                    md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
+                  md-menu-content(width="1")
+                    md-menu-item(ng-repeat="i in docMenu")
+                      md-button.md-primary(aria-label="i.name" ng-click="menuAction(i.click, doc._id)")
+                        md-icon(md-font-set="{{i.icon}}" md-menu-align-target) 
+                        span {{i.name}}
+
+
+  md-content(layout ="column" flex="100" layout-margin)
+
+    md-toolbar.table
+      .md-toolbar-tools.sectionTitle(layout="row")
+        span(flex) Group Documents - No Access
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="init()")
+          md-icon(md-font-set="fa fa-refresh fa-2x") 
+          span Refresh
+
+    md-content.listDocs(layout="column" layout-margin)
+      md-table-container
+        table.md-table(md-row-select="true" md-progress="promise")
+          thead.md-head(md-order="query.order")
+            tr.headerSection.md-row
+              th.md-column.md-checkbox-cell
+                md-checkbox(aria-label="Select Column" ng-click="selectAll()" role="checkbox")
+              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header.name}}
+          tbody.md-body
+            tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="!accessDoc(doc)")
+              td.md-cell -
+              td.md-cell {{doc.label}}
+              td.md-cell {{doc.title}}
+              td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
+              td.md-cell {{getTime(doc.dateCreated).day}}
+              td.md-cell {{getTime(doc.lastModified).day}}
+              td.md-cell 
+                md-icon(ng-if="doc.roles.length > 0" md-font-set="fa fa-group")
+              td.md-cell -
+
+        

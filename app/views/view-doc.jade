@@ -1,0 +1,19 @@
+md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="column" layout-margin)
+  div.head(layout="row" layout-padding)
+    h2 {{viewingDoc.title || msg}}
+    span(flex)
+    md-fab-speed-dial(md-direction="left" md-open="fabisOpen"  class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false")
+      md-fab-trigger
+        md-button(aria-label="menu" class="md-fab md-warn")
+          md-tooltip(md-direction="top" md-visible="tooltipVisible") Options
+          md-icon(md-font-set="fa fa-ellipsis-v fa-2x")
+      md-fab-actions
+        md-button.md-primary(aria-label="" class="md-fab md-raised md-mini")
+          md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
+        md-button.md-primary(aria-label="" class="md-fab md-raised md-mini")
+          md-icon(md-font-set="fa fa-trash fa-2x")
+  div.contentView
+    | {{viewingDoc.content}}
+  md-divider
+  div
+    span {{viewingDoc.label}} {{viewingDoc.dateCreated}}

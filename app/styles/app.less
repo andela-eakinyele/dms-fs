@@ -1,434 +1,468 @@
 html body {
-  font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
-  text-transform: none;
-  height: 100%;
-  /*background: linear-gradient( rgba(99, 73, 135, 0.9), rgba(99, 73, 135, 0.9));*/
-  /*   // background: linear-gradient( rgba(99, 73, 135, 0.9), rgba(99, 73, 135, 0.9)), 
+    font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
+    text-transform: none;
+    background: linear-gradient(rgba(223, 251, 251, 0.8), rgba(223, 251, 251, 0.5)), url('./../images/homeBckgrd.jpg');
+    /*background: linear-gradient( rgba(83, 77, 90, 0.9), rgba(208, 154, 154, 0.9));*/
+    /*   // background: linear-gradient( rgba(99, 73, 135, 0.9), rgba(99, 73, 135, 0.9)), 
    // url('./../images/homeBckgrd.jpg');*/
-  > div.main {
-    /*    background: linear-gradient( rgba(99, 73, 135, 0.9), rgba(99, 73, 135, 0.9)),
+    >div {
+        height: 100%;
+        /*    background: linear-gradient( rgba(99, 73, 135, 0.9), rgba(99, 73, 135, 0.9)),
     url('./../images/homeBckgrd.jpg');
 */
-    height: 100%;
-  }
+        > .main {
+            height: 95%;
+        }
+    }
+    >div.md-open-menu-container {
+        height: auto;
+    }
+}
+
+body > md-toolbar {
+    z-index: 3;
 }
 
 h1 h2 h3 h4 {
-  margin: 0;
-}
-
-md-toolbar {
-  font-size: 18px;
-}
-
-.md-toolbar-tools {
-  font-size: 18px;
-  height: 50px;
+    margin: 0;
 }
 
 #dashContent {
-  min-width: 600px;
+    min-width: 600px;
 }
 
 .md-button {
-  text-transform: none;
-  text-align: center;
-  margin: 0 8px 0 0;
-  &.md-raised:not([disabled]) {
-    font-size: 16px;
-  }
+    text-transform: none;
+    text-align: center;
+    margin: 0 8px 0 0;
+    &.md-raised:not([disabled]) {
+        font-size: 16px;
+    }
 }
 
 .overlay {
-  text-align: center;
-  >md-content {
-    background-color: #EFEFEF;
-    opacity: 0.9;
-  }
+    height: inherit;
+    text-align: center;
+    >md-content {
+        background-color: rgba(77, 208, 225, 0.9);
+    }
 }
 
 .extraView {
-  .md-button {
-    font-size: 1.2em;
-    width: 120px;
-  }
-  h3 {
-    color: orange;
-  }
+    .md-button {
+        font-size: 1.2em;
+        width: 120px;
+    }
+    h3 {
+        color: #540D88;
+        font-size: 24px;
+    }
 }
 
 .features {
-  margin-top: 100px;
-  h3 {
-    color: orange;
-    font-size: 24px;
-  }
-  span {
-    font-size: 16px;
-  }
-  .side-border {
-    border-right: 2px solid #50dfff;
-  }
-  .bottom {
-    border-bottom: 2px solid #50dfff;
-  }
+    margin-top: 100px;
+    h3 {
+        color: #540D88;
+        font-size: 20px;
+    }
+    span {
+        font-size: 16px;
+    }
+    .side-border {
+        border-right: 3px solid #3C626B;
+    }
+    .bottom {
+        border-bottom: 3px solid #3C626B;
+    }
 }
 
 .nextViews {
-  padding: 30px;
-  background-color: #EFEFEF;
-  border-radius: 50px 0 50px 0;
+    padding: 30px;
+    background-color: #EFEFEF;
+    border-radius: 50px 0 50px 0;
 }
 
 .signup {
-  width: 500px;
-  >form {
-    min-width: 400px;
-    font-size: 20px;
-    md-input-container {
-      color: #5D518E;
+    width: 500px;
+    >form {
+        min-width: 400px;
+        font-size: 20px;
+        md-input-container {
+            color: #5D518E;
+        }
+        .md-button {
+            width: 100%;
+            font-size: 1.1em;
+        }
     }
-    .md-button {
-      width: 100%;
-      font-size: 1.1em;
+    > span {
+        font-size: 16px;
     }
-  }
-  > span {
-    font-size: 16px;
-  }
 }
 
 .login {
-  width: 400px;
-  >form {
-    min-width: 300px;
-    font-size: 20px;
-    md-input-container {
-      color: #5D518E;
+    width: 400px;
+    >form {
+        min-width: 300px;
+        font-size: 20px;
+        md-input-container {
+            color: #5D518E;
+        }
+        .md-button {
+            width: 100%;
+        }
     }
-    .md-button {
-      width: 100%;
-    }
-  }
 }
 
 .options {
-  text-align: left;
+    text-align: left;
 }
 
 .redirect {
-  span {
-    font-size: 16px;
-  }
-  .md-button {
-    margin-left: 10px;
-  }
+    span {
+        font-size: 16px;
+    }
+    .md-button {
+        margin-left: 10px;
+    }
+}
+
+md-toolbar .md-toolbar-tools {
+    font-size: 18px;
 }
 
 md-toolbar .md-menu {
-  margin: 0;
+    margin: 0;
+}
+
+md-toolbar.table.alternate .md-toolbar-tools {
+    font-size: 16px;
+    color: #1e88e5;
+    background-color: #e3f2fd;
 }
 
 .header {
-  min-width: 550px;
-  height: 60px;
-  opacity: 0.9;
-  div {
-    > md-icon {
-      vertical-align: middle;
-      font-size: 24px;
+    background-color: #E1EDEF;
+    min-width: 550px;
+    height: 65px;
+    opacity: 0.9;
+    .md-button.md-icon-button {
+        padding: 0;
+    }
+    .right-border {
+        height: 80%;
+        border-right: 1px solid orange;
+    }
+    md-menu {
+        > .md-button {
+            width: 150px;
+            margin: 2px;
+            span {
+                color: white;
+                font-size: 16px;
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+div.right-border {
+    > button md-icon {
+        vertical-align: middle;
+        margin: auto;
+        background-repeat: no-repeat no-repeat;
+        height: inherit;
+        width: inherit;
+    }
+    > a md-icon {
+        vertical-align: middle;
+        margin: auto;
+        background-repeat: no-repeat no-repeat;
+        height: inherit;
+        width: inherit;
     }
     span {
-      color: white;
-      font-size: 1.1em;
-      margin-left: 5px;
+        color: #540D88;
+        vertical-align: middle;
+        font-size: 1.1em;
+        margin-left: 5px;
     }
-  }
-  .md-button.md-icon-button {
-    padding: 0;
-  }
-  .right-border {
-    height: 80%;
-    border-right: 1px solid #fff;
-  }
-  md-menu {
-    > .md-button {
-      width: 150px;
-      margin: 2px;
-      span {
-        color: white;
-        font-size: 16px;
-        margin-left: 10px;
-      }
-    }
-  }
 }
 
 .dashboard {
-  height: inherit;
-  > div {
-    height: inherit;
-    > div.sidenav {
-      height: inherit;
-      >md-sidenav {
-        background-color: #635577;
-      }
+    height: 100%;
+    > div {
+        height: 100%;
+        > div.sidenav {
+            >md-sidenav {}
+        }
     }
-  }
-  .sectionTitle {
-    h3 {
-      font-size: 1.4em;
-      font-weight: bold;
-      vertical-align: middle;
+    .sectionTitle {
+        h3 {
+            font-size: 1.4em;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        >.md-button {
+            width: 150px;
+            margin-right: 10px;
+            > md-icon {
+                vertical-align: middle;
+                font-size: 24px;
+            }
+        }
     }
-    >.md-button {
-      width: 150px;
-      > md-icon {
-        vertical-align: middle;
-        font-size: 24px;
-      }
-    }
-  }
-  .iconImage {
-    margin-right: 5px;
-    width: 20px;
-    height: 20px;
-  }
-  md-whiteframe {
-    > div.head {
-      width: 100%;
-    }
-  }
 }
 
 md-fab-speed-dial md-fab-trigger {
-  transition: all 0.3s ease-in-out;
-  transform: scale(1);
-}
-
-.listDocs {
-  table {
-    width: 100%;
-  }
-  .mdl-data-table {
-    th {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    tr {
-      font-size: 14px;
-    }
-    td.docMenu {
-      padding: 0;
-      text-align: left;
-      vertical-align: middle;
-    }
-  }
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
 }
 
 .sidenav {
-  md-content {
-    > div {
-      >h3 {
-        font-size: 18px;
-        color: indigo;
-        margin: 0;
-      }
-      md-checkbox {
-        font-size: 16px;
-        margin-top: 5px;
-      }
-      font-style: italic;
-      width: 100%;
-      padding: 0;
+    md-content {
+        > div {
+            >h3 {
+                font-size: 18px;
+                color: indigo;
+                margin: 0;
+            }
+            md-checkbox {
+                font-size: 16px;
+                margin-top: 5px;
+            }
+            font-style: italic;
+            width: 100%;
+            padding: 0;
+        }
     }
-  }
 }
 
 .btn-style {
-  margin: 0;
-  font-size: 16px;
-  text-align: left;
-  width: 100%;
-  padding: 10px 0 10px 15px;
-  text-transform: none;
+    margin: 0;
+    font-size: 16px;
+    text-align: left;
+    width: 100%;
+    padding: 10px 0 10px 15px;
+    text-transform: none;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 md-dialog {
-  > div {
-    min-width: 80%;
-    max-height: 80%;
-  }
+    > div {
+        min-width: 80%;
+        max-height: 80%;
+    }
 }
 
 md-dialog-actions {
-  >.md-button {
-    width: 100px;
-    span {
-      font-size: 16px;
+    >.md-button {
+        width: 100px;
+        span {
+            font-size: 16px;
+        }
     }
-  }
 }
 
 .docForm {
-  height: inherit;
-  min-width: 600px;
-  .formTitle {
-    border-bottom: 2px solid #000;
-    background-color: #ECECEC;
-    margin: 0;
-    padding: 0;
-    height: 54px;
-    vertical-align: middle;
-    >md-input-container {
-      .md-input {
-        text-align: center;
-        border: none;
-        color: red;
-        font-size: 20px;
-        font-weight: bold;
-      }
+    height: 100%;
+    min-width: 600px;
+    .formTitle {
+        border-bottom: 2px solid #000;
+        background-color: #ECECEC;
+        margin: 0;
+        padding: 0;
+        height: 54px;
+        vertical-align: middle;
+        >md-input-container {
+            .md-input {
+                text-align: center;
+                border: none;
+                color: red;
+                font-size: 20px;
+                font-weight: bold;
+            }
+        }
     }
-  }
-  .formContent {
-    min-height: 600px;
-    margin-top: 20px;
-    background-color: #ECECEC;
-    font-size: 24px;
-    md-input-container textarea.md-input {
-      color: black;
-      border: none;
+    .formContent {
+        min-height: 600px;
+        margin-top: 20px;
+        background-color: #ECECEC;
+        font-size: 24px;
+        md-input-container textarea.md-input {
+            color: black;
+            border: none;
+        }
     }
-  }
-  .docheader {
-    background-color: #B5A8C1;
-    font-size: 18px;
-  }
+    .docheader {
+        background-color: #e3f2fd;
+        font-size: 18px;
+    }
 }
 
 .group {
-  md-checkbox {
-    text-align: left;
-  }
-  span {
-    font-size: 16px;
-  }
-  > fieldset {
-    border: 2px solid orange;
-    > legend {
-      font-size: 18px;
+    md-checkbox {
+        text-align: left;
     }
-    >form {
-      min-width: 400px;
-      font-size: 20px;
-      md-input-container {
-        color: #5D518E;
-      }
+    span {
+        font-size: 16px;
     }
-  }
+    > fieldset {
+        border: 2px solid orange;
+        > legend {
+            font-size: 18px;
+        }
+        >form {
+            min-width: 400px;
+            font-size: 20px;
+            md-input-container {
+                color: #5D518E;
+            }
+        }
+    }
 }
 
 .adduser {
-  width: 80%;
-  margin: 0 auto;
+    width: 80%;
+    margin: 0 auto;
 }
 
 .update {
-  width: 100%;
-  background-color: ghostwhite;
-  margin: 0 auto;
-  >form {
-    min-width: 400px;
-    font-size: 20px;
-    md-input-container {
-      color: #5D518E;
-    }
-    .md-button {
-      width: 100%;
-    }
-  }
-  > span {
-    font-size: 16px;
-  }
-  .updateUser {
-    border-radius: 5px;
-  }
-  > h3 {
-    margin: 0;
-    text-align: center;
     width: 100%;
-    font-size: 20px;
-    border-bottom: 1px solid beige;
-    border-top: 1px solid beige;
-    background-color: #ECECEC;
-  }
-  md-list {
-    width: 100%;
-    md-list-item.md-3-line .md-list-item-text h3 {
-      font-size: 20px;
+    background-color: ghostwhite;
+    margin: 0 auto;
+    >form {
+        min-width: 400px;
+        font-size: 20px;
+        md-input-container {
+            color: #5D518E;
+        }
+        .md-button {
+            width: 100%;
+        }
     }
-  }
+    > span {
+        font-size: 16px;
+    }
+    .updateUser {
+        border-radius: 5px;
+    }
+    > h3 {
+        margin: 0;
+        text-align: center;
+        width: 100%;
+        font-size: 20px;
+        border-bottom: 1px solid beige;
+        border-top: 1px solid beige;
+        background-color: #ECECEC;
+    }
+    md-list {
+        width: 100%;
+        md-list-item.md-3-line .md-list-item-text h3 {
+            font-size: 20px;
+        }
+    }
 }
 
 .share {
-  background-color: #ECECEC;
+    background-color: #ECECEC;
+    span {
+        font-size: 18px;
+    }
 }
 
 .addrole {
-  width: 90%;
-  min-width: 500px;
-  min-height: 600px;
-  text-align: center;
-  margin: 0 auto;
-  >div {
-    margin-top: 20px;
-  }
-  background-color: #ECECEC;
-  > md-content {
-    >md-input-container {
-      width: 70%;
-      > .md-input {
-        font-size: 18px;
-      }
+    width: 90%;
+    min-width: 500px;
+    text-align: center;
+    margin: 0 auto;
+    >div {
+        margin-top: 20px;
     }
-  }
-  md-content md-checkbox {
-    text-align: left;
-    font-size: 1.4em;
-  }
+    background-color: #ECECEC;
+    > md-content {
+        >md-input-container {
+            width: 70%;
+            > .md-input {
+                font-size: 18px;
+            }
+        }
+    }
+    md-content {
+        &.roleadd md-input-container {
+            margin: 0;
+        }
+        md-checkbox {
+            text-align: left;
+            font-size: 1.0em;
+        }
+    }
 }
 
 .viewheader {
-  color: white;
-  height: 50px;
-  background-color: #B5A8C1;
-  h3 {
-    margin: 0;
-  }
+    color: #1e88e5;
+    h3 {
+        margin: 0;
+    }
 }
 
 .footer {
-  text-align: center;
+    text-align: center;
+    position: relative;
+    background-color: #CAE7EC;
+    >h3 {
+        font-size: 20px;
+        padding: 5px;
+    }
 }
 
 .no-padding {
-  padding: 0;
-  > .md-button {
-    margin-left: 5px;
-  }
-  md-icon {
-    font-size: 1.1em;
-  }
-  .plusminus {
-    .md-button {
-      width: 40px;
-      margin: 5px;
-      background-color: #ECECEC;
-      border-radius: 10%;
+    padding: 0;
+    > .md-button {
+        margin-left: 5px;
     }
-  }
+    md-icon {
+        font-size: 16px;
+    }
+    .plusminus {
+        .md-button {
+            width: 40px;
+            margin: 5px;
+            background-color: #ECECEC;
+            border-radius: 10%;
+        }
+    }
+}
+
+.listDocs {
+    table.md-table {
+        td.md-cell {
+            font-size: 16px;
+        }
+        th.md-column {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        thead.md-head>tr.md-row {
+            height: 25px;
+        }
+    }
+}
+
+.md-whiteframe-4dp {
+    width: inherit;
+    > div.head {
+        width: inherit;
+    }
+    background-color: #fff;
+    md-fab-speed-dial {
+        margin-left: 50px;
+    }
+}
+
+.contentView {
+    font-size: 20px;
 }

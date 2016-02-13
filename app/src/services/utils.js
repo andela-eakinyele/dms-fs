@@ -1,8 +1,15 @@
 (function() {
   'use strict';
   angular.module('prodocs.services')
-    .service('Utils', function($mdToast, $mdDialog, $http) {
+    .service('Utils', function($mdToast, $mdDialog, $http, $filter) {
 
+      // format date data
+      this.parseTime = function(eventTime) {
+        return {
+          day: $filter('date')(eventTime, 'EEEE dd MMM yyyy'),
+          time: $filter('date')(eventTime, 'hh:mma')
+        };
+      };
 
       this.toast = function(msg) {
         $mdToast.show($mdToast.simple().content(msg));
