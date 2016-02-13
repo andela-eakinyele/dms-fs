@@ -183,8 +183,8 @@
           url: '/:docId/edit',
           views: {
             'docdata@dashboard.doc': {
-              // templateUrl: 'views/edit-doc.html',
-              // controller: 'EditDocCtrl'
+              templateUrl: 'views/edit-doc.html',
+              controller: 'DocCtrl'
             },
           }
         })

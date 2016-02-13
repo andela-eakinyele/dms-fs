@@ -11,7 +11,7 @@
     var queryDoc = Doc.findOne({
       _id: id,
       groupId: [groupId]
-    });
+    }).populate('ownerId');
     // query for user access
     var queryUser = User.findOne({
       _id: userId
@@ -95,8 +95,9 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
+
           if ((a[0].length && !a[0].status) ||
-            (a[2].data._id === a[1].data.ownerId[0])) {
+            (a[2].data._id === a[1].data.ownerId[0]._id)) {
             res.status(a[1].status).json(a[1].data);
           } else if (a[0].status) {
             res.status(a[0].status).json(a[0].data);
@@ -120,9 +121,9 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if ((a[0].length && !a[0].status) ||
-            (a[2].data._id === a[1].data.ownerId[0])) {
-            req.body.ownerId = a[1].data.ownerId;
+          if (!a[0].status &&
+            (a[2].data._id === a[1].data.ownerId[0]._id)) {
+            req.body.ownerId = [a[1].data.ownerId[0]._id];
             req.body.lastModified = Date.now();
             var query = Doc.findByIdAndUpdate(req.params.id, req.body, {
               new: true
@@ -198,7 +199,7 @@
         .then(function(a) {
           if (!a[0].status &&
             a[1].data.roles.length === 0 &&
-            a[2].data._id === a[1].data.ownerId[0] ||
+            a[2].data._id === a[1].data.ownerId[0]._id ||
 
             (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1)) {
 
