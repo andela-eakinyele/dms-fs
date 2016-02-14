@@ -9,6 +9,7 @@
         activeUser, activeGroup) {
 
         $scope.init = function() {
+          console.log(activeGroup);
           $scope.updateForm = {};
           $scope.newDoc = {};
           $scope.currentUser = activeUser;
@@ -38,9 +39,14 @@
           }, function(err) {
             console.log(err);
           });
-
-
         };
+
+        $scope.setActiveGroup = function() {
+          $rootScope.activeGroup = $scope.setGroup;
+          console.log('reset');
+          $scope.init();
+        };
+
 
 
         // Load Dialog with form template
@@ -134,8 +140,6 @@
           icon: 'fa fa-sign-out fa-2x',
           click: 'logout'
         }];
-
-        $scope.init();
 
       }
 
