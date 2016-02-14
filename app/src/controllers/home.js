@@ -16,14 +16,6 @@
           }
         });
 
-        $scope.facebook = function() {
-          $window.location.href = '/auth/facebook';
-        };
-
-        $scope.google = function() {
-          $window.location.href = '/auth/google';
-        };
-
       }
     ]);
 })();

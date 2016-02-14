@@ -10,7 +10,7 @@
             if (xtoken !== 'undefined' && xtoken !== null) {
               userid = JSON.parse(xtoken) ? true : false;
               groupid = ($rootScope.activeGroup) ? true : false;
-              config.headers.access_token = JSON.parse(xtoken)['token'];
+              config.headers.access_token = JSON.parse(xtoken).token;
             }
             if (userid) {
               config.headers.userid = JSON.parse(xtoken).user._id;

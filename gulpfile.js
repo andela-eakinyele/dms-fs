@@ -14,7 +14,6 @@
   var reporter = require('gulp-codeclimate-reporter');
 
   var watchify = require('watchify');
-  var assign = require('lodash.assign');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');

@@ -2,8 +2,8 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('AdminRoleCtrl', ['$rootScope', '$scope',
-      '$stateParams', 'Utils', 'Roles', 'Groups',
-      function($rootScope, $scope, $stateParams, Utils, Roles, Groups) {
+      '$stateParams', 'Utils', 'Roles',
+      function($rootScope, $scope, $stateParams, Utils, Roles) {
 
         $scope.num = 0;
         $scope.role = [];
