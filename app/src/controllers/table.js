@@ -19,14 +19,6 @@
                 $scope.docs = res.data;
               }
             });
-          } else if (/shared/.test($state.current.name)) {
-            //  Docs.getRoleDocs($stateParams.id, function(err, res) {
-            //   if (err) {
-            //     console.log('Error retrieving docs for users');
-            //   } else {
-            //     $scope.docs = res.data;
-            //   }
-            // });
           } else {
             $scope.docs = Docs.query();
           }
