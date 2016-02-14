@@ -1,52 +1,45 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('LoginCtrl', ['$rootScope', '$scope', '$window',
+    .controller('LoginCtrl', ['$rootScope', '$scope',
       '$state', '$stateParams', 'Users', 'Auth',
 
       function($rootScope, $scope, $state, $stateParams,
-        $window, Users, Auth) {
+        Users, Auth) {
         $scope.loginForm = {};
-
-
-
+        $scope.loginErr = 'Enter your credentials below';
 
         $scope.login = function() {
           Users.login({
             username: $scope.loginForm.userdata,
             password: $scope.loginForm.password
           }, function(err, res) {
-            console.log(err, res);
             if (err) {
-              $state.go('loginerror');
+              $scope.loginErr = 'Invalid Username/Password';
             } else {
-              Auth.setToken(res.token);
-              $rootScope.activeUser = res;
-              $state.go('dashboard', {
-                projectId: $scope.loginForm.project
-              });
+              Auth.setToken(JSON.stringify(res));
+              $rootScope.activeUser = res.user;
+              if (res.user.groupId.length > 0) {
+                $rootScope.activeGroup = res.user.groupId[0];
+                $state.go('dashboard.list', {
+                  id: res.user._id,
+                  groupid: res.user.groupId[0]._id
+                });
+              } else {
+                var superAdmin = window._.map(res.user.roles, 'title');
+                if (superAdmin.length > 0) {
+                  $state.go('dashboard.admin', {
+                    id: res.user._id
+                  });
+                } else {
+                  $state.go('home.group', {
+                    id: res.user._id
+                  });
+                }
+              }
             }
           });
         };
-
-
-        // $state.reload = function reload() {
-        //   console.log($stateParams);
-        //   return $state.transitionTo($state.current, $stateParams, {
-        //     reload: false,
-        //     inherit: false,
-        //     notify: true
-        //   });
-        // };
-
-        $scope.facebook = function() {
-          $window.location.href = '/auth/facebook';
-        };
-
-        $scope.google = function() {
-          $window.location.href = '/auth/google';
-        };
-
       }
     ]);
 })();

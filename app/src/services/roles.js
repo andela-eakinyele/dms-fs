@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Roles', ['$resource', function roleFactory($resource) {
-      return $resource('/api/roles/:id', {
+    .factory('Roles', ['$resource', '$http', function roleFactory($resource, $http) {
+      var obj = $resource('/api/roles/:id', {
         id: '@id',
         groupId: '@groupid'
       }, {
@@ -14,6 +14,17 @@
       }, {
         stripTrailingSlashes: false
       });
+
+      obj.bulkDelete = function(roles, cb) {
+        $http.post('/api/roles/delete', roles).success(function(res) {
+          cb(null, res);
+        }).error(function(err) {
+          cb(err);
+        });
+      };
+
+      return obj;
+
     }]);
 
 })();

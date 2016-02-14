@@ -1,15 +1,13 @@
-div.overlay(layout="column" layout-gt-sm="row" layout-padding flex-gt-sm layout-fill layout-align="center center")
-  md-content(layout="column" layout-margin layout-padding)
+.overlay(layout="column" layout-padding layout-align="center center")
+  md-content.extraView(layout="column" layout-margin layout-padding)
     span ProDocs
     h3 Create, Share and Manage Documents
-    div.md-padding(layout layout-align="center center" ng-if="showButton")
-      md-button.md-accent.md-raised(md-ink-ripple ui-sref="home.login") Login
-      md-button.md-warn.md-raised(md-ink-ripple ui-sref="home.adduser") Sign Up
+    .md-padding(layout layout-align="center center" ng-if="showButton")
+      md-button.md-primary.md-raised(md-ink-ripple ui-sref="home.login") Login
+      md-button.md-accent.md-raised(md-ink-ripple ui-sref="home.adduser") Sign Up
+ 
+  md-content.features(ng-if="showButton")
+    div(ui-view="feature" layout-gt-sm="row" layout="column" layout-padding)
 
-    div(ng-if="showButton")
-      div(ui-view="feature" layout-gt-sm="row" layout="column" layout-padding)
-
-  md-content(layout="column" layout-align="center center" ng-if="!showButton")
+  md-content.nextViews(layout="column" layout-align="center center" ng-if="!showButton")
     div(ui-view="nextView")
-
-

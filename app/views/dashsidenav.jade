@@ -1,11 +1,11 @@
 md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
   md-toolbar
     div(layout="row" layout-margin)
-      h3.md-toolbar-tools Username -
-      md-select( ng-model="selectGroup" class="select" aria-label="View Group" ng-selected="userGroups[0]")
-        md-option(ng-value="group.id" ng-repeat="group in userGroups" placeholder="") {{group.name}}
+      h3.md-toolbar-tools {{currentUser.username}} -
+      md-select(ng-model="activeGroup" class="select" aria-label="View Group" ng-selected="activeUser.groupId[0]")
+        md-option(ng-value="group" ng-repeat="gr in activeUser.groupId" placeholder="") {{gr.title}}
   md-content(layout-margin)
-    div(layout="column")
+    div(layout="column" ng-if="superAdmin.length > 0 || userRole.length > 0")
       h3 Admin Menu
       md-button.btn-style(md-ink-ripple ng-repeat="itemN in adminSideBarMenu" aria-label="admin menu item") {{itemN}}
       md-divider

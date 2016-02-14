@@ -6,7 +6,6 @@
       function($mdMedia, $rootScope, $scope, $state) {
         $scope.showButton = true;
 
-        // $timeout(function() {
         $scope.$watch(function() {
           return $state.current.name;
         }, function(name) {
@@ -16,7 +15,15 @@
             $scope.showButton = false;
           }
         });
-        // }, 0.5);
+
+        $scope.facebook = function() {
+          $window.location.href = '/auth/facebook';
+        };
+
+        $scope.google = function() {
+          $window.location.href = '/auth/google';
+        };
+
       }
     ]);
 })();

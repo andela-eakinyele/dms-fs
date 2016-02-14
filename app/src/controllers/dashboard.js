@@ -1,16 +1,34 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('DashBoardCtrl', ['$scope', '$mdMedia',
-      '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      function($scope, $mdMedia, $mdSidenav, $timeout, Utils) {
+    .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
+      '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
+      'Groups', 'Users', 'Auth', 'Roles', 'activeUser', 'activeGroup',
+      function($rootScope, $scope, $mdMedia, $state, $stateParams,
+        $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles,
+        activeUser, activeGroup) {
 
-        $scope.viewing = false;
+        $scope.init = function() {
+          $scope.updateForm = {};
+          $scope.newDoc = {};
+          $scope.currentUser = activeUser;
 
-        $scope.newDoc = false;
-        $scope.fabisOpen = false;
-        $scope.tooltipVisible = false;
+          $scope.superAdmin = window._.filter(activeUser.roles, {
+            title: 'superAdmin'
+          });
 
+          if (activeGroup) {
+            $scope.userRole = window._.filter(activeUser.roles, {
+              title: 'Admin',
+              groupId: [activeGroup._id]
+            });
+          }
+
+          $scope.fabisOpen = false;
+          $scope.tooltipVisible = false;
+        };
+
+        // check if FAB button is open and show tooltip
         $scope.$watch('fabisOpen', function(isOpen) {
           if (isOpen) {
             $timeout(function() {
@@ -20,6 +38,57 @@
             $scope.tooltipVisible = $scope.fabisOpen;
           }
         });
+
+        // Load Dialog with form template
+        $scope.updateUserModal = function(ev) {
+          Utils.custom(ev,
+            'views/update.html', 'UserCtrl');
+        };
+
+        // delete a Document/Role/User
+        $scope.delete = function(ev, name) {
+          Utils.showConfirm(ev, 'Delete Documents', name +
+            'will be deleted', 'Delete',
+            function() {});
+        };
+
+        // Load roles in a group
+        $scope.loadRoles = function() {
+          Roles.query({
+            groupid: $stateParams.groupid
+          }, function(role) {
+            $scope.roles = role;
+          });
+        };
+
+        // Cancel create document, return to dashboard
+        $scope.upState = function() {
+          $state.go('^');
+        };
+
+        // Log out user and delete token
+        $scope.logout = function() {
+          $rootScope.activeUser = null;
+          $rootScope.activeGroup = null;
+          Auth.logout();
+          $state.go('home.features');
+        };
+
+        // Menu button action
+        $scope.menuAction = function(ev) {
+          if (ev === 'logout') {
+            $scope.logout();
+          }
+          if (ev === 'Set') {
+            $scope.updateUserModal();
+          }
+          if (ev === 'Join') {
+            $state.go('home.group', {
+              id: activeUser._id
+            });
+          }
+        };
+
         // side navigation bar control
         $scope.openLeft = function() {
           $mdSidenav('lefty').toggle();
@@ -34,41 +103,12 @@
           $mdOpenMenu(ev);
         };
 
-        $scope.addDocModal = function(ev, title, answer) {
-          Utils.custom(ev, title, answer,
-            'views/doc-modal.html',
-            function(ans) {
-              if (ans === answer) {
-                $scope.saveDoc(ev, 'French');
-              }
-            });
-        };
-
-
-        $scope.saveDoc = function(ev, name) {
-          Utils.showAlert(ev, 'Save Document', name +
-            'successfully saved');
-        };
-
-        $scope.update = function(ev, name) {
-          Utils.showAlert(ev, 'Updated Document', name +
-            'successfully updated');
-        };
-
-        $scope.delete = function(ev, name) {
-          Utils.showConfirm(ev, 'Delete Documents', name +
-            'will be deleted', 'Delete',
-            function() {
-
-            });
-        };
-
-
+        // Side bar navigation menu
         $scope.sideBarMenu = [{
           name: 'View Documents',
           subMenu: ['My Documents', 'Shared Documents']
         }, {
-          name: 'FileTypes',
+          name: 'Labels',
           subMenu: $scope.filterExt
         }];
 
@@ -76,42 +116,22 @@
           'List Users', 'List Roles', 'Report'
         ];
 
-
-
+        // Header menu
         $scope.menu = [{
+          name: 'Join Group',
+          icon: 'fa fa-group fa-2x',
+          click: 'Join'
+        }, {
           name: 'User Profile',
           icon: 'fa fa-cog fa-2x',
+          click: 'Set'
         }, {
           name: 'Log Out',
           icon: 'fa fa-sign-out fa-2x',
+          click: 'logout'
         }];
 
-        $scope.adminMenu = {
-          name: 'Add User/Role',
-          icon: 'fa fa-user-plus fa-2x',
-          subMenu: [{
-            name: 'New Users',
-            icon: 'fa fa-user'
-          }, {
-            name: 'New Role',
-            icon: 'fa fa-briefcase'
-          }]
-        };
-
-        $scope.userGroups = [{
-          name: 'Vikings',
-          id: 3
-        }, {
-          name: 'SpyKIngs',
-          id: 1
-        }, {
-          name: 'Hooters',
-          id: 2
-        }];
-
-
-
-
+        $scope.init();
 
       }
 

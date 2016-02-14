@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Groups', ['$resource', function roleFactory($resource) {
+    .factory('Groups', ['$resource', function groupFactory($resource) {
       return $resource('/api/groups/:id', {
         id: '@id'
       }, {

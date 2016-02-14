@@ -31,10 +31,6 @@
     docs: [{
       type: Number,
       ref: 'Documents'
-    }],
-    roles: [{
-      type: Number,
-      ref: 'Roles'
     }]
   });
 

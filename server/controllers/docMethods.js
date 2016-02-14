@@ -59,9 +59,9 @@
       cm.gCreate('Documents', req.body, Doc, query)
         .then(function(result) {
           // respond with new document details
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
 
     },
@@ -81,9 +81,9 @@
       }
       cm.gGetAll('Documents', query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -94,9 +94,9 @@
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
           if (a[0].length && !a[0].status) {
-            res.status(a[1].status).json(a[1]);
+            res.status(a[1].status).json(a[1].data);
           } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
+            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,
@@ -125,12 +125,12 @@
             });
             cm.gUpdate('Documents', req.params.id, query)
               .then(function(result) {
-                res.status(result.status).json(result);
+                res.status(result.status).json(result.data);
               }).catch(function(err) {
-                res.status(err.status).json(err);
+                res.status(err.status).json(err.error);
               });
           } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
+            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,
@@ -190,7 +190,8 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status && a[1].data.roles.length === 1 &&
+          if (a[0].length && !a[0].status &&
+            a[1].data.roles.length === 1 &&
             a[2].data._id === a[1].data.ownerId[0] ||
 
             (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1 &&
@@ -200,12 +201,12 @@
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)
               .then(function(result) {
-                res.status(result.status).json(result);
+                res.status(result.status).json(result.data);
               }).catch(function(err) {
-                res.status(err.status).json(err);
+                res.status(err.status).json(err.error);
               });
           } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
+            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,

@@ -35,39 +35,15 @@
       };
 
 
-      this.custom = function(ev, title, action, tmpl, cb) {
-
+      this.custom = function(ev, tmpl, ctrl) {
         $mdDialog.show({
-            controller: DialogController,
-            templateUrl: tmpl,
-            parent: angular.element(document.querySelector('#dashContent')),
-            targetEvent: ev,
-            clickOutsideToClose: true,
-            fullscreen: true
-          })
-          .then(function(answer) {
-            cb(answer);
-          }, function() {
-            console.log('Error in Dialog');
-          });
-
-        function DialogController($scope, $mdDialog) {
-
-          $scope.title = title;
-          $scope.action = action;
-
-          $scope.hide = function() {
-            $mdDialog.hide();
-          };
-
-          $scope.cancel = function() {
-            $mdDialog.cancel();
-          };
-
-          $scope.answer = function(answer) {
-            $mdDialog.hide(answer);
-          };
-        }
+          controller: ctrl,
+          templateUrl: tmpl,
+          parent: angular.element(document.querySelector('#dashContent')),
+          targetEvent: ev,
+          clickOutsideToClose: true,
+          fullscreen: true
+        });
       };
 
       this.fetch = function(path) {

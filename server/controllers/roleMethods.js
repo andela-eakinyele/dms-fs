@@ -2,29 +2,14 @@
   'use strict';
   var Role = require('./../models/role');
   var Doc = require('./../models/document');
-  var group = require('./groupMethods');
-  var Group = require('./../models/group');
   var _ = require('lodash');
 
   var cm = require('./helpers');
 
-
-  function rollBack(title, cb) {
-    Role.remove({
-      title: title
-    }).then(function() {
-      console.log('Deleted ', title);
-      cb(null, true);
-      // return error during rollback 
-    }, function(err) {
-      console.log('Error rolling back role');
-      cb(err, null);
-    });
-  }
-
   var roleFunctions = {
     bulkCreate: function(req, res) {
-      var groupid = parseInt(req.headers.groupid);
+      var groupid = parseInt(req.headers.groupid) ||
+        parseInt(req.query.groupid);
       var titles = _.pluck(req.body, 'title');
       var bulkData = req.body;
       Role.find({
@@ -55,11 +40,12 @@
             });
           }
         });
-
     },
-    create: function(req, res) {
 
-      req.body.groupId = [parseInt(req.headers.groupid)];
+    create: function(req, res) {
+      var groupid = parseInt(req.headers.groupid) ||
+        parseInt(req.query.groupid);
+      req.body.groupId = groupid;
       // query for existing role
       var query = Role.find({
         title: req.body.title,
@@ -68,62 +54,7 @@
       // create role or return existing role
       cm.gCreate('Roles', req.body, Role, query)
         .then(function(role) {
-          // query for group
-          var query = {
-            _id: req.headers.groupid
-          };
-
-          // retrieve group and update with role
-          group.retrieveData(query).then(function(gr) {
-            if (gr) {
-              gr.roles.push(role.data);
-
-              // query for updating group data with new role
-              var query2 = Group.findByIdAndUpdate(req.headers.groupid,
-                gr, {
-                  new: true
-                });
-
-              // update group data
-              cm.gUpdate('Groups', req.headers.groupid, query2)
-                .then(function() {
-                  // return status of created role
-                  res.status(role.status).json(role);
-
-                  // return error during update and rollback role created
-                }).catch(function(err) {
-                  rollBack(req.body.title, function(errs) {
-                    if (errs) {
-                      res.status(500).json(errs);
-                    } else {
-                      res.status(err.status).json(err);
-                    }
-                  });
-                });
-
-              // group not found
-            } else {
-              rollBack(req.body.title, function(errs) {
-                if (errs) {
-                  res.status(500).json(errs);
-                } else {
-                  res.status(400).json({
-                    'status': 400,
-                    'message': 'Invalid Group'
-                  });
-                }
-              });
-            }
-            // return error during group retrieval and rollback
-          }).catch(function(err) {
-            rollBack(req.body.title, function(errs) {
-              if (errs) {
-                res.status(500).json(errs);
-              } else {
-                res.status(err.status).json(err);
-              }
-            });
-          });
+          res.status(role.status).json(role.data);
           // return error during role create
         }).catch(function(err) {
           res.status(err.status).json(err);
@@ -131,8 +62,10 @@
     },
 
     all: function(req, res) {
+      var groupid = parseInt(req.headers.groupid) ||
+        parseInt(req.query.groupid);
       var query = Role.find({
-        groupId: [parseInt(req.headers.groupid)]
+        groupId: [groupid]
       });
       cm.gGetAll('Roles', query)
         .then(function(result) {
@@ -145,6 +78,9 @@
     get: function(req, res) {
       var query = Role.findOne({
         _id: req.params.id
+      }).populate({
+        path: 'groupId',
+        select: 'title description'
       });
       cm.gGetOne('Roles', query, req.params.id)
         .then(function(result) {
