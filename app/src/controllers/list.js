@@ -96,7 +96,8 @@
             if (res.length > 0) {
               $scope.docs = res;
               var data = window._.map($scope.docs, function(a) {
-                a.Owner = a.OwnerId[0].name.first + ' ' + a.OwnerId[0].name.last;
+                a.Owner = a.OwnerId[0].name.first + ' ' +
+                  a.OwnerId[0].name.last;
                 return a;
               });
               $scope.gridOptions2.data = data;
