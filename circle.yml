@@ -10,6 +10,7 @@ dependencies:
     - "node_modules"
   pre:
     - bower install
+    - npm install mongoose@4.2.8 -g
   post:
     - npm install module-deps
     - npm install gulp -g
