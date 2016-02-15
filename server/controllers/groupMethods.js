@@ -68,25 +68,29 @@
             cm.gUpdate('Groups', result.data._id, query4)
               .then(function(newData) {
                 newData.passphrase = null;
-                done(null, result, resRole, newData);
+                done(null, result.data._id, resRole.data._id, newData);
               }).catch(function(err) { // error with update group
                 done(err);
               });
           },
 
           // retrieve user and update group, role with admin for group
-          function(result, resRole, newData, done) {
+          function(a, b, c, done) {
             user.retrieveData(query2).then(function(resUser) {
-              resUser.roles.push(resRole.data._id);
-              resUser.groupId.push(result.data._id);
-              done(null, newData, resUser);
+
+              resUser.roles.push(parseInt(b));
+              resUser.groupId.push(parseInt(a));
+              done(null, c, resUser);
 
             }).catch(function(err) { // error with retrieve user
               done(err);
             });
           },
+
+          // update user with group and role id
           function(newData, resUser, done) {
-            delete resUser._id;
+            var update = resUser;
+            console.log(update);
             var query5 = User.findByIdAndUpdate(req.body.userid,
               resUser, {
                 new: true
@@ -101,6 +105,7 @@
         ],
         function(err, result) {
           if (err) {
+            console.log(err);
             res.status(500).json(err);
           } else {
             res.status(result.status).json(result.data);
