@@ -4,7 +4,7 @@
   "description": "Document management system",
   "main": "index.js",
   "scripts": {
-    "test": "gulp test",
+    "test": "node index.js &\ngulp test",
     "start": "node index.js"
   },
   "repository": {
