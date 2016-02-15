@@ -38,7 +38,7 @@
                 var superAdmin = window._.map(res.data.user.roles, 'title');
                 $rootScope.activeGroup = res.data.user.groupId[0]._id;
                 if (superAdmin.length > 0) {
-                  $state.go('dashboard.admin', {
+                  $state.go('dashboard.admin'.viewdocs, {
                     id: res.data.user._id
                   });
                 } else {

@@ -23,6 +23,8 @@
             'groupId': [parseInt($stateParams.groupid)]
           });
 
+          console.log($scope.userRole);
+
           Docs.query(function(res) {
             $scope.allDocs = res;
           }, function(err) {
@@ -44,7 +46,7 @@
 
         $scope.isSelected = function(id) {
           var checked = $stateParams.groupid ?
-            $stateParams.groupid === id : false;
+            parseInt($stateParams.groupid) === id : false;
           return checked;
         };
 

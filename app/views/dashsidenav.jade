@@ -5,8 +5,9 @@ md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked
   md-content(layout="column")
     div(layout="column" ng-if="userRole[0].title === \"superAdmin\" || userRole[0].title === \"Admin\"" layout-padding)
       h3 Admin Menu
-      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ng-click="") List Users
-      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ng-click="") List Roles
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewdoc({groupid: activeGroup})") List Docs
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewuser({groupid: activeGroup})") List Users
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewrole({groupid: activeGroup})")  List Roles
       md-divider
     div(layout="column" layout-padding)
       h3 Groups

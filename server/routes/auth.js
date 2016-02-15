@@ -24,7 +24,6 @@
       'username': username
     };
     userFunc.retrieveData(query).then(function(result) {
-      console.log(result);
       if (result) {
         var validPassword = bcrypt.compareSync(password, result.password);
         if (validPassword) {

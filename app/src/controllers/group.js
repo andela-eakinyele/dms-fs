@@ -39,7 +39,7 @@
             $rootScope.activeGroup = group._id;
             Users.get({ id: $stateParams.id }, function(user) {
                 $rootScope.activeUser = user;
-                $state.go('dashboard.list', {
+                $state.go('dashboard.admin.docs', {
                   id: $stateParams.id,
                   groupid: group._id
                 });

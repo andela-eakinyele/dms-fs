@@ -54,7 +54,7 @@
         };
 
         $scope.query = {
-          order: 'name',
+          order: 'Title',
           limit: 5,
           page: 1
         };
@@ -72,10 +72,6 @@
           } else {
             list.push(item);
           }
-        };
-
-        $scope.selectAll = function() {
-          // body...
         };
 
         // Menu button action

@@ -123,7 +123,7 @@
     get: function(req, res) {
       var query = Group.findOne({
         _id: req.params.id
-      });
+      }).populate({ path: 'users', select: 'username name roles email' });
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
           result.data.passphrase = null;

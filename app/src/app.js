@@ -25,6 +25,7 @@
   require('./controllers/admin-role');
   require('./controllers/user');
   require('./controllers/doc');
+  require('./controllers/list');
   require('./controllers/view-doc');
 
   window.app = angular.module('prodocs', [
@@ -36,6 +37,8 @@
     'ui.router',
     'ngMaterial',
     'md.data.table',
+    'ui.grid',
+    'ui.grid.pagination',
     'ngAria',
     'ngAnimate'
   ])
@@ -50,8 +53,8 @@
       $httpProvider.interceptors.push('TokenInjector');
 
       $mdThemingProvider.theme('default')
-        .primaryPalette('cyan')
-        .accentPalette('orange');
+        .primaryPalette('green')
+        .accentPalette('light-blue');
 
       // For any unmatched url, redirect to /state1
       $urlRouterProvider.otherwise('/404');
@@ -189,6 +192,7 @@
           }
         })
         .state('dashboard.admin', {
+          abstract: true,
           url: '^/prodocs/users/:id/dashboard/admin',
           views: {
             'add@dashboard': {
@@ -196,17 +200,35 @@
             },
           }
         })
-        .state('dashboard.admin.role', {
-          url: '/:groupid/roles',
+        .state('dashboard.admin.viewdoc', {
+          url: '/:groupid/documents/list',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/admin-role.html',
-              controller: 'AdminRoleCtrl'
+              templateUrl: 'views/admin-list-docs.html',
+              controller: 'AdminListCtrl'
             },
           }
         })
         .state('dashboard.admin.viewrole', {
           url: '/:groupid/roles/list',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-list-roles.html',
+              controller: 'AdminListCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.viewuser', {
+          url: '/:groupid/users',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-list-users.html',
+              controller: 'AdminListCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.role', {
+          url: '/:groupid/roles',
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-role.html',
@@ -284,16 +306,17 @@
               Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
             }
 
-            // check for superAdmin user
-            var superAdmin = window._
-              .filter(res.data.user.roles, { 'title': 'superAdmin' });
+            //check for superAdmin user
+            var Admin = window._
+              .filter(res.data.user.roles, { 'title': 'Admin' });
 
-            if (superAdmin.length > 0) {
-              $state.go('dashboard.admin', {
-                id: res.data.user._id
+            if (Admin.length > 0) {
+              $state.go('dashboard.admin.viewdoc', {
+                id: res.data.user._id,
+                groupid: $rootScope.activeGroup
               });
 
-              // not super admin user
+              // not admin user
             } else {
               if (!res.group && res.data.user.groupId.length === 0) {
                 $state.go('home.group', {
