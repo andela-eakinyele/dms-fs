@@ -116,64 +116,6 @@
           field: 'buttons '
         }];
 
-
-        $scope.userHeaders = [{
-          name: 'UserId',
-          field: 'id'
-        }, {
-          name: 'Username',
-          field: 'Username'
-        }, {
-          name: 'Name',
-          field: 'fname'
-        }, {
-          name: 'Joined On',
-          field: 'created'
-        }, {
-          name: 'Role',
-          field: 'role'
-        }, {
-          name: 'No of Docs',
-          field: 'docs'
-        }, {
-          name: 'active',
-          field: 'active'
-        }];
-
-
-        $scope.testUsers = [{
-          id: 1,
-          username: 'Diskit',
-          fname: 'Dissin Mockit',
-          date: '12-11-1222',
-          role: 'Driver',
-          num: 50,
-          active: false
-        }];
-
-
-        $scope.roleHeaders = [{
-          name: 'RoleId',
-          field: 'id'
-        }, {
-          name: 'Title',
-          field: 'title'
-        }, {
-          name: 'No of Users',
-          field: 'users'
-        }, {
-          name: 'Last Modified',
-          field: 'modified'
-        }];
-
-
-        $scope.testRoles = [{
-          id: 1,
-          title: 'Driver',
-          num: 50,
-          date: '12-11-1222',
-        }];
-
         $scope.init();
 
       }
