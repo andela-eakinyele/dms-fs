@@ -4,10 +4,10 @@
     .service('Utils', function($mdToast, $mdDialog, $http, $filter) {
 
       // format date data
-      this.parseTime = function(eventTime) {
+      this.parseDate = function(date) {
         return {
-          day: $filter('date')(eventTime, 'EEEE dd MMM yyyy'),
-          time: $filter('date')(eventTime, 'hh:mma')
+          day: $filter('date')(date, 'EEEE dd MMM yyyy'),
+          time: $filter('date')(date, 'hh:mma')
         };
       };
 

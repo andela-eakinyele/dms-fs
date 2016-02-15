@@ -50,6 +50,10 @@
 
         // update user modal
         $scope.update = function(ev) {
+          if ($scope.data.password === 'undefined') {
+            delete $scope.data.password;
+          }
+
           Users.update({
             id: $stateParams.id
           }, $scope.data, function() {

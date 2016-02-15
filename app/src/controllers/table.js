@@ -32,9 +32,13 @@
           }) || $rootScope.activeUser._id === doc.ownerId[0]._id;
         };
 
+        $scope.editDoc = function(doc) {
+          return $rootScope.activeUser._id === doc.ownerId[0]._id;
+        };
+
         // format date data
-        $scope.getTime = function(eventTime) {
-          return Utils.parseTime(eventTime);
+        $scope.getDate = function(date) {
+          return Utils.parseDate(date);
         };
 
         $scope.query = {
@@ -80,16 +84,6 @@
             });
           }
         };
-
-        $scope.docMenu = [{
-          name: 'Edit Doc',
-          icon: 'fa fa-pencil-square-o fa-2x',
-          click: 'edit'
-        }, {
-          name: 'Delete',
-          icon: 'fa fa-trash fa-2x',
-          click: 'delete'
-        }];
 
         $scope.headers = [{
           name: 'Label',

@@ -23,6 +23,16 @@
               cb(err, null);
             });
         };
+
+        obj.getRoleDocs = function(id, cb) {
+          return $http.get('/api/users/' + id + '/documents')
+            .then(function(data) {
+              cb(null, data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
         return obj;
       }
     ]);

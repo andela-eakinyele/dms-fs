@@ -44,9 +44,8 @@ md-dialog(aria-label="Forms", ng-cloak class="forms" ng-init="init()")
             md-input-container.md-block(flex="50")
               label(for="npassword") Password
               md-icon(md-font-set="fa fa-key")
-              input(type="password" name="npassword" ng-model="data.password" ng-minlength="6" required)
+              input(type="password" name="npassword" ng-model="data.password" ng-minlength="6")
               div(ng-messages="updateForm.npassword.$error" ng-show="updateForm.npassword.$dirty")
-                div(ng-message="required") Password is required
                 div(ng-message="minlength") Password must be at Least Six Characters
     md-divider
     div.update(layout="column" layout-align="start center")

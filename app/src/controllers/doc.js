@@ -14,11 +14,24 @@
           });
         };
 
+        $scope.loadDoc = function() {
+          Docs.get({
+            id: $stateParams.docId
+          }, function(res) {
+            $scope.doc = res;
+          }, function(err) {
+            console.log(err);
+            console.log('Error retrieving docs');
+          });
+        };
+
         // save a new document
         $scope.saveDoc = function(ev) {
-          console.log($scope.newDoc);
           Docs.save($scope.newDoc, function(res) {
             Utils.showAlert(ev, 'Successfully saved', res.title);
+            $state.go('dashboard.doc.view', {
+              docId: res._id
+            });
           }, function(err) {
             if (err.status === 409) {
               Utils.showAlert(ev, 'Title already Exists - Rename title');
@@ -26,14 +39,24 @@
               Utils.showAlert(ev, 'Error saving document');
             }
           });
+        };
 
-          // Up
-          $scope.update = function(ev) {
-            Docs.update($scope.updateForm, function(user) {
-              Utils.showAlert(ev, 'Updated Document', user.username +
-                'successfully updated');
+        // update a document
+        $scope.updateDoc = function(ev) {
+          Docs.update({
+            id: $stateParams.docId
+          }, $scope.doc, function(res) {
+            Utils.showAlert(ev, 'Successfully updated', res.title);
+            $state.go('dashboard.doc.view', {
+              docId: res._id
             });
-          };
+          }, function(err) {
+            if (err.status === 409) {
+              Utils.showAlert(ev, 'Title already Exists - Rename title');
+            } else {
+              Utils.showAlert(ev, 'Error saving document');
+            }
+          });
         };
 
         // Update shared roles array
@@ -44,6 +67,12 @@
           } else {
             list.push(item);
           }
+        };
+
+        $scope.isSelected = function(role) {
+          var checked = $scope.doc ?
+            $scope.doc.roles.indexOf(role._id) > -1 : false;
+          return checked;
         };
 
         // Cancel create document, return to dashboard
