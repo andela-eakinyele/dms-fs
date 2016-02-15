@@ -32,6 +32,7 @@
               cb(err, null);
             });
         };
+
         return obj;
       }
     ]);
