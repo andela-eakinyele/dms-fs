@@ -100,6 +100,7 @@
         ],
         function(err, result) {
           if (err) {
+            console.log(err);
             res.status(500).json(err);
           } else {
             res.status(result.status).json(result.data);
