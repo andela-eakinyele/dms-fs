@@ -80,34 +80,19 @@
     });
   };
 
-  documentSchema.statics.getDocsByDate = function(date) {
-    var st = new Date(date);
-    var end = (new Date(date)).setDate(st.getDate() + 1);
-    var edt = new Date(end);
-    var query = this.find({}).where('dateCreated').gt(st).lt(edt).populate({
-      path: 'ownerId',
-      select: 'username'
-    }).sort('dateCreated');
-    return new Promise(function(resolve, reject) {
-      query.then(function(docs) {
-          resolve(docs);
-        },
-        function(err) {
-          reject(Error(err));
-        });
-    });
-  };
-
   documentSchema.statics.getDocsByRole = function(roleId, groupId) {
-    var doc = this;
+    var query = this.find({
+        groupId: groupId
+      }).where('roles').in([roleId])
+      .populate('groupId')
+      .populate('roles')
+      .populate({
+        path: 'ownerId',
+        select: 'username name'
+      }).sort('dateCreated');
+
     return new Promise(function(resolve, reject) {
-      var query = doc.find({
-          groupId: groupId
-        }).where('roles').in([roleId])
-        .populate({
-          path: 'roles',
-          select: 'title'
-        }).sort('dateCreated');
+
       query.then(function(docs) {
           resolve(docs);
         },

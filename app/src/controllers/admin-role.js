@@ -14,7 +14,7 @@
         // Load roles in a group
         $scope.loadRoles = function() {
           Roles.query({
-            groupid: $rootScope.activeGroup._id
+            groupid: parseInt($stateParams.groupid)
           }, function(role) {
             $scope.roles = role;
           });
@@ -39,7 +39,8 @@
         };
 
         $scope.create = function(ev) {
-          var gId = parseInt($rootScope.activeGroup._id);
+
+          var gId = parseInt($stateParams.groupid);
           $scope.newRoles = window._.map($scope.newRoles,
             function(role) {
               return role.trim();

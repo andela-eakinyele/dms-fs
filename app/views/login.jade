@@ -6,7 +6,7 @@ div.login(layout="column" layout-padding layout-align="center center")
       md-input-container
         label(for="userData") Username or Email
         md-icon(md-font-set="fa fa-user")
-        input(type="text" ng-model="loginForm.userdata" name="userData" required)
+        input(type="text" ng-model="loginForm.userdata" name="userData" md-auto-focus="true" required)
         div(ng-messages="loginForm.userData.$error" ng-show="loginForm.userData.$dirty")
           div(ng-message="required") Username/Email is required
       md-input-container

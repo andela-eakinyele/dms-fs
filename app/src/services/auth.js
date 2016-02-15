@@ -10,9 +10,11 @@
             return false;
           }
         },
-        setToken: function(token) {
-          Token.set(token);
+
+        setToken: function(token, groupid) {
+          Token.set(token, groupid);
         },
+
         logout: function() {
           Token.remove();
         }

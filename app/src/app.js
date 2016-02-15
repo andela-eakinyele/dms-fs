@@ -153,7 +153,7 @@
           }
         })
         .state('dashboard.list.shared', {
-          url: '/shared',
+          url: '/shared/{roleid}',
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
@@ -198,6 +198,15 @@
         })
         .state('dashboard.admin.role', {
           url: '/:groupid/roles',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-role.html',
+              controller: 'AdminRoleCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.viewrole', {
+          url: '/:groupid/roles/list',
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-role.html',
@@ -262,34 +271,43 @@
           // response with expired or invalid token
           if (!res || res.error) {
             $state.go('home.login');
-          } else { // response with valid renewed token
-            if ($rootScope.activeUser) {
-              $state.go($state.current.name);
+            // response with valid renewed token
+          } else {
+            $rootScope.activeUser = res.data.user;
+
+            // check for group 
+            if (res.group === '' && res.data.user.groupId.length === 0) {
+              Auth.setToken(JSON.stringify(res.data), '');
             } else {
-              $rootScope.activeUser = res.user;
-              Auth.setToken(JSON.stringify(res));
-              if (res.user.groupId[0]) {
-                $rootScope.activeGroup = res.user.groupId[0];
-                $state.go('dashboard.list', {
-                  id: res.user._id,
-                  groupid: res.user.groupId[0]._id
+              $rootScope.activeGroup = (res.group === '') ?
+                res.data.user.groupId[0]._id : res.group;
+              Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
+            }
+
+            // check for superAdmin user
+            var superAdmin = window._
+              .filter(res.data.user.roles, { 'title': 'superAdmin' });
+
+            if (superAdmin.length > 0) {
+              $state.go('dashboard.admin', {
+                id: res.data.user._id
+              });
+
+              // not super admin user
+            } else {
+              if (!res.group && res.data.user.groupId.length === 0) {
+                $state.go('home.group', {
+                  id: res.data.user._id
                 });
+                // use user group or last set header group
               } else {
-                var superAdmin = window._.map(res.user.roles, 'title');
-                if (superAdmin.length > 0) {
-                  $state.go('dashboard.admin', {
-                    id: res.user._id
-                  });
-                } else {
-                  $state.go('home.group', {
-                    id: res.user._id
-                  });
-                }
+                $state.go('dashboard.list', {
+                  id: res.data.user._id,
+                  groupid: $rootScope.activeGroup
+                });
               }
             }
           }
-        } else {
-          $state.reload();
         }
       });
 

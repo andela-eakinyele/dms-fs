@@ -2,7 +2,7 @@
   'use strict';
   var jwt = require('jwt-simple');
   var userFunc = require('./../controllers').userFunc;
-
+  var bcrypt = require('bcrypt-nodejs');
 
   var getToken = function(validuser) {
     var ndate = new Date();
@@ -21,11 +21,21 @@
 
   var validateDB = function(username, password, cb) {
     var query = {
-      'username': username,
-      'password': password
+      'username': username
     };
     userFunc.retrieveData(query).then(function(result) {
-      cb(null, result);
+      console.log(result);
+      if (result) {
+        var validPassword = bcrypt.compareSync(password, result.password);
+        if (validPassword) {
+          result.password = null;
+          cb(null, result);
+        } else {
+          cb(null, false);
+        }
+      } else {
+        cb(null, result);
+      }
     }).catch(function(err) {
       cb(err, null);
     });
@@ -50,7 +60,12 @@
             return;
           }
           if (validuser) {
-            res.json(getToken(validuser));
+            var groupid = validuser.groupId[0] ?
+              validuser.groupId[0]._id : '';
+            res.status(200).json({
+              data: auth.getToken(validuser),
+              group: groupid
+            });
           } else {
             res.status(400).json({
               'status': 400,

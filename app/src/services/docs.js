@@ -17,17 +17,17 @@
 
         obj.getUserDocs = function(id, cb) {
           return $http.get('/api/users/' + id + '/documents')
-            .then(function(data) {
-              cb(null, data);
+            .then(function(res) {
+              cb(null, res.data);
             }, function(err) {
               cb(err, null);
             });
         };
 
         obj.getRoleDocs = function(id, cb) {
-          return $http.get('/api/users/' + id + '/documents')
-            .then(function(data) {
-              cb(null, data);
+          return $http.get('/api/roles/' + id + '/documents')
+            .then(function(res) {
+              cb(null, res.data);
             }, function(err) {
               cb(err, null);
             });

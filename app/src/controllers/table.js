@@ -16,32 +16,36 @@
               if (err) {
                 console.log('Error retrieving docs for users');
               } else {
-                $scope.docs = res.data;
+                $scope.docs = res;
               }
             });
           } else if (/shared/.test($state.current.name)) {
-            //  Docs.getRoleDocs($stateParams.id, function(err, res) {
-            //   if (err) {
-            //     console.log('Error retrieving docs for users');
-            //   } else {
-            //     $scope.docs = res.data;
-            //   }
-            // });
+            Docs.getRoleDocs($state.params.roleid, function(err, res) {
+              if (err) {
+                console.log('Error retrieving Shared Docs');
+              } else {
+                $scope.docs = res;
+              }
+            });
           } else {
             $scope.docs = Docs.query();
           }
         };
 
         $scope.accessDoc = function(doc) {
-          var roleId = window._.map(doc.roles, '_id');
-          var userRole = window._.map($rootScope.activeUser.roles, '_id');
-          return userRole.some(function(a) {
-            return roleId.indexOf(a) > -1;
-          }) || $rootScope.activeUser._id === doc.ownerId[0]._id;
+          if (doc && $rootScope.activeUser) {
+            var roleId = window._.map(doc.roles, '_id');
+            var userRole = window._.map($rootScope.activeUser.roles, '_id');
+            return userRole.some(function(a) {
+              return roleId.indexOf(a) > -1;
+            }) || $rootScope.activeUser._id === doc.ownerId[0]._id;
+          }
         };
 
         $scope.editDoc = function(doc) {
-          return $rootScope.activeUser._id === doc.ownerId[0]._id;
+          if (doc && $rootScope.activeUser) {
+            return $rootScope.activeUser._id === doc.ownerId[0]._id;
+          }
         };
 
         // format date data
@@ -151,14 +155,6 @@
           active: false
         }];
 
-        $scope.userMenu = [{
-          name: 'Edit User',
-          icon: 'fa fa-pencil-square-o fa-2x'
-        }, {
-          name: 'Delete',
-          icon: 'fa fa-trash fa-2x',
-        }];
-
 
         $scope.roleHeaders = [{
           name: 'RoleId',
@@ -180,14 +176,6 @@
           title: 'Driver',
           num: 50,
           date: '12-11-1222',
-        }];
-
-        $scope.RoleMenu = [{
-          name: 'Edit User',
-          icon: 'fa fa-pencil-square-o fa-2x'
-        }, {
-          name: 'Delete',
-          icon: 'fa fa-trash fa-2x',
         }];
 
         $scope.init();

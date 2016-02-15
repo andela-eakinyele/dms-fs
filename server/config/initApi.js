@@ -5,12 +5,15 @@
 
     var User = require('./../models/user');
     var Role = require('./../models/role');
+    var bcrypt = require('bcrypt-nodejs');
+
 
     var superRole = {
       title: 'superAdmin',
       users: [100]
     };
 
+    var password = bcrypt.hashSync(process.env.ADMIN_PASSWORD);
     var superAdmin = {
       username: process.env.ADMIN_USERNAME,
       name: {
@@ -18,7 +21,7 @@
         last: 'Akinyele'
       },
       email: 'phoelanre@gmail.com',
-      password: process.env.ADMIN_PASSWORD,
+      password: password,
       roles: [1]
     };
 

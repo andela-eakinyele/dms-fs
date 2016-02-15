@@ -17,23 +17,33 @@
             if (err) {
               $scope.loginErr = 'Invalid Username/Password';
             } else {
-              Auth.setToken(JSON.stringify(res));
-              $rootScope.activeUser = res.user;
-              if (res.user.groupId.length > 0) {
-                $rootScope.activeGroup = res.user.groupId[0];
-                $state.go('dashboard.list', {
-                  id: res.user._id,
-                  groupid: res.user.groupId[0]._id
-                });
+              $rootScope.activeUser = res.data.user;
+
+              var userGroup = res.data.user.groupId.length > 0;
+              if (userGroup) {
+                Auth.setToken(JSON.stringify(res.data),
+                  res.data.user.groupId[0]._id);
               } else {
-                var superAdmin = window._.map(res.user.roles, 'title');
+                Auth.setToken(JSON.stringify(res.data), '');
+              }
+
+              if (userGroup) {
+                $rootScope.activeGroup = res.data.user.groupId[0]._id;
+                $state.go('dashboard.list', {
+                  id: res.data.user._id,
+                  groupid: res.data.user.groupId[0]._id
+                });
+
+              } else {
+                var superAdmin = window._.map(res.data.user.roles, 'title');
+                $rootScope.activeGroup = res.data.user.groupId[0]._id;
                 if (superAdmin.length > 0) {
                   $state.go('dashboard.admin', {
-                    id: res.user._id
+                    id: res.data.user._id
                   });
                 } else {
                   $state.go('home.group', {
-                    id: res.user._id
+                    id: res.data.user._id
                   });
                 }
               }

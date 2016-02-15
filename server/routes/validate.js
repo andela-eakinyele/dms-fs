@@ -26,7 +26,12 @@
           // retrieve user details
           userFunc.retrieveData(query).then(function(user) {
             if (user) {
-              res.json(auth.getToken(user));
+              var groupid = req.headers.groupid !== 'undefined' ?
+                req.headers.groupid : '';
+              res.json({
+                data: auth.getToken(user),
+                group: groupid
+              });
             } else {
               res.status(400).json({
                 'status': 400,

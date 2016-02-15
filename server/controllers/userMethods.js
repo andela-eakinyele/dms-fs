@@ -4,6 +4,7 @@
   var User = require('./../models/user');
   var cm = require('./helpers'); // common methods
   var _ = require('lodash');
+  var bcrypt = require('bcrypt-nodejs');
 
 
   function superAdmin(id, userid) {
@@ -41,6 +42,8 @@
         .select('username name')
         .populate('roles');
 
+      req.body.password = bcrypt.hashSync(req.body.password);
+
       cm.gCreate('Users',
           req.body, User, query)
         .then(function(result) {
@@ -75,14 +78,23 @@
 
     update: function(req, res) {
       var query2 = User.findByIdAndUpdate(req.params.id,
-        req.body, {
-          new: true
+          req.body, {
+            new: true
+          }).select('username email roles name groupId')
+        .populate({
+          path: 'roles',
+          select: 'title _id groupId users'
+        })
+        .populate({
+          path: 'groupId',
+          select: 'title description'
         });
       superAdmin(req.params.id, req.headers.userid)
         .then(function(result) {
           if (result) {
             cm.gUpdate('Users', req.params.id, query2)
               .then(function(result) {
+                console.log(result);
                 res.status(result.status).json(result.data);
               }).catch(function(err) {
                 res.status(err.status).json(err.error);
@@ -130,7 +142,7 @@
 
     retrieveData: function(search) {
       var query = User.findOne(search)
-        .select('username name email firstname lastname groupId roles')
+        .select('username name email firstname lastname password groupId roles')
         .populate('roles')
         .populate({
           path: 'groupId',
