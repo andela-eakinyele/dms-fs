@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var apiTest = require('./specVar')();
-  var agent = apiTest.agent;
+  var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
 
@@ -21,7 +21,7 @@
       describe('Group Admin Spec', function() {
         // verify admin login
         it('- Should return a token on Successful login', function(done) {
-          agent
+          request
             .post('/api/users/login')
             .type('json')
             .send(groupAdmin)
@@ -45,7 +45,7 @@
           // should be able to retrieve all user data
           it('- Should be able to retrieve all user data',
             function(done) {
-              agent
+              request
                 .get('/api/users/')
                 .set({
                   'Accept': 'application/json',
@@ -76,7 +76,7 @@
             var userdata = users[1];
             userdata.username = 'Altered username';
 
-            agent
+            request
               .put('/api/users/' + ids[1])
               .set({
                 'Accept': 'application/json',
@@ -101,7 +101,7 @@
 
           // should not be able to delete userdata
           it('- Should not be able to delete userdata', function(done) {
-            agent
+            request
               .delete('/api/users/' + ids[1])
               .set({
                 'Accept': 'application/json',
@@ -128,7 +128,7 @@
 
         //  should be able to get all documents
         it('- Should be able to get all document', function(done) {
-          agent
+          request
             .get('/api/documents')
             .set({
               'Accept': 'application/json',
@@ -151,7 +151,7 @@
         });
 
         it('- Should be able to get document by role', function(done) {
-          agent
+          request
             .get('/api/roles/3/documents')
             .set({
               'Accept': 'application/json',
@@ -174,7 +174,7 @@
         });
 
         it('- Should be able to get document by date', function(done) {
-          agent
+          request
             .get('/api/documents/date')
             .set({
               'Accept': 'application/json',
@@ -208,7 +208,7 @@
         it('- Should be able to update other users data', function(done) {
           var userdata = users[1];
           userdata.username = 'Altered username';
-          agent
+          request
             .put('/api/users/' + ids[1])
             .set({
               'Accept': 'application/json',
@@ -233,7 +233,7 @@
 
         // should be able to delete userdata
         it('- Should  be able to delete userdata', function(done) {
-          agent
+          request
             .delete('/api/users/' + ids[1])
             .set({
               'Accept': 'application/json',

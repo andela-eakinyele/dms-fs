@@ -19,9 +19,9 @@
     initSpec();
     groupSpec();
     roleSpec();
-    userSpec();
-    docSpec();
-    adminSpec();
+    // userSpec();
+    // docSpec();
+    // adminSpec();
 
   });
 })();

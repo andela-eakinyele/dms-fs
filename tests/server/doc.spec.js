@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var apiTest = require('./specVar')();
-  var agent = apiTest.agent;
+  var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
   var mock = apiTest.seed;
@@ -77,7 +77,7 @@
         // document route requires authentication
         it('Should require a login/access_token', function(done) {
           var docdata = mock.parseData(ckey, data.testDocs);
-          agent
+          request
             .post('/api/documents')
             .set({
               'Accept': 'application/json',
@@ -107,7 +107,7 @@
             'password': userSeed.docUsers.tuser3[3]
           };
 
-          agent
+          request
             .post('/api/users/login')
             .type('json')
             .send(user)
@@ -131,7 +131,7 @@
             'password': userSeed.docUsers.tuser4[3]
           };
 
-          agent
+          request
             .post('/api/users/login')
             .type('json')
             .send(user)
@@ -151,7 +151,7 @@
         // logged in user should be able to create documents
         it('Users should be able to create documents', function(done) {
           var docdata = mock.parseData(ckey, data.testDocs);
-          agent
+          request
             .post('/api/documents')
             .set({
               'Accept': 'application/json',
@@ -180,7 +180,7 @@
       describe('Users with role defined in document', function() {
         // users with role defined should be able to get, and update document
         it('-Should be able to get document', function(done) {
-          agent
+          request
             .get('/api/documents/' + docIds[0])
             .set({
               'username': userSeed.docUsers.tuser3[2],
@@ -202,7 +202,7 @@
 
         // should return not exist for invalid document
         it('- Should not find invalid document', function(done) {
-          agent
+          request
             .get('/api/documents/' + 600)
             .set({
               'username': userSeed.docUsers.tuser3[2],
@@ -225,7 +225,7 @@
         it('-Should be able to update document with access', function(done) {
           var docdata = docData[0];
           docdata.title = 'Staple Foods in Nigeria';
-          agent
+          request
             .put('/api/documents/' + docIds[0])
             .set({
               'username': userSeed.docUsers.tuser3[2],
@@ -251,7 +251,7 @@
           function(done) {
             var docdata = docData[1];
             docdata.title = 'Lorem Ipsum Dolor';
-            agent
+            request
               .put('/api/documents/' + docIds[1])
               .set({
                 'username': userSeed.docUsers.tuser3[2],
@@ -275,7 +275,7 @@
 
         // should return all docs owned by user
         it('-Should be able to get document by userid', function(done) {
-          agent
+          request
             .get('/api/users/' + userIds[0] + '/documents')
             .set({
               'username': userSeed.docUsers.tuser3[2],
@@ -303,7 +303,7 @@
 
         // should be able to delete document with only role access and ownerId
         it('-Should be able to delete own document', function(done) {
-          agent
+          request
             .delete('/api/documents/' + docIds[1])
             .set({
               'username': userSeed.docUsers.tuser3[2],
@@ -327,7 +327,7 @@
         it('-Should not be able to delete shared document ' +
           'owned by others',
           function(done) {
-            agent
+            request
               .delete('/api/documents/' + docIds[0])
               .set({
                 'username': userSeed.docUsers.tuser3[2],
@@ -351,7 +351,7 @@
         //  should not be able to delete doucments owned by others
         it('-Should not be able to delete own shared document',
           function(done) {
-            agent
+            request
               .delete('/api/documents/' + docIds[2])
               .set({
                 'username': userSeed.docUsers.tuser3[2],

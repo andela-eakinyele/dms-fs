@@ -3,7 +3,7 @@
   var _ = require('lodash');
   var apiTest = require('./specVar')();
   var assert = require('assert');
-  var agent = apiTest.agent;
+  var request = apiTest.request;
   var roleSeed = apiTest.testdata.roles;
   var userSeed = apiTest.testdata.users;
 
@@ -17,7 +17,7 @@
         };
       // role route requires authentication and validation
       it('Should require a login/access_token for Role CRUD', function(done) {
-        agent
+        request
           .post('/api/roles')
           .type('json')
           .send({
@@ -36,7 +36,7 @@
       });
       // verify admin login
       it('Should return a token on Successful login', function(done) {
-        agent
+        request
           .post('/api/users/login')
           .type('json')
           .send(user)
@@ -45,18 +45,18 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            adminUser = response.user;
-            token = response.token;
-            assert(response.token, 'Token not generated');
-            assert.equal(typeof response.expires, 'number');
-            assert.equal(response.user.username, 'EAbbott');
+            adminUser = response.data.user;
+            token = response.data.token;
+            assert(token, 'Token not generated');
+            assert.equal(typeof response.data.expires, 'number');
+            assert.equal(response.data.user.username, 'EAbbott');
             done();
           });
       });
 
       // group admin user create roles
       it('- Should be able to create roles for valid group', function(done) {
-        agent
+        request
           .post('/api/roles')
           .type('json')
           .set({
@@ -64,46 +64,23 @@
             access_token: token,
             groupid: 113
           })
-          .send({
+          .send([{
             title: roleSeed.testRole,
             groupId: 113
-          })
+          }])
           .expect(201)
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            testRole = response.data;
-            assert.equal(response.message, 'Created new Roles');
+            testRole = response.ops[0];
             assert.equal(testRole.title, 'Manager');
-            assert.deepEqual(testRole.groupId, [113]);
-            done();
-          });
-      });
-
-      it('- Should rollback roles for invalid group', function(done) {
-        agent
-          .post('/api/roles')
-          .type('json')
-          .set({
-            userid: adminUser._id,
-            access_token: token,
-            groupid: 113
-          })
-          .send({
-            title: 'New Role',
-            groupId: 600
-          })
-          .expect(400)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(response.message, 'Invalid Group');
+            assert.deepEqual(testRole.groupId, 113);
             done();
           });
       });
 
       it('- Should be able to update roles for group', function(done) {
-        agent
+        request
           .put('/api/roles/' + testRole._id)
           .type('json')
           .set({
@@ -113,21 +90,20 @@
           })
           .send({
             title: 'Librarian',
-            groupId: 113
+            groupId: [113]
           })
           .expect(200)
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response.message, 'Updated Roles');
-            assert.equal(response.data.title, 'Librarian');
-            assert.deepEqual(response.data.groupId, [113]);
+            assert.equal(response.title, 'Librarian');
+            assert.deepEqual(response.groupId, [113]);
             done();
           });
       });
 
       it('- Should be able to get all roles', function(done) {
-        agent
+        request
           .get('/api/roles')
           .type('json')
           .set({
@@ -139,8 +115,7 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response.message, 'Existing Roles');
-            assert.deepEqual(_.pluck(response.data, 'title'), ['Admin',
+            assert.deepEqual(_.pluck(response, 'title'), ['Admin',
               'Librarian'
             ]);
             done();
@@ -149,7 +124,7 @@
 
 
       it('- Should be able to get a role', function(done) {
-        agent
+        request
           .get('/api/roles/' + testRole._id)
           .type('json')
           .set({
@@ -161,14 +136,13 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response.message, 'Roles data:');
-            assert.equal(response.data.title, 'Librarian');
+            assert.equal(response.title, 'Librarian');
             done();
           });
       });
 
       it('- Should be able to delete a role', function(done) {
-        agent
+        request
           .delete('/api/roles/' + testRole._id)
           .type('json')
           .set({
@@ -180,8 +154,7 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response.message, 'Removed Roles');
-            assert.equal(response.data.title, 'Librarian');
+            assert.equal(response.title, 'Librarian');
             done();
           });
       });

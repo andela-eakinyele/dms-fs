@@ -14,7 +14,7 @@
     var Group = require('./../../server/models/group');
 
     return {
-      agent: request.agent(app),
+      request: request(app),
       seed: require('./mockMethods'),
       testdata: require('./testData.json'),
       model: {

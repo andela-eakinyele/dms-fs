@@ -29,7 +29,6 @@
               .then(function(result) {
                 done(null, result);
               }).catch(function(err) { // error with create group
-                console.log(err);
                 done(err);
               });
           },
@@ -51,8 +50,7 @@
                 .then(function(resRole) {
                   done(null, result, resRole);
                 })
-                .catch(function(err) { // error with create group
-                  console.log(err);
+                .catch(function(err) { // error with create role
                   done(err);
                 });
             } else {

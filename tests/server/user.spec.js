@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var apiTest = require('./specVar')();
-  var agent = apiTest.agent;
+  var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
   var mock = apiTest.seed;
@@ -34,7 +34,7 @@
         it('- Should persist a valid userdata to database',
           function(done) {
             var userdata = mock.parseData(keys, data.testUsers.tuser1);
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -55,7 +55,7 @@
           function(done) {
             var userdata = mock.parseData(keys, data.testUsers.tuser1);
             userdata.username = 'HAhmed123';
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -74,7 +74,7 @@
           function(done) {
             var userdata = mock.parseData(keys, data.testUsers.tuser1);
             userdata.email = 'hahmed123@project.com';
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -98,7 +98,7 @@
             var userdata = mock.parseData(keys,
               data.invalidData);
             delete userdata['name.first'];
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -119,7 +119,7 @@
             var userdata = mock.parseData(keys,
               data.invalidData);
             delete userdata['name.last'];
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -140,7 +140,7 @@
             var userdata = mock.parseData(keys,
               data.invalidData);
             delete userdata.username;
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -161,7 +161,7 @@
             var userdata = mock.parseData(keys,
               data.invalidData);
             delete userdata.password;
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -182,7 +182,7 @@
             var userdata = mock.parseData(keys,
               data.invalidData);
             delete userdata.email;
-            agent
+            request
               .post('/api/users')
               .type('json')
               .send(userdata)
@@ -237,7 +237,7 @@
         it('Should require a login/access_token for' +
           ' retrieve or update',
           function(done) {
-            agent
+            request
               .get('/api/users/' + usersId[0])
               .type('json')
               .expect('Content-Type', /json/)
@@ -255,7 +255,7 @@
         it('- Should validate username',
           function(done) {
             var username = 'HAhmed123';
-            agent
+            request
               .post('/api/users/login')
               .type('json')
               .send({
@@ -277,7 +277,7 @@
         it('- Should validate password',
           function(done) {
             var password = 'HAhmed123';
-            agent
+            request
               .post('/api/users/login')
               .type('json')
               .send({
@@ -298,7 +298,7 @@
 
         // successful login and token
         it('- Should return a token on Successful login', function(done) {
-          agent
+          request
             .post('/api/users/login')
             .type('json')
             .send({
@@ -320,7 +320,7 @@
 
         // retrieve any user data
         it('- Should retrieve any user data in group', function(done) {
-          agent
+          request
             .get('/api/users/' + usersId[2] + '/?groupId=' +
               userData[0].groupId)
             .set({
@@ -343,7 +343,7 @@
 
         // should return not exist for invalid user
         it('- Should not find invalid users', function(done) {
-          agent
+          request
             .get('/api/users/600')
             .set({
               username: userData[0].username,
@@ -365,7 +365,7 @@
         it('- Should be able to retrieve all' +
           ' user data in group',
           function(done) {
-            agent
+            request
               .get('/api/users/')
               .set({
                 username: userData[0].username,
@@ -388,7 +388,7 @@
         // should be able to retrieve all group
         it('- Should be able to retrieve all group',
           function(done) {
-            agent
+            request
               .get('/api/groups')
               .set({
                 access_token: token,
@@ -409,7 +409,7 @@
         // should be able to retrieve a group
         it('- Should be able to retrieve a group',
           function(done) {
-            agent
+            request
               .get('/api/groups/' + groupIds[0])
               .set({
                 access_token: token
@@ -430,7 +430,7 @@
         it('- Should be able to update own data', function(done) {
           var userdata = mock.parseData(keys, data.testUsers.PM);
           userdata.username = 'DAdams_Love';
-          agent
+          request
             .put('/api/users/' + usersId[0])
             .set({
               access_token: token,
@@ -451,7 +451,7 @@
 
         it('- Should be able to join a group', function(done) {
           seedGroupdata[1].users.push(usersId[0]);
-          agent
+          request
             .put('/api/groups/' + groupIds[1])
             .set({
               access_token: token,
@@ -475,7 +475,7 @@
 
         // should not be able to delete own userdata
         it('- Should not be able to delete own data', function(done) {
-          agent
+          request
             .delete('/api/users/' + usersId[0])
             .set({
               userid: usersId[0],
@@ -496,7 +496,7 @@
 
         // should not be able to delete other user data
         it('- Should not be able to delete other users data', function(done) {
-          agent
+          request
             .delete('/api/users/' + usersId[1])
             .set({
               userid: usersId[0],
@@ -522,7 +522,7 @@
             title: 'Admin'
           }];
 
-          agent
+          request
             .post('/api/users')
             .set({
               userid: usersId[0],
