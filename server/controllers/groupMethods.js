@@ -86,6 +86,7 @@
             });
           },
           function(newData, resUser, done) {
+            delete resUser._id;
             var query5 = User.findByIdAndUpdate(req.body.userid,
               resUser, {
                 new: true
@@ -100,7 +101,6 @@
         ],
         function(err, result) {
           if (err) {
-            console.log(err);
             res.status(500).json(err);
           } else {
             res.status(result.status).json(result.data);
