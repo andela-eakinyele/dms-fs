@@ -1,107 +1,108 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('tableCtrl', ['$scope',
-      function($scope) {
+    .controller('tableCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
+      'Docs', 'Utils',
+      function($rootScope, $scope, $state, $stateParams, Docs, Utils) {
 
-        $scope.viewing = false;
+        $scope.init = function() {
+          $scope.selectedDocs = [];
+          $scope.getDocs();
+        };
+
+        $scope.getDocs = function() {
+          if (/mydocs/.test($state.current.name)) {
+            Docs.getUserDocs($stateParams.id, function(err, res) {
+              if (err) {
+                console.log('Error retrieving docs for users');
+              } else {
+                $scope.docs = res.data;
+              }
+            });
+          } else {
+            $scope.docs = Docs.query();
+          }
+        };
+
+        $scope.accessDoc = function(doc) {
+          var roleId = window._.map(doc.roles, '_id');
+          var userRole = window._.map($rootScope.activeUser.roles, '_id');
+          return userRole.some(function(a) {
+            return roleId.indexOf(a) > -1;
+          }) || $rootScope.activeUser._id === doc.ownerId[0]._id;
+        };
+
+        // format date data
+        $scope.getTime = function(eventTime) {
+          return Utils.parseTime(eventTime);
+        };
+
+        $scope.query = {
+          order: 'name',
+          limit: 5,
+          page: 1
+        };
 
         // menu control
         $scope.openMenu = function($mdOpenMenu, ev) {
           $mdOpenMenu(ev);
         };
 
-        // parse filename to name and extension
-        $scope.getExt = function(name) {
-          var extStart = name.lastIndexOf('.');
-          return {
-            name: name.substring(0, extStart),
-            ext: name.substring(extStart + 1)
-          };
+        // Update edit/delete docs array
+        $scope.toggle = function(item, list) {
+          var role = list.indexOf(item);
+          if (role > -1) {
+            list.splice(role, 1);
+          } else {
+            list.push(item);
+          }
         };
 
-        $scope.openDoc = function() {
-
+        $scope.selectAll = function() {
+          // body...
         };
 
+        // Menu button action
+        $scope.menuAction = function(ev, id) {
+          if (ev === 'edit') {
+            $state.go('dashboard.doc.edit', {
+              docId: id
+            });
+          }
+          if (ev === 'delete') {
+            Docs.delete({
+              id: id
+            }, function() {
+              Utils.showAlert(ev, 'Delete Action', 'Document' +
+                'successfully deleted');
+              $state.reload();
 
-        $scope.testDocs = [{
-          id: 1,
-          name: '1.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          id: 2,
-          name: '2.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }, {
-          id: 3,
-          name: '3.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          id: 4,
-          name: '4.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }, {
-          id: 5,
-          name: '5.jsx',
-          title: 'Shake and Bake',
-          ownerId: 'Emmy Akin',
-          shared: true,
-          date: '12-11-1654'
-        }, {
-          id: 6,
-          name: '6.js',
-          title: 'Trust and Obey',
-          ownerId: 'Emmy Akin',
-          shared: false,
-          date: '12-11-1654'
-        }];
-
-        $scope.filterExt = window._
-          .chain($scope.testDocs)
-          .map('name')
-          .map(function(name) {
-            return $scope.getExt(name).ext;
-          }).uniq().value();
-
+            });
+          }
+        };
 
         $scope.docMenu = [{
           name: 'Edit Doc',
-          icon: 'fa fa-pencil-square-o fa-2x'
+          icon: 'fa fa-pencil-square-o fa-2x',
+          click: 'edit'
         }, {
           name: 'Delete',
           icon: 'fa fa-trash fa-2x',
-        }];
-
-        $scope.menu = [{
-          name: 'User Profile',
-          icon: 'fa fa-cog fa-2x',
-        }, {
-          name: 'Log Out',
-          icon: 'fa fa-sign-out fa-2x',
+          click: 'delete'
         }];
 
         $scope.headers = [{
-          name: 'FileName',
-          field: 'filename'
+          name: 'Label',
+          field: 'label'
         }, {
           name: 'Title',
           field: 'title'
         }, {
           name: 'Owner',
-          field: 'owner'
+          field: 'ownerId'
+        }, {
+          name: 'Date Created',
+          field: 'lastModified'
         }, {
           name: 'Last Modified',
           field: 'lastModified'
@@ -109,8 +110,8 @@
           name: 'Shared',
           field: 'shared'
         }, {
-          name: 'Type',
-          field: 'ext'
+          name: '',
+          field: 'buttons '
         }];
 
 
@@ -186,6 +187,8 @@
           name: 'Delete',
           icon: 'fa fa-trash fa-2x',
         }];
+
+        $scope.init();
 
       }
 

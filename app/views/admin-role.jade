@@ -1,31 +1,34 @@
 div.addrole(layout="column" layout-padding ng-init="loadRoles()")
-  div.viewheader(layout="row" layout-padding)
-    div(flex)
-      h3.md-subheadline Add New Roles
-    div.no-padding(layout="row") 
-      div.plusminus(layout layout-margin layout-align="center center")
-        md-button.md-raised.md-icon-button(ng-click="decrease()" aria-label="remove fields")
-          md-icon(md-font-set="fa fa-minus")
-        md-button.md-raised.md-icon-button(ng-click="increase()" aria-label="add fields")
-          md-icon(md-font-set="fa fa-plus")
-      md-button.md-primary.md-raised(ng-click="create($event)" ng-disabled="disableCreateButton(newRoles)")
-        span Create
-      md-button.md-accent.md-raised(ng-click="cancelAdd()")
-        span Clear
-  md-content(layout="row" layout-wrap layout-margin)
-    md-input-container(ng-repeat="i in range(num) track by $index" flex="45")
-      label {{$index +1}} 
-      md-icon(md-font-set="fa fa-dot-circle-o fa-2x")
-      input(type="text" ng-model="newRoles[$index]")
-  div.viewheader(layout="row" layout-padding)
-    div(flex)
-      h3.md-subheadline Existing Roles
-    div.no-padding(layout="row") 
-      md-button.md-primary.md-raised(ng-click="deleteRoles($event)")
-        span Delete
-      md-button.md-accent.md-raised(ng-click="cancelEdit()")
-        span Clear
-  md-content(layout="row" layout-wrap layout-padding)
-    md-checkbox(ng-checked="editRoles.indexOf(role) > -1" aria-label="New Group" ng-repeat="role in roles" flex="30" ng-disabled="role.title===\"Admin\"" ng-click="toggle(role, editRoles)") {{role.title}} [{{role.users.length}} Users]
+  md-toolbar
+    .md-toolbar-tools.viewheader(layout="row")
+      div(flex)
+        h3.md-subheadline Add New Roles
+      div.no-padding(layout="row") 
+        div.plusminus(layout layout-align="center center")
+          md-button.md-raised.md-icon-button(ng-click="decrease()" aria-label="remove fields")
+            md-icon(md-font-set="fa fa-minus")
+          md-button.md-raised.md-icon-button(ng-click="increase()" aria-label="add fields")
+            md-icon(md-font-set="fa fa-plus")
+        md-button.md-primary.md-raised(ng-click="create($event)" ng-disabled="!enableCreateButton(newRoles)")
+          span Create
+        md-button.md-accent.md-raised(ng-click="cancelAdd()")
+          span Clear
+    md-content.roleadd(layout="row" layout-wrap layout-padding)
+      md-input-container(ng-repeat="i in range(num) track by $index" flex="45")
+        label {{$index +1}} 
+        md-icon(md-font-set="fa fa-dot-circle-o")
+        input(type="text" ng-model="newRoles[$index]")
+  div(flex)
+  md-toolbar
+    .md-toolbar-tools.viewheader(layout="row")
+      div(flex)
+        h3.md-subheadline Existing Roles
+      div.no-padding(layout="row") 
+        md-button.md-primary.md-raised(ng-click="deleteRoles($event)")
+          span Delete
+        md-button.md-accent.md-raised(ng-click="cancelEdit()")
+          span Clear
+    md-content(layout="row" layout-wrap layout-padding)
+      md-checkbox(ng-checked="editRoles.indexOf(role) > -1" aria-label="New Group" ng-repeat="role in roles" flex="30" ng-disabled="role.title===\"Admin\"" ng-click="toggle(role, editRoles)") {{role.title}} [{{role.users.length}} Users]
 
   

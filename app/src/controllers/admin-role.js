@@ -32,10 +32,10 @@
           $scope.num -= 1;
         };
 
-        $scope.disableCreateButton = function(list) {
-          return window._.filter(list, function(a) {
-            return a.trim().length > 0;
-          }).length === 0;
+        $scope.enableCreateButton = function(list) {
+          return window._.every(list, function(a) {
+            return a ? a.trim().length > 0 : false;
+          });
         };
 
         $scope.create = function(ev) {

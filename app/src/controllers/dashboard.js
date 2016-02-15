@@ -24,20 +24,24 @@
             });
           }
 
-          $scope.fabisOpen = false;
-          $scope.tooltipVisible = false;
+          Docs.query(function(res) {
+            $scope.allDocs = res;
+            $scope.label = window._.uniq(window._.map($scope.allDocs, 'label'));
+            // Side bar navigation menu
+            $scope.sideBarMenu = [{
+              name: 'Group Documents',
+              subMenu: ['My Documents', 'Shared Documents']
+            }, {
+              name: 'Labels',
+              subMenu: $scope.label
+            }];
+          }, function(err) {
+            console.log(err);
+          });
+
+
         };
 
-        // check if FAB button is open and show tooltip
-        $scope.$watch('fabisOpen', function(isOpen) {
-          if (isOpen) {
-            $timeout(function() {
-              $scope.tooltipVisible = $scope.fabisOpen;
-            }, 600);
-          } else {
-            $scope.tooltipVisible = $scope.fabisOpen;
-          }
-        });
 
         // Load Dialog with form template
         $scope.updateUserModal = function(ev) {
@@ -109,7 +113,7 @@
           subMenu: ['My Documents', 'Shared Documents']
         }, {
           name: 'Labels',
-          subMenu: $scope.filterExt
+          subMenu: $scope.label
         }];
 
         $scope.adminSideBarMenu = [

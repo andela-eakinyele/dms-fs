@@ -7,7 +7,7 @@
           request: function(config) {
             var xtoken = Token.get();
             var userid, groupid;
-            if (xtoken) {
+            if (xtoken !== 'undefined' && xtoken !== null) {
               userid = JSON.parse(xtoken) ? true : false;
               groupid = ($rootScope.activeGroup) ? true : false;
               config.headers.access_token = JSON.parse(xtoken)['token'];
