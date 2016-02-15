@@ -89,12 +89,13 @@
 
           // update user with group and role id
           function(newData, resUser, done) {
-            var update = resUser;
-            console.log(update);
-            var query5 = User.findByIdAndUpdate(req.body.userid,
-              resUser, {
-                new: true
-              });
+
+            var query5 = User.findByIdAndUpdate(req.body.userid, {
+              roles: resUser.roles,
+              groupId: resUser.groupId
+            }, {
+              new: true
+            });
             cm.gUpdate('Users', req.body.userid, query5)
               .then(function() {
                 done(null, newData);
@@ -127,7 +128,10 @@
     get: function(req, res) {
       var query = Group.findOne({
         _id: req.params.id
-      }).populate({ path: 'users', select: 'username name roles email' });
+      }).populate({
+        path: 'users',
+        select: 'username name roles email'
+      });
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
           result.data.passphrase = null;
