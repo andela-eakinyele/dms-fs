@@ -31,11 +31,13 @@
         mock.seedCreate(apiTest.model.user, keys,
             data.seedUsers, 101)
           .then(function(users) {
+            console.log('Seeded Users');
             userData = users;
             usersId = _.pluck(users, '_id');
             mock.seedCreate(apiTest.model.group, groupKeys,
                 groupSeed.seedGroups, 114)
               .then(function(groups) {
+                console.log('Seeded Groups\n', userData);
                 seedGroupdata = groups;
                 groupIds = _.pluck(groups, '_id');
                 // update users with group id
@@ -47,10 +49,13 @@
                 mock.seedUpdate(apiTest.model.user, userData)
                   .then(function(updated) {
                     userData = updated;
+                    console.log(userData);
+                    console.log('Updated seed Users');
                     done();
                   })
                   .catch(function(err) {
                     console.log('Error updating users', err);
+                    return;
                   });
               }).catch(function(err) {
                 console.log('Error mocking groups', err);
@@ -307,6 +312,7 @@
 
       // retrieve any user data
       it('- Should retrieve any user data in group', function(done) {
+        console.log(userData);
         request
           .get('/api/users/' + usersId[2] + '/?groupId=' +
             userData[0].groupId)
