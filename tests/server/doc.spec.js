@@ -37,27 +37,40 @@
           roleData = roles;
           roleIds = _.pluck(roles, '_id');
 
+          console.log('Seeded Roles');
           // seed users and add role
           mock.seedCreate(apiTest.model.user, uKey,
             userSeed.docUsers, 203).then(function(users) {
             userData = users;
-            userData = _.map(userData, function(user, index) {
+            var ids = _.pluck(userData, '_id');
+            console.log('Seeded Users');
+
+            // create update data for users
+            var updateData = _.map(userData, function(user, index) {
               user.roles.push(roleIds[index % 2]);
               user.groupId.push(113);
-              return user;
+              return {
+                groupId: user.groupId,
+                roles: user.roles
+              };
             });
+
             // mock updated user data
-            mock.seedUpdate(apiTest.model.user, userData)
+            mock.seedUpdate(apiTest.model.user, updateData, ids)
               .then(function(updated) {
                 userData = updated;
                 userIds = _.pluck(updated, '_id');
+                console.log('Updated Users');
 
+                // seed documents
                 mock.seedCreate(apiTest.model.doc, keys,
                     data.seedDocs, 100)
                   .then(function(docs) {
                     docData = docs;
                     docIds = _.pluck(docs, '_id');
+                    console.log('Seeded Documents');
                     done();
+
                   }).catch(function(err) {
                     console.log('Error mocking docs', err);
                     return;

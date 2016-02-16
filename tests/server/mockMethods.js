@@ -28,9 +28,9 @@
     });
   };
 
-  exports.seedUpdate = function(model, seedData) {
-    return promise.mapSeries(seedData, function(data) {
-      return model.findByIdAndUpdate(data._id,
+  exports.seedUpdate = function(model, seedData, seedIds) {
+    return promise.mapSeries(seedData, function(data, index) {
+      return model.findByIdAndUpdate(seedIds[index],
           data, {
             new: true
           })

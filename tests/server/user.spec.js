@@ -28,28 +28,35 @@
     describe('Users CRUD\n', function() {
       // seed users
       before(function(done) {
+
         mock.seedCreate(apiTest.model.user, keys,
             data.seedUsers, 101)
           .then(function(users) {
-            console.log('Seeded Users');
             userData = users;
             usersId = _.pluck(users, '_id');
+            console.log('Seeded Users');
+
+            // seed groups
             mock.seedCreate(apiTest.model.group, groupKeys,
                 groupSeed.seedGroups, 114)
               .then(function(groups) {
-                console.log('Seeded Groups\n', userData);
                 seedGroupdata = groups;
                 groupIds = _.pluck(groups, '_id');
+                console.log('Seeded Groups');
+
                 // update users with group id
-                userData = _.map(userData, function(a, index) {
+                var ids = _.pluck(userData, '_id');
+                var updateData = _.map(userData, function(a, index) {
                   a.groupId.push(groupIds[index % 2]);
-                  return a;
+                  return {
+                    groupId: a.groupId
+                  };
                 });
+
                 // mock updated user data
-                mock.seedUpdate(apiTest.model.user, userData)
+                mock.seedUpdate(apiTest.model.user, updateData, ids)
                   .then(function(updated) {
                     userData = updated;
-                    console.log(userData);
                     console.log('Updated seed Users');
                     done();
                   })
@@ -312,7 +319,6 @@
 
       // retrieve any user data
       it('- Should retrieve any user data in group', function(done) {
-        console.log(userData);
         request
           .get('/api/users/' + usersId[2] + '/?groupId=' +
             userData[0].groupId)
