@@ -199,6 +199,7 @@
         ' other users data',
         function(done) {
           var userdata = users[1];
+          delete userdata._id;
           userdata.username = 'Altered username';
           request
             .put('/api/users/' + ids[1])
