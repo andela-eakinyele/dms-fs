@@ -14,7 +14,10 @@
   module.exports = function() {
 
     describe('Users CRUD\n', function() {
-      var testuser, userData, token, usersId, seedGroupdata, groupIds;
+      var testuser, userData = [],
+        token, usersId = [],
+        seedGroupdata = [],
+        groupIds = [];
 
       // seed users
       before(function(done) {

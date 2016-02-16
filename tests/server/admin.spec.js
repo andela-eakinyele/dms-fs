@@ -197,7 +197,7 @@
                 .end(function(err, res) {
                   assert.equal(null, err, 'Error encountered');
                   var response = res.body;
-                  console.log(response);
+                  assert.equal(response.ops[0].title, 'Publishers');
                   done();
                 });
             });

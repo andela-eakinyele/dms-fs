@@ -36,7 +36,6 @@
                 }
               });
             }).catch(function(err) {
-              console.log(err);
               cm.resdberrors(res, 'querying database', err);
             });
           }
