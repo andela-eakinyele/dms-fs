@@ -19,15 +19,17 @@
 
   module.exports = function() {
 
+    var token = [];
+    var userData = [];
+    var userIds = [];
+    var docData = [];
+    var docIds = [];
+    var roleData = [];
+    var roleIds = [];
+    var testDoc = '';
+
     describe('Document CRUD\n', function() {
-      var token = [];
-      var userData = [];
-      var userIds = [];
-      var docData = [];
-      var docIds = [];
-      var roleData = [];
-      var roleIds = [];
-      var testDoc = '';
+
 
       describe('Valid and authenticate users can create documents', function() {
 

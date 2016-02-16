@@ -13,15 +13,14 @@
 
   module.exports = function() {
 
+    var testuser = '';
+    var userData = '';
+    var token = '';
+    var usersId = '';
+    var seedGroupdata = '';
+    var groupIds = '';
+
     describe('Users CRUD\n', function() {
-
-      var testuser = '';
-      var userData = '';
-      var token = '';
-      var usersId = '';
-      var seedGroupdata = '';
-      var groupIds = '';
-
       // seed users
       before(function(done) {
         mock.seedCreate(apiTest.model.user, keys,

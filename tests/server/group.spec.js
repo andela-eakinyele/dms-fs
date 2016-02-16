@@ -13,10 +13,14 @@
   ];
 
   module.exports = function() {
+    var token = '';
+    var userData = '';
+    var usersId = '';
+    var testGroup = '';
+    var adminUser = '';
 
 
     describe('Group Spec', function() {
-      var token, userData, usersId, testGroup, adminUser;
 
       describe(' - Create Group and Group Admin', function() {
 

@@ -14,3 +14,4 @@ dependencies:
     - npm install module-deps
     - npm install gulp -g
     - npm install mocha -g
+    - npm install codeclimate-test-reporter -g

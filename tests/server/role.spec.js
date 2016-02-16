@@ -9,14 +9,15 @@
 
   module.exports = function() {
 
+    var token = '';
+    var testRole = '';
+    var adminUser = '';
+    var user = {
+      username: userSeed.groupUsers.tuser2[2],
+      password: userSeed.groupUsers.tuser2[3]
+    };
     describe('Admin User CRUD role', function() {
-      var token = '';
-      var testRole = '';
-      var adminUser = '';
-      var user = {
-        username: userSeed.groupUsers.tuser2[2],
-        password: userSeed.groupUsers.tuser2[3]
-      };
+
       // role route requires authentication and validation
       it('Should require a login/access_token for Role CRUD', function(done) {
         request
