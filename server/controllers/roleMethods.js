@@ -28,7 +28,7 @@
                 a._id = nextId + index;
                 return a;
               });
-              Role.collection.insert(req.body, function(err, inserted) {
+              Role.collection.insert(bulkData, function(err, inserted) {
                 if (err) {
                   res.status(400).json(err);
                 } else {
@@ -39,25 +39,6 @@
               cm.resdberrors(res, 'querying database', err);
             });
           }
-        });
-    },
-
-    create: function(req, res) {
-      var groupid = parseInt(req.headers.groupid) ||
-        parseInt(req.query.groupid);
-      req.body.groupId = groupid;
-      // query for existing role
-      var query = Role.find({
-        title: req.body.title,
-        groupId: [parseInt(req.headers.groupid)]
-      });
-      // create role or return existing role
-      cm.gCreate('Roles', req.body, Role, query)
-        .then(function(role) {
-          res.status(role.status).json(role.data);
-          // return error during role create
-        }).catch(function(err) {
-          res.status(err.status).json(err);
         });
     },
 

@@ -71,7 +71,6 @@
       }).sort('dateCreated');
     return new Promise(function(resolve, reject) {
       query.then(function(docs) {
-          console.log(docs);
           resolve(docs);
         },
         function(err) {

@@ -29,7 +29,6 @@
               .then(function(result) {
                 done(null, result);
               }).catch(function(err) { // error with create group
-                console.log(err);
                 done(err);
               });
           },
@@ -51,8 +50,7 @@
                 .then(function(resRole) {
                   done(null, result, resRole);
                 })
-                .catch(function(err) { // error with create group
-                  console.log(err);
+                .catch(function(err) { // error with create role
                   done(err);
                 });
             } else {
@@ -70,28 +68,34 @@
             cm.gUpdate('Groups', result.data._id, query4)
               .then(function(newData) {
                 newData.passphrase = null;
-                done(null, result, resRole, newData);
+                done(null, result.data._id, resRole.data._id, newData);
               }).catch(function(err) { // error with update group
                 done(err);
               });
           },
 
           // retrieve user and update group, role with admin for group
-          function(result, resRole, newData, done) {
+          function(a, b, c, done) {
             user.retrieveData(query2).then(function(resUser) {
-              resUser.roles.push(resRole.data._id);
-              resUser.groupId.push(result.data._id);
-              done(null, newData, resUser);
+
+              resUser.roles.push(parseInt(b));
+              resUser.groupId.push(parseInt(a));
+              done(null, c, resUser);
 
             }).catch(function(err) { // error with retrieve user
               done(err);
             });
           },
+
+          // update user with group and role id
           function(newData, resUser, done) {
-            var query5 = User.findByIdAndUpdate(req.body.userid,
-              resUser, {
-                new: true
-              });
+
+            var query5 = User.findByIdAndUpdate(req.body.userid, {
+              roles: resUser.roles,
+              groupId: resUser.groupId
+            }, {
+              new: true
+            });
             cm.gUpdate('Users', req.body.userid, query5)
               .then(function() {
                 done(null, newData);
@@ -102,6 +106,7 @@
         ],
         function(err, result) {
           if (err) {
+            console.log(err);
             res.status(500).json(err);
           } else {
             res.status(result.status).json(result.data);
@@ -123,7 +128,10 @@
     get: function(req, res) {
       var query = Group.findOne({
         _id: req.params.id
-      }).populate({ path: 'users', select: 'username name roles email' });
+      }).populate({
+        path: 'users',
+        select: 'username name roles email',
+      }).populate('roles');
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
           result.data.passphrase = null;

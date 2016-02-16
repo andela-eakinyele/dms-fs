@@ -1,6 +1,7 @@
 (function() {
   'use strict';
   var promise = require('bluebird');
+  var bcrypt = require('bcrypt-nodejs');
   var _ = require('lodash');
   var User = require('./../../server/models/user');
   var Doc = require('./../../server/models/document');
@@ -11,7 +12,14 @@
     keys.push('_id');
     return promise.mapSeries(_.values(seedData), function(data, index) {
       data.push(minId + index);
-      return model.create(_.zipObject(keys, data))
+      var _data = _.zipObject(keys, data);
+      if (_data.password) {
+        _data.password = bcrypt.hashSync(_data.password);
+      }
+      if (_data.passphrase) {
+        _data.passphrase = bcrypt.hashSync(_data.passphrase);
+      }
+      return model.create(_data)
         .then(function(created) {
           return created;
         }, function(err) {
@@ -20,9 +28,9 @@
     });
   };
 
-  exports.seedUpdate = function(model, seedData) {
-    return promise.mapSeries(seedData, function(data) {
-      return model.findByIdAndUpdate(data._id,
+  exports.seedUpdate = function(model, seedData, seedIds) {
+    return promise.mapSeries(seedData, function(data, index) {
+      return model.findByIdAndUpdate(seedIds[index],
           data, {
             new: true
           })

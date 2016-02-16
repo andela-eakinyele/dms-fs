@@ -9,11 +9,11 @@
 
   function superAdmin(id, userid) {
     var query = User.findOne({
-      _id: id
+      _id: userid
     }).populate('roles');
 
     return new Promise(function(resolve, reject) {
-      cm.gGetOne('Users', query, id)
+      cm.gGetOne('Users', query, userid)
         .then(function(user) {
           if (user) {
             var superAdmin = _.filter(user.data.roles, {
@@ -42,7 +42,9 @@
         .select('username name')
         .populate('roles');
 
-      req.body.password = bcrypt.hashSync(req.body.password);
+      if (req.body.password) {
+        req.body.password = bcrypt.hashSync(req.body.password);
+      }
 
       cm.gCreate('Users',
           req.body, User, query)
@@ -94,7 +96,6 @@
           if (result) {
             cm.gUpdate('Users', req.params.id, query2)
               .then(function(result) {
-                console.log(result);
                 res.status(result.status).json(result.data);
               }).catch(function(err) {
                 res.status(err.status).json(err.error);

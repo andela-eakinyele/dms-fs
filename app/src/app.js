@@ -306,9 +306,11 @@
               Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
             }
 
-            //check for superAdmin user
+            //check for Admin user
             var Admin = window._
-              .filter(res.data.user.roles, { 'title': 'Admin' });
+              .filter(res.data.user.roles, {
+                'title': 'Admin'
+              });
 
             if (Admin.length > 0) {
               $state.go('dashboard.admin.viewdoc', {
@@ -318,7 +320,19 @@
 
               // not admin user
             } else {
-              if (!res.group && res.data.user.groupId.length === 0) {
+
+              //check for superAdmin user
+              var superAdmin = window._
+                .filter(res.data.user.roles, {
+                  'title': 'superAdmin'
+                });
+
+              console.log(superAdmin);
+              if (superAdmin.length > 0) {
+                $state.go('dashboard.admin.user', {
+                  id: res.data.user._id
+                });
+              } else if (!res.group && res.data.user.groupId.length === 0) {
                 $state.go('home.group', {
                   id: res.data.user._id
                 });

@@ -2,7 +2,7 @@
   'use strict';
 
   var apiTest = require('./specVar')();
-  var agent = apiTest.agent;
+  var request = apiTest.request;
 
   module.exports = function() {
 
@@ -10,7 +10,7 @@
 
       // should respond to root route
       it('- API should respond to root', function(done) {
-        agent
+        request
           .get('/api')
           .set('Accept', 'application/json')
           .expect(200, {

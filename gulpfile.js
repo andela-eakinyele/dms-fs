@@ -178,7 +178,9 @@
         read: false
       })
       .pipe(reporter({
-        token: process.env.CODECLIMATE_REPO_TOKEN
+        token: process.env.CODECLIMATE_REPO_TOKEN,
+        executable: './node_modules/codeclimate-test-reporter/bin/codeclimate',
+        verbose: true
       }));
   });
 
