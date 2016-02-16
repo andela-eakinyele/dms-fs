@@ -12,7 +12,7 @@
   var jshint = require('gulp-jshint');
   var imagemin = require('gulp-imagemin');
   var reporter = require('gulp-codeclimate-reporter');
-
+  var karma = require('gulp-karma');
   var watchify = require('watchify');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
@@ -31,12 +31,7 @@
       'app/**/*.*',
       'app/styles/*.css'
     ],
-    unitTests: [
-      'public/lib/angular/angular.min.js',
-      'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-      'public/js/application.js',
-      'tests/unit/**/*.spec.js'
-    ],
+    unitTests: [],
     serverTests: ['./tests/server/**/*.spec.js'],
     libTests: ['lib/tests/**/*.js'],
     styles: 'app/styles/*.+(less|css)'
@@ -123,6 +118,22 @@
 
   gulp.task('buildjs', bundle.bind(null, bundler()));
 
+
+  gulp.task('test:fend', ['buildjs', 'bower'], function() {
+    // Be sure to return the stream
+    return gulp.src(paths.unitTests)
+      .pipe(karma({
+        configFile: __dirname + '/karma.conf.js',
+        // autoWatch: false,
+        // singleRun: true
+        action: 'run'
+      }))
+      .on('error', function(err) {
+        // Make sure failed tests cause gulp to exit non-zero
+        throw err;
+      });
+  });
+
   // test runners
   // server api tests
   gulp.task('test:bend', function() {
@@ -179,7 +190,6 @@
       })
       .pipe(reporter({
         token: process.env.CODECLIMATE_REPO_TOKEN,
-        executable: './node_modules/codeclimate-test-reporter/bin/codeclimate',
         verbose: true
       }));
   });

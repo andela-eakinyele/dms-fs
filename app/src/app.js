@@ -1,8 +1,9 @@
 (function() {
   'use strict';
 
-  angular.module('prodocs.controllers', []);
   angular.module('prodocs.services', []);
+  angular.module('prodocs.controllers', []);
+
 
   //Require Services
   require('./services/roles');
@@ -29,8 +30,8 @@
   require('./controllers/view-doc');
 
   window.app = angular.module('prodocs', [
-    'prodocs.controllers',
     'prodocs.services',
+    'prodocs.controllers',
     'ngRoute',
     'ngMessages',
     'ngResource',

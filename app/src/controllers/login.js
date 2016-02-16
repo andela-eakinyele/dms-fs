@@ -17,6 +17,7 @@
             if (err) {
               $scope.loginErr = 'Invalid Username/Password';
             } else {
+              $scope.loginErr = '';
               $rootScope.activeUser = res.data.user;
 
               var userGroup = res.data.user.groupId.length > 0;
@@ -35,9 +36,11 @@
                 });
 
               } else {
-                var superAdmin = window._.map(res.data.user.roles, 'title');
+                var superAdmin = window._.map(res.data.user.roles, {
+                  title: 'superAdmin'
+                });
                 if (superAdmin.length > 0) {
-                  $state.go('dashboard.admin'.viewdocs, {
+                  $state.go('dashboard.admin.viewdocs', {
                     id: res.data.user._id
                   });
                 } else {
