@@ -16,28 +16,20 @@
         });
 
         obj.login = function(user, cb) {
-          $http.post('/api/users/login', user).success(function(res) {
-            cb(null, res);
-          }).error(function(err) {
+          $http.post('/api/users/login', user).then(function(res) {
+            cb(null, res.data);
+          }, function(err) {
             cb(err);
           });
         };
-        // obj.session = function(cb) {
-        //   $http.get('/api/users/session').success(function(res) {
-        //     cb(null, res);
-        //   }).error(function(err) {
-        //     cb(err);
-        //   });
-        // };
 
-        // obj.logout = function(cb) {
-        //   $http.get('/api/users/logout').success(function(res) {
-        //     cb(null, res);
-        //   }).error(function(err) {
-        //     cb(err);
-        //   });
-        // };
-
+        obj.session = function(cb) {
+          $http.get('/api/session').then(function(res) {
+            cb(null, res.data);
+          }, function(err) {
+            cb(err);
+          });
+        };
 
         return obj;
       }

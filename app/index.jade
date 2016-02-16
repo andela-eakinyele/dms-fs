@@ -1,10 +1,9 @@
 doctype html
-html(lang="en" ng-app="prodocs")
+html(lang="en" ng-app="prodocs" ng-cloak)
   head
     title(ng-bind="\"Prodocs\" +$state.current.name")
     include shared/head
   body
-    main
-      div(ui-view)
-  footer
-    include shared/footer
+    div(layout="column")
+      div.main(ui-view)
+

@@ -1,9 +1,10 @@
-.dashboard(layout="column" class="mdl-layout mdl-js-layout mdl-layout--fixed-header")
-  md-toolbar.md-accent(ui-view="header")
+.dashboard(layout="column" ng-cloak)
+  md-toolbar(ui-view="header")
   div(layout="row" id="dashContent")
     div.sidenav(layout="row"  ui-view="sidenav")
     div(layout="column" flex)
       div(ui-view="inner")
+      div(ui-view="add")
 
         
 

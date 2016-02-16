@@ -98,7 +98,11 @@
               'data': rstGet
             });
           } else {
-            notExist(modelName, rstGet, resolve);
+            resolve({
+              'status': 200,
+              'message': 'Existing ' + modelName,
+              'data': []
+            });
           }
         },
         function(err) { // db error

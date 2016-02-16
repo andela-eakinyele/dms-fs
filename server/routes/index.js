@@ -19,7 +19,10 @@
     });
   });
 
+
   router.post('/users/login', auth.login);
+  router.get('/session', validate.session);
+
   router.post('/users', validate.adminUser, userRoute.create);
 
 
@@ -45,11 +48,13 @@
   router.put('/documents/:id', docRoute.update);
 
   router.get('/roles', roleRoute.all);
-  router.get('/roles/:id', roleRoute.get);
+  router.route('/roles/:id')
+    .put(roleRoute.update)
+    .get(roleRoute.get);
+
   router.get('/roles/:id/documents', roleRoute.getDocsByRole);
 
   router.get('/users/:id/documents', docRoute.getDocsById);
-  router.get('/documents/date', docRoute.getDocsByDate);
 
   // Routes that require owner/access validation
   router.route('/documents/:id')
@@ -64,8 +69,8 @@
   // Routes that can be accessed only by authenticated and authorized users
   router.all('/*', validate.authorize);
 
-  router.route('/roles')
-    .post(roleRoute.create);
+  router.post('/roles', roleRoute.bulkCreate);
+  router.post('/roles/delete', roleRoute.bulkDelete);
 
   router.route('/roles/:id')
     .put(roleRoute.update)

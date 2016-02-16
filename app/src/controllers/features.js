@@ -1,14 +1,11 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('featCtrl', ['$mdMedia', '$scope',
+    .controller('featCtrl', ['$mdMedia', '$scope', '$http',
       function($mdMedia, $scope) {
 
         $scope.init = function() {
-          console.log('test');
           $scope.bigScreen = $mdMedia('gt-sm');
-          console.log($scope.bigScreen);
-
         };
 
         $scope.$watch(function() {
@@ -25,7 +22,7 @@
             ' Create your own group or Join one'
         }, {
           'title': 'Add Team Members/Users',
-          'content': 'Team members can be added by Admin' +
+          'content': 'Team members can be added by Admin ' +
             'or send them the group passphrase '
         }, {
           'title': 'Create and Share Documents',
@@ -37,6 +34,7 @@
             'and ownership '
         }];
 
+        $scope.init();
       }
     ]);
 })();

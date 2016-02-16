@@ -1,5 +1,7 @@
 (function() {
   'use strict';
+
+  var apiTest = require('./specVar')();
   var initSpec = require('./init.spec');
   var roleSpec = require('./role.spec');
   var userSpec = require('./user.spec');
@@ -7,13 +9,12 @@
   var adminSpec = require('./admin.spec');
   var groupSpec = require('./group.spec');
 
-  var apiTest = require('./specVar');
 
   describe('Testing API Routes', function() {
+
     after(function(done) {
       apiTest.seed.deleteModels(done);
     });
-
 
     initSpec();
     groupSpec();
@@ -21,6 +22,5 @@
     userSpec();
     docSpec();
     adminSpec();
-
   });
 })();

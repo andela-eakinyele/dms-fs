@@ -10,8 +10,8 @@
     // query for document
     var queryDoc = Doc.findOne({
       _id: id,
-      groupId: groupId
-    });
+      groupId: [groupId]
+    }).populate('ownerId');
     // query for user access
     var queryUser = User.findOne({
       _id: userId
@@ -40,6 +40,7 @@
         }).catch(function(errDoc) {
           cm.dberrors(reject, 'querying database', errDoc, 500);
         });
+
     });
 
   }
@@ -52,16 +53,16 @@
       // query for existing document
       var query = Doc.find({
         title: req.body.title
-      });
+      }).populate('roles');
 
       req.body.ownerId = userid;
       req.body.groupId = [groupid];
       cm.gCreate('Documents', req.body, Doc, query)
         .then(function(result) {
           // respond with new document details
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
 
     },
@@ -69,21 +70,21 @@
     all: function(req, res) {
       var groupid = parseInt(req.headers.groupid);
       var query = Doc.find({})
-        .where('groupId')
-        .in([groupid])
+        .where('groupId').in([groupid])
+        .populate('groupId')
+        .populate('roles')
         .populate({
           path: 'ownerId',
-          select: 'username'
-        }).populate('roles')
-        .sort('dateCreated');
+          select: 'username name'
+        }).sort('dateCreated');
       if (req.params.limt) {
         query = query.limit(req.params.limit);
       }
       cm.gGetAll('Documents', query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -93,10 +94,11 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status) {
-            res.status(a[1].status).json(a[1]);
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if ((a[0].length && !a[0].status) ||
+            (a[2].data._id === a[1].data.ownerId[0]._id)) {
+            res.status(a[1].status).json(a[1].data);
           } else {
             res.status(403).json({
               'status': 403,
@@ -117,20 +119,21 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status) {
-            req.body.ownerId = a[1].data.ownerId;
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if (!a[0].status &&
+            (a[2].data._id === a[1].data.ownerId[0]._id)) {
+            req.body.ownerId = [a[1].data.ownerId[0]._id];
             req.body.lastModified = Date.now();
             var query = Doc.findByIdAndUpdate(req.params.id, req.body, {
               new: true
             });
             cm.gUpdate('Documents', req.params.id, query)
               .then(function(result) {
-                res.status(result.status).json(result);
+                res.status(result.status).json(result.data);
               }).catch(function(err) {
-                res.status(err.status).json(err);
+                res.status(err.status).json(err.error);
               });
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
           } else {
             res.status(403).json({
               'status': 403,
@@ -146,42 +149,13 @@
 
     getDocsById: function(req, res) {
       var ownerId = req.params.id;
-      Doc.getDocsByOwnerId(ownerId).then(function(data) {
-        if (data.length) {
-          res.status(200).json({
-            'status': 200,
-            'message': 'Document for id ' + req.params.id,
-            'data': data
-          });
-        } else {
-          res.status(200).json({
-            'message': 'No Document exist for id ' + req.params.id,
-            'data': []
-          });
-        }
-      }).catch(function(err) {
-        cm.resdberrors(res, 'querying database', err);
-      });
-    },
-
-    getDocsByDate: function(req, res) {
-      Doc.getDocsByDate(req.query.date).then(function(data) {
-        if (data.length) {
-          res.status(200).json({
-            'status': 200,
-            'message': 'Document for ' + req.query.date,
-            'data': data
-          });
-        } else {
-          res.status(200).json({
-            'status': 200,
-            'message': 'No Document exist for date ',
-            'data': []
-          });
-        }
-      }).catch(function(err) {
-        cm.resdberrors(res, 'querying database', err);
-      });
+      var groupid = req.headers.groupid;
+      Doc.getDocsByOwnerId(ownerId, groupid)
+        .then(function(data) {
+          res.status(200).json(data);
+        }).catch(function(err) {
+          cm.resdberrors(res, 'querying database', err);
+        });
     },
 
     delete: function(req, res) {
@@ -190,22 +164,21 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (a[0].length && !a[0].status && a[1].data.roles.length === 1 &&
-            a[2].data._id === a[1].data.ownerId[0] ||
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if (!a[0].status &&
+            a[1].data.roles.length === 0 &&
+            a[2].data._id === a[1].data.ownerId[0]._id ||
 
-            (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1 &&
-
-              _.pluck(a[2].data.roles, 'groupId') === req.headers.groupid)) {
+            (_.pluck(a[2].data.roles, 'title').indexOf('Admin') > -1)) {
 
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)
               .then(function(result) {
-                res.status(result.status).json(result);
+                res.status(result.status).json(result.data);
               }).catch(function(err) {
-                res.status(err.status).json(err);
+                res.status(err.status).json(err.error);
               });
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0]);
           } else {
             res.status(403).json({
               'status': 403,

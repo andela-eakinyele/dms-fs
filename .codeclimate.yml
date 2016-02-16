@@ -1,5 +1,8 @@
-languages:
-- javascript
+engines: 
+  eslint:
+    enabled: false
+  languages:
+  - javascript
 
 ratings:
   paths:

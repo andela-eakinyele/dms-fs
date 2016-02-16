@@ -1,25 +1,106 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('DashBoardCtrl', ['$scope', '$mdMedia',
-      '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      function($scope, $mdMedia, $mdSidenav, $timeout, Utils) {
+    .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
+      '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
+      'Groups', 'Users', 'Auth', 'Roles', 'Token',
+      function($rootScope, $scope, $mdMedia, $state, $stateParams,
+        $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles, Token) {
 
-        $scope.viewing = false;
+        $scope.init = function() {
 
-        $scope.newDoc = false;
-        $scope.fabisOpen = false;
-        $scope.tooltipVisible = false;
-
-        $scope.$watch('fabisOpen', function(isOpen) {
-          if (isOpen) {
-            $timeout(function() {
-              $scope.tooltipVisible = $scope.fabisOpen;
-            }, 600);
-          } else {
-            $scope.tooltipVisible = $scope.fabisOpen;
+          if (!$rootScope.activeUser) {
+            $state.go('home.login');
           }
-        });
+          $scope.groups = $rootScope.activeUser.groupId;
+
+          $scope.updateForm = {};
+          $scope.newDoc = {};
+          $scope.currentUser = $rootScope.activeUser;
+          $rootScope.activeGroup = $stateParams.groupid;
+
+          $scope.userRole = window._.filter($rootScope.activeUser.roles, {
+            'groupId': [parseInt($stateParams.groupid)]
+          });
+
+          console.log($scope.userRole);
+
+          Docs.query(function(res) {
+            $scope.allDocs = res;
+          }, function(err) {
+            console.log(err);
+          });
+        };
+
+        // Set Selected group
+        $scope.toggle = function(id) {
+          $rootScope.activeGroup = id;
+          Auth.setToken(Token.get()[0], id);
+          $state.go($state.current, {
+            id: $rootScope.activeUser._id,
+            groupid: id
+          }, {
+            reload: true
+          });
+        };
+
+        $scope.isSelected = function(id) {
+          var checked = $stateParams.groupid ?
+            parseInt($stateParams.groupid) === id : false;
+          return checked;
+        };
+
+
+        // Load Dialog with form template
+        $scope.updateUserModal = function(ev) {
+          Utils.custom(ev,
+            'views/update.html', 'UserCtrl');
+        };
+
+        // delete a Document/Role/User
+        $scope.delete = function(ev, name) {
+          Utils.showConfirm(ev, 'Delete Documents', name +
+            'will be deleted', 'Delete',
+            function() {});
+        };
+
+        // Load roles in a group
+        $scope.loadRoles = function() {
+          Roles.query({
+            groupid: $stateParams.groupid
+          }, function(role) {
+            $scope.roles = role;
+          });
+        };
+
+        // Cancel create document, return to dashboard
+        $scope.upState = function() {
+          $state.go('^');
+        };
+
+        // Log out user and delete token
+        $scope.logout = function() {
+          $rootScope.activeUser = null;
+          $rootScope.activeGroup = null;
+          Auth.logout();
+          $state.go('home.features');
+        };
+
+        // Menu button action
+        $scope.menuAction = function(ev) {
+          if (ev === 'logout') {
+            $scope.logout();
+          }
+          if (ev === 'Set') {
+            $scope.updateUserModal();
+          }
+          if (ev === 'Join') {
+            $state.go('home.group', {
+              id: $rootScope.activeUser._id
+            });
+          }
+        };
+
         // side navigation bar control
         $scope.openLeft = function() {
           $mdSidenav('lefty').toggle();
@@ -34,84 +115,22 @@
           $mdOpenMenu(ev);
         };
 
-        $scope.addDocModal = function(ev, title, answer) {
-          Utils.custom(ev, title, answer,
-            'views/doc-modal.html',
-            function(ans) {
-              if (ans === answer) {
-                $scope.saveDoc(ev, 'French');
-              }
-            });
-        };
-
-
-        $scope.saveDoc = function(ev, name) {
-          Utils.showAlert(ev, 'Save Document', name +
-            'successfully saved');
-        };
-
-        $scope.update = function(ev, name) {
-          Utils.showAlert(ev, 'Updated Document', name +
-            'successfully updated');
-        };
-
-        $scope.delete = function(ev, name) {
-          Utils.showConfirm(ev, 'Delete Documents', name +
-            'will be deleted', 'Delete',
-            function() {
-
-            });
-        };
-
-
-        $scope.sideBarMenu = [{
-          name: 'View Documents',
-          subMenu: ['My Documents', 'Shared Documents']
-        }, {
-          name: 'FileTypes',
-          subMenu: $scope.filterExt
-        }];
-
-        $scope.adminSideBarMenu = [
-          'List Users', 'List Roles', 'Report'
-        ];
-
-
-
+        // Header menu
         $scope.menu = [{
+          name: 'Join Group',
+          icon: 'fa fa-group fa-2x',
+          click: 'Join'
+        }, {
           name: 'User Profile',
           icon: 'fa fa-cog fa-2x',
+          click: 'Set'
         }, {
           name: 'Log Out',
           icon: 'fa fa-sign-out fa-2x',
+          click: 'logout'
         }];
 
-        $scope.adminMenu = {
-          name: 'Add User/Role',
-          icon: 'fa fa-user-plus fa-2x',
-          subMenu: [{
-            name: 'New Users',
-            icon: 'fa fa-user'
-          }, {
-            name: 'New Role',
-            icon: 'fa fa-briefcase'
-          }]
-        };
-
-        $scope.userGroups = [{
-          name: 'Vikings',
-          id: 3
-        }, {
-          name: 'SpyKIngs',
-          id: 1
-        }, {
-          name: 'Hooters',
-          id: 2
-        }];
-
-
-
-
+        $scope.init();
 
       }
 

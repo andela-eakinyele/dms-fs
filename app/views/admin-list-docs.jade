@@ -1,0 +1,5 @@
+div.listdata(layout ="column" layout-margin ng-init="docList()")
+  md-toolbar
+    .md-toolbar-tools(layout="row")
+      h3.md-subheadline List of Documents : {{docErr}}
+  md-content(ui-grid="gridOptions3" ui-grid-pagination class="grid")

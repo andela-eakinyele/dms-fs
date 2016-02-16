@@ -41,7 +41,7 @@
     "testDocs": ["Fiction", "Lorem Ipsum", "Who knows the whole words....", [3, 4]],
     "seedDocs": {
       "doc2": ["Foods", "Staple Foods", "These are classes of group...", 113, 203, [3, 4]],
-      "doc3": ["Technology", "Life of a developer", "We can\"t stand bugs, we write and kill...", 113, 203, [3]],
+      "doc3": ["Technology", "Life of a developer", "We can\"t stand bugs, we write and kill...", 113, 203, []],
       "doc4": ["Money", "Value for money", "I have money, I want value for it...", 113, 204, [3, 4]]
     }
   }

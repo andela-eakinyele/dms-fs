@@ -1,20 +1,20 @@
 md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
   md-toolbar
     div(layout="row" layout-margin)
-      h3.md-toolbar-tools Username -
-      md-select( ng-model="selectGroup" class="select" aria-label="View Group" ng-selected="userGroups[0]")
-        md-option(ng-value="group.id" ng-repeat="group in userGroups" placeholder="") {{group.name}}
-  md-content(layout-margin)
-    div(layout="column")
+      h3.md-toolbar-tools {{currentUser.username}}
+  md-content(layout="column")
+    div(layout="column" ng-if="userRole[0].title === \"superAdmin\" || userRole[0].title === \"Admin\"" layout-padding)
       h3 Admin Menu
-      md-button.btn-style(md-ink-ripple ng-repeat="itemN in adminSideBarMenu" aria-label="admin menu item") {{itemN}}
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewdoc({groupid: activeGroup})") List Docs
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewuser({groupid: activeGroup})") List Users
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewrole({groupid: activeGroup})")  List Roles
       md-divider
-    div(layout="column") 
-      h3 {{sideBarMenu[0].name}}
-      md-button.btn-style(md-ink-ripple ng-repeat="itemN in sideBarMenu[0].subMenu" aria-label="Own Docs") {{itemN}}
+    div(layout="column" layout-padding)
+      h3 Groups
+      md-checkbox(ng-repeat="group in groups" aria-label="user groups" ng-checked= "isSelected(group._id)" ng-click="toggle(group._id)" ) {{group.title}}
       md-divider
-    div(layout="column") 
-      h3 {{sideBarMenu[1].name}}
-      md-checkbox(ng-repeat="itemN in sideBarMenu[1].subMenu" ng-checked="true" ng-click="" aria-label="Shared Docs") {{itemN}}
+    div(layout="column" layout-padding) 
+      h3 Documents
+      md-button.btn-style(md-ink-ripple aria-label="Doc category" ui-sref="dashboard.list.mydocs") My Documents
+      md-button.btn-style(md-ink-ripple aria-label="Doc category" ui-sref="dashboard.list.shared({roleid: userRole[0]._id})") Shared Documents
       md-divider
-

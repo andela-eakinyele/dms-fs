@@ -6,7 +6,6 @@
       function($mdMedia, $rootScope, $scope, $state) {
         $scope.showButton = true;
 
-        // $timeout(function() {
         $scope.$watch(function() {
           return $state.current.name;
         }, function(name) {
@@ -16,7 +15,7 @@
             $scope.showButton = false;
           }
         });
-        // }, 0.5);
+
       }
     ]);
 })();

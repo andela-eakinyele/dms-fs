@@ -1,21 +1,2 @@
-div(layout="row" ui-view="docdata" layout-fill)           
-
-  md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="column" layout-margin)
-    div.head(layout="row" layout-padding)
-      h4 Technology
-      span(flex)
-      md-fab-speed-dial(md-direction="left" md-open="fabisOpen"  class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false")
-        md-fab-trigger
-          md-button(aria-label="menu" class="md-fab md-warn")
-            md-tooltip(md-direction="top" md-visible="tooltipVisible") Options
-            md-icon(md-font-set="fa fa-ellipsis-v fa-2x")
-        md-fab-actions
-          md-button.md-primary(aria-label="" class="md-fab md-raised md-mini")
-            md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
-          md-button.md-primary(aria-label="" class="md-fab md-raised md-mini")
-            md-icon(md-font-set="fa fa-trash fa-2x")
-    div
-      | Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Nostrud in laboris labore nisi amet do dolor eu fugiat consectetur elit cillum esse. Pariatur occaecat nisi laboris tempor laboris eiusmod qui id Lorem esse commodo in. Exercitation aute dolore deserunt culpa consequat elit labore incididunt elit anim.
-    md-divider
-    div
-      span Read our features
+div(layout="row" layout-fill)           
+  div.docdata(ui-view="docdata")

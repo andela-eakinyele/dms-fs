@@ -5,70 +5,112 @@
   var Role = require('./../models/role');
   var user = require('./userMethods');
   var cm = require('./helpers');
+  var _async = require('async');
+  var bcrypt = require('bcrypt-nodejs');
+
 
 
   var group = {
     create: function(req, res) {
+
       var query = Group.find({
         title: req.body.title
       });
-      req.body.users = req.body.id || '';
+      req.body.users = [req.body.userid] || [];
+      req.body.passphrase = bcrypt.hashSync(req.body.passphrase);
 
       var query2 = { // query for user data
-        _id: req.body.id
+        _id: req.body.userid
       };
-      // create a new group
-      cm.gCreate('Groups', req.body, Group, query)
-        .then(function(result) {
-          if (result.status === 201) {
-            var query3 = Role.find({
-              title: 'Admin',
-              groupId: result.data._id
-            });
-            // create Admin role for new group
-            cm.gCreate('Roles', {
-                title: 'Admin',
-                groupId: result.data._id,
-                users: req.body.id || ''
-              }, Role, query3)
-              .then(function(resRole) {
-                // update group data with role id
-                var query4 = Group.findByIdAndUpdate(result.data._id, {
-                  roles: [resRole.data._id]
-                }, {
-                  new: true
-                });
-                cm.gUpdate('Groups', result.data._id, query4)
-                  .then(function(newData) {
-                    // retrieve user and update group, role with admin for group
-                    user.retrieveData(query2).then(function(resUser) {
-                      resUser.roles.push(resRole.data._id);
-                      resUser.groupId.push(result.data._id);
-                      var query5 = User.findByIdAndUpdate(req.body.id,
-                        resUser, {
-                          new: true
-                        });
-                      cm.gUpdate('Users', req.body.id, query5)
-                        .then(function() {
-                          // respond with new group details
-                          res.status(newData.status).json(newData);
-                        }).catch(function(err) { // error with update user
-                          res.status(err.status).json(err);
-                        });
-                    }).catch(function(err) { // error with retrieve user
-                      res.status(err.status).json(err);
-                    });
-                  }).catch(function(err) { // error with update group
-                    res.status(err.status).json(err);
-                  });
-              }).catch(function(err) { // error with create role
-                res.status(err.status).json(err);
+      _async.waterfall([
+          // create new group
+          function(done) {
+            cm.gCreate('Groups', req.body, Group, query)
+              .then(function(result) {
+                done(null, result);
+              }).catch(function(err) { // error with create group
+                done(err);
               });
-          } else { // duplicate group or bad request
-            res.status(result.status).json(result);
+          },
+
+          // create admin role for group
+          function(result, done) {
+            if (result.status === 201) {
+              var query3 = Role.find({
+                title: 'Admin',
+                groupId: [result.data._id]
+              });
+
+              // create Admin role for new group
+              cm.gCreate('Roles', {
+                  title: 'Admin',
+                  groupId: [result.data._id],
+                  users: [req.body.userid] || []
+                }, Role, query3)
+                .then(function(resRole) {
+                  done(null, result, resRole);
+                })
+                .catch(function(err) { // error with create role
+                  done(err);
+                });
+            } else {
+              done(result);
+            }
+          },
+
+          // update group data with role id
+          function(result, resRole, done) {
+            var query4 = Group.findByIdAndUpdate(result.data._id, {
+              roles: [resRole.data._id]
+            }, {
+              new: true
+            });
+            cm.gUpdate('Groups', result.data._id, query4)
+              .then(function(newData) {
+                newData.passphrase = null;
+                done(null, result.data._id, resRole.data._id, newData);
+              }).catch(function(err) { // error with update group
+                done(err);
+              });
+          },
+
+          // retrieve user and update group, role with admin for group
+          function(a, b, c, done) {
+            user.retrieveData(query2).then(function(resUser) {
+
+              resUser.roles.push(parseInt(b));
+              resUser.groupId.push(parseInt(a));
+              done(null, c, resUser);
+
+            }).catch(function(err) { // error with retrieve user
+              done(err);
+            });
+          },
+
+          // update user with group and role id
+          function(newData, resUser, done) {
+
+            var query5 = User.findByIdAndUpdate(req.body.userid, {
+              roles: resUser.roles,
+              groupId: resUser.groupId
+            }, {
+              new: true
+            });
+            cm.gUpdate('Users', req.body.userid, query5)
+              .then(function() {
+                done(null, newData);
+              }).catch(function(err) { // error with update user
+                done(err);
+              });
           }
-        }).catch(function(err) { // error with create group
-          res.status(err.status).json(err);
+        ],
+        function(err, result) {
+          if (err) {
+            console.log(err);
+            res.status(500).json(err);
+          } else {
+            res.status(result.status).json(result.data);
+          }
         });
     },
 
@@ -76,21 +118,26 @@
       var query = Group.find({});
       cm.gGetAll('Groups', query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          console.log(err);
+          res.status(err.status).json(err.error);
         });
     },
 
     get: function(req, res) {
       var query = Group.findOne({
         _id: req.params.id
-      });
+      }).populate({
+        path: 'users',
+        select: 'username name roles email',
+      }).populate('roles');
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
-          res.status(result.status).json(result);
+          result.data.passphrase = null;
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -102,9 +149,9 @@
         });
       cm.gUpdate('Groups', req.params.id, query)
         .then(function(result) {
-          res.status(result.status).json(result);
+          res.status(result.status).json(result.data);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 
@@ -114,7 +161,7 @@
         .then(function(result) {
           res.status(result.status).json(result);
         }).catch(function(err) {
-          res.status(err.status).json(err);
+          res.status(err.status).json(err.error);
         });
     },
 

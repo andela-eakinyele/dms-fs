@@ -1,182 +1,51 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar');
-  var agent = apiTest.agent;
+  var apiTest = require('./specVar')();
+  var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
 
   var admin = require('./../../server/config/secret.js')().testAd;
-  console.log(admin);
   var userSeed = apiTest.testdata.users;
 
   module.exports = function() {
+
+    var token = '';
+    var users = [];
+    var ids = [];
+    var groupAdmin = {
+      'Accept': 'application/json',
+      'username': userSeed.groupUsers.tuser2[2],
+      'password': userSeed.groupUsers.tuser2[3]
+    };
+
     // seed roles and users
     describe('Admin users CRUD users and documents\n', function() {
-      var token, users, ids,
-        groupAdmin = {
-          'Accept': 'application/json',
-          'username': userSeed.groupUsers.tuser2[2],
-          'password': userSeed.groupUsers.tuser2[3]
-        };
 
-      describe('Group Admin Spec', function() {
-        // verify admin login
-        it('- Should return a token on Successful login', function(done) {
-          agent
-            .post('/api/users/login')
-            .type('json')
-            .send(groupAdmin)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              token = response;
-              assert(response.token, 'Token not generated');
-              assert.equal(typeof response.expires, 'number');
-              assert.equal(response.user.username, 'EAbbott');
-              done();
-            });
-        });
+      // verify admin login
+      it('- Should return a token on Successful login', function(done) {
+        request
+          .post('/api/users/login')
+          .type('json')
+          .send(groupAdmin)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            token = response.data;
+            assert(response.data.token, 'Token not generated');
+            assert.equal(typeof response.data.expires, 'number');
+            assert.equal(response.data.user.username, 'EAbbott');
+            done();
+          });
       });
 
-      describe('Retrieve all users, update and delete' +
-        ' other users\n',
-        function() {
-          // should be able to retrieve all user data
-          it('- Should be able to retrieve all user data',
-            function(done) {
-              agent
-                .get('/api/users/')
-                .set({
-                  'Accept': 'application/json',
-                  'username': userSeed.groupUsers.tuser2[2],
-                  'password': userSeed.groupUsers.tuser2[3],
-                  groupid: 113,
-                  userid: token.user._id,
-                  access_token: token.token
-                })
-                .type('json')
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end(function(err, res) {
-                  assert.equal(null, err, 'Error encountered');
-                  var response = res.body;
-                  users = response.data;
-                  var name = _.pluck(response.data, 'username').slice(0, 4);
-                  ids = _.pluck(response.data, '_id');
-                  assert.equal(response.message, 'Existing Users');
-                  assert.deepEqual(name, ['EAbbott', 'TPerox', 'PNishi',
-                    'SPolls'
-                  ]);
-                  done();
-                });
-            });
-
-          it('- Should not be able to update other users data', function(done) {
-            var userdata = users[1];
-            userdata.username = 'Altered username';
-
-            agent
-              .put('/api/users/' + ids[1])
-              .set({
-                'Accept': 'application/json',
-                'username': userSeed.groupUsers.tuser2[2],
-                'password': userSeed.groupUsers.tuser2[3],
-                groupid: 113,
-                userid: token.user._id,
-                access_token: token.token
-              })
-              .type('json')
-              .send(userdata)
-              .expect('Content-Type', /json/)
-              .expect(403)
-              .end(function(err, res) {
-                assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                assert.equal(response.message, 'Not authorized to update user');
-                done();
-              });
-          });
-
-
-          // should not be able to delete userdata
-          it('- Should not be able to delete userdata', function(done) {
-            agent
-              .delete('/api/users/' + ids[1])
-              .set({
-                'Accept': 'application/json',
-                'username': userSeed.groupUsers.tuser2[2],
-                'password': userSeed.groupUsers.tuser2[3],
-                groupid: 113,
-                userid: token.user._id,
-                access_token: token.token
-              })
-              .type('json')
-              .expect('Content-Type', /json/)
-              .expect(403)
-              .end(function(err, res) {
-                assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                assert.equal(response.message, 'Not authorized');
-                done();
-              });
-          });
-        });
-
-      //  should be able to get, update and delete documents in group
-      describe('Should be able to CRUD documents\n', function() {
-
-        //  should be able to get all documents
-        it('- Should be able to get all document', function(done) {
-          agent
-            .get('/api/documents')
-            .set({
-              'Accept': 'application/json',
-              'username': userSeed.groupUsers.tuser2[2],
-              'password': userSeed.groupUsers.tuser2[3],
-              groupid: 113,
-              userid: token.user._id,
-              access_token: token.token
-            })
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var docIds = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Existing Documents');
-              assert.deepEqual(docIds, [100, 102, 103]);
-              done();
-            });
-        });
-
-        it('- Should be able to get document by role', function(done) {
-          agent
-            .get('/api/roles/3/documents')
-            .set({
-              'Accept': 'application/json',
-              'username': userSeed.groupUsers.tuser2[2],
-              'password': userSeed.groupUsers.tuser2[3],
-              groupid: 113,
-              userid: token.user._id,
-              access_token: token.token
-            })
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var docbyroleIds = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Document for role-3');
-              assert.deepEqual(docbyroleIds, [100, 102, 103]);
-              done();
-            });
-        });
-
-        it('- Should be able to get document by date', function(done) {
-          agent
-            .get('/api/documents/date')
+      // should be able to retrieve all user data
+      it('- Should be able to retrieve all user data in a group',
+        function(done) {
+          request
+            .get('/api/users/')
             .set({
               'Accept': 'application/json',
               'username': userSeed.groupUsers.tuser2[2],
@@ -186,30 +55,153 @@
               access_token: token.token
             })
             .type('json')
-            .query({
-              'date': new Date().toDateString()
-            })
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              var docbydate = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Document for ' +
-                new Date().toDateString());
-              assert.deepEqual(docbydate, [100, 102, 103]);
+              users = response;
+              var name = _.pluck(response, 'username').slice(0, 4);
+              ids = _.pluck(response, '_id');
+              assert.deepEqual(name, ['EAbbott', 'PNishi',
+                'SPolls'
+              ]);
               done();
             });
         });
 
+      it('- Should not be able to update other users data', function(done) {
+        var userdata = users[1];
+        userdata.username = 'Altered username';
+
+        request
+          .put('/api/users/' + ids[1])
+          .set({
+            'Accept': 'application/json',
+            'username': userSeed.groupUsers.tuser2[2],
+            'password': userSeed.groupUsers.tuser2[3],
+            groupid: 113,
+            userid: token.user._id,
+            access_token: token.token
+          })
+          .type('json')
+          .send(userdata)
+          .expect('Content-Type', /json/)
+          .expect(403)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            assert.equal(response.message, 'Not authorized to update user');
+            done();
+          });
       });
 
-      describe('Super Admin', function() {
 
-        it('- Should be able to update other users data', function(done) {
+      // should not be able to delete userdata
+      it('- Should not be able to delete userdata', function(done) {
+        request
+          .delete('/api/users/' + ids[1])
+          .set({
+            'Accept': 'application/json',
+            'username': userSeed.groupUsers.tuser2[2],
+            'password': userSeed.groupUsers.tuser2[3],
+            groupid: 113,
+            userid: token.user._id,
+            access_token: token.token
+          })
+          .type('json')
+          .expect('Content-Type', /json/)
+          .expect(403)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            assert.equal(response.message, 'Not authorized');
+            done();
+          });
+      });
+
+
+      //  should be able to get all documents
+      it('- Should be able to get all document', function(done) {
+        request
+          .get('/api/documents')
+          .set({
+            'Accept': 'application/json',
+            'username': userSeed.groupUsers.tuser2[2],
+            'password': userSeed.groupUsers.tuser2[3],
+            groupid: 113,
+            userid: token.user._id,
+            access_token: token.token
+          })
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            var docIds = _.pluck(response, '_id');
+            assert.deepEqual(docIds, [100, 102, 103]);
+            done();
+          });
+      });
+
+      it('- Should be able to get document by role', function(done) {
+        request
+          .get('/api/roles/3/documents')
+          .set({
+            'Accept': 'application/json',
+            'username': userSeed.groupUsers.tuser2[2],
+            'password': userSeed.groupUsers.tuser2[3],
+            groupid: 113,
+            userid: token.user._id,
+            access_token: token.token
+          })
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            var docbyroleIds = _.pluck(response, '_id');
+            assert.deepEqual(docbyroleIds, [100, 102, 103]);
+            done();
+          });
+      });
+
+
+      // should be able to retrieve all user data
+      it('- Should be able to create roles in a group',
+        function(done) {
+          request
+            .post('/api/roles/')
+            .set({
+              'Accept': 'application/json',
+              'username': userSeed.groupUsers.tuser2[2],
+              'password': userSeed.groupUsers.tuser2[3],
+              groupid: 113,
+              userid: token.user._id,
+              access_token: token.token
+            })
+            .send([{
+              title: 'Publishers'
+            }])
+            .type('json')
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.ops[0].title, 'Publishers');
+              done();
+            });
+        });
+
+
+      it('- Super Admin Should be able to update' +
+        ' other users data',
+        function(done) {
           var userdata = users[1];
+          delete userdata._id;
           userdata.username = 'Altered username';
-          agent
+          request
             .put('/api/users/' + ids[1])
             .set({
               'Accept': 'application/json',
@@ -225,37 +217,35 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Updated Users');
-              assert.equal(response.data.username, 'Altered username');
+              assert.equal(response.username, 'Altered username');
               done();
             });
         });
 
 
-        // should be able to delete userdata
-        it('- Should  be able to delete userdata', function(done) {
-          agent
-            .delete('/api/users/' + ids[1])
-            .set({
-              'Accept': 'application/json',
-              'username': admin.user,
-              'password': admin.pw,
-              userid: 100,
-              access_token: token.token
-            })
-            .type('json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.message, 'Removed Users');
-              done();
-            });
-        });
-
+      // should be able to delete userdata
+      it('- Super Admin Should  be able to delete userdata', function(done) {
+        request
+          .delete('/api/users/' + ids[1])
+          .set({
+            'Accept': 'application/json',
+            'username': admin.user,
+            'password': admin.pw,
+            userid: 100,
+            access_token: token.token
+          })
+          .type('json')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            assert.equal(response.username, 'Altered username');
+            done();
+          });
       });
 
     });
+
   };
 })();

@@ -14,7 +14,6 @@
   var reporter = require('gulp-codeclimate-reporter');
 
   var watchify = require('watchify');
-  var assign = require('lodash.assign');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');
@@ -80,10 +79,6 @@
       .pipe(gulp.dest('./public/'));
   });
 
-  gulp.task('watch', function() {
-    gulp.watch(paths.jade, ['jade']);
-    gulp.watch(paths.styles, ['less']);
-  });
   // install front-end dependencies
   gulp.task('bower', function() {
     return bower()
@@ -93,29 +88,40 @@
   // build custom scripts
   // add custom browserify options here
   var customOpts = {
+    cache: {},
+    packageCache: {},
     entries: ['./app/src/app.js'],
     debug: true
   };
 
-  var opts = assign({}, watchify.args, customOpts);
-  var bundler = watchify(browserify(opts))
-    .transform(babelify, {
-      presets: 'es2015'
-    });
+  var bundler = function() {
+    return browserify(customOpts)
+      .transform(babelify, {
+        presets: 'es2015'
+      });
+  };
 
-  bundler.on('update', rebundle); // on any dep update, runs the bundler
-  bundler.on('log', gutil.log); // output build logs to terminal
+  var w = watchify(bundler());
+  w.on('log', gutil.log); // output build logs to terminal
 
-  function rebundle() {
-    return bundler.bundle()
-      .on('success', gutil.log.bind(gutil, 'Browserify Rebundled'))
+  function bundle(b) {
+    return b.bundle()
+      .on('success', gutil.log.bind(gutil, 'Browserify bundle'))
       // log errors if they happen
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('app.js'))
       .pipe(gulp.dest('./public/js'));
   }
 
-  gulp.task('buildjs', rebundle);
+  gulp.task('watch', function() {
+    gulp.watch(paths.jade, ['jade']);
+    gulp.watch(paths.styles, ['less']);
+    // on any dep update, runs the bundler
+    bundle(w);
+    w.on('update', bundle.bind(null, w));
+  });
+
+  gulp.task('buildjs', bundle.bind(null, bundler()));
 
   // test runners
   // server api tests
@@ -133,7 +139,7 @@
           assert: require('assert')
         }
       }))
-      .once('error', (err) => {
+      .once('error', function(err) {
         gutil.log(err);
         process.exit(1);
       })
@@ -141,7 +147,7 @@
       .pipe(cover.format(
         ['lcov', 'html', 'json']))
       .pipe(gulp.dest('./reports'))
-      .once('end', () => {
+      .once('end', function() {
         process.exit();
       });
   });
@@ -166,17 +172,19 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-  gulp.task('codeclimate', function() {
+  gulp.task('codeclimate', ['test:bend'], function() {
     return gulp
       .src(['./reports/coverage.lcov'], {
         read: false
       })
       .pipe(reporter({
-        token: process.env.CODECLIMATE_REPO_TOKEN
+        token: process.env.CODECLIMATE_REPO_TOKEN,
+        executable: './node_modules/codeclimate-test-reporter/bin/codeclimate',
+        verbose: true
       }));
   });
 
-  gulp.task('test', ['test:bend', 'codeclimate']);
+  gulp.task('test', ['codeclimate']);
   // // var envOptions = {
   //  //   string: 'env',
   //  //   default: {
@@ -190,7 +198,7 @@
   //  gulp.task('test', ['test:fend', 'test:bend']);
 
   gulp.task('build', ['jade', 'less', 'static-files',
-    'buildjs', 'bower', 'images'
+    'buildjs', 'images', 'bower',
   ]);
 
 

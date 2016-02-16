@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var apiTest = require('./specVar');
-  var agent = apiTest.agent;
+  var apiTest = require('./specVar')();
+  var request = apiTest.request;
 
   module.exports = function() {
 
@@ -10,16 +10,13 @@
 
       // should respond to root route
       it('- API should respond to root', function(done) {
-        agent
+        request
           .get('/api')
           .set('Accept', 'application/json')
           .expect(200, {
             'message': 'Welcome to the Document Management System'
           }, done);
       });
-
-
-
     });
 
   };
