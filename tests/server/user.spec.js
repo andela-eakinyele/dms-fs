@@ -14,10 +14,13 @@
   module.exports = function() {
 
     describe('Users CRUD\n', function() {
-      var testuser, userData = [],
-        token, usersId = [],
-        seedGroupdata = [],
-        groupIds = [];
+
+      var testuser = '';
+      var userData = '';
+      var token = '';
+      var usersId = '';
+      var seedGroupdata = '';
+      var groupIds = '';
 
       // seed users
       before(function(done) {
@@ -304,7 +307,6 @@
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
-              console.log(err, res.body);
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
               token = response.data.token;

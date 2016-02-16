@@ -11,12 +11,14 @@
   module.exports = function() {
     // seed roles and users
     describe('Admin users CRUD users and documents\n', function() {
-      var token, users, ids,
-        groupAdmin = {
-          'Accept': 'application/json',
-          'username': userSeed.groupUsers.tuser2[2],
-          'password': userSeed.groupUsers.tuser2[3]
-        };
+      var token = '';
+      var users = [];
+      var ids = [];
+      var groupAdmin = {
+        'Accept': 'application/json',
+        'username': userSeed.groupUsers.tuser2[2],
+        'password': userSeed.groupUsers.tuser2[3]
+      };
 
       describe('Group Admin Spec', function() {
         // verify admin login
