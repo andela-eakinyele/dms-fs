@@ -19,7 +19,7 @@
     initSpec();
     groupSpec();
     roleSpec();
-    // userSpec();
+    userSpec();
     // docSpec();
     // adminSpec();
 

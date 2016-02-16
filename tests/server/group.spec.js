@@ -68,9 +68,8 @@
                 access_token: token
               })
               .send(groupData)
-              .expect(500)
+              .expect(200)
               .end(function(err, res) {
-                console.log(err);
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
                 testGroup = response;

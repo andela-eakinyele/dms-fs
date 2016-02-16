@@ -2,6 +2,7 @@
   'use strict';
   var jwt = require('jwt-simple');
   var _ = require('lodash');
+  var bcrypt = require('bcrypt-nodejs');
   var auth = require('./auth');
   var userFunc = require('./../controllers').userFunc;
   var groupFunc = require('./../controllers').groupFunc;
@@ -166,33 +167,42 @@
 
 
   exports.adminUser = function(req, res, next) {
-    var userRole = req.body.roles ? req.body.roles[0].title === 'Admin' : false;
+    var userRole = req.body.roles ?
+      req.body.roles[0].title === 'Admin' : false;
     if (userRole) {
-      var query = {
-        _id: req.headers.groupid
-      };
-      // retrieve group admin user
-      groupFunc.retrieveData(query).then(function(group) {
-        var adminId = _.filter(group.roles, {
-          title: 'Admin'
-        });
-        // compare group admin and user id
-        if (adminId[0].users[0] === parseInt(req.headers.userid)) {
-          authenticate(req, res, next);
-        } else { // userid is not admin
-          res.status(403).json({
-            'status': 403,
-            'message': 'Not authorized to create Admin user',
-            'error': 'Unauthorized user action'
+      userFunc.retrieveData({
+        _id: req.headers.userid
+      }).then(function(user) {
+          if (user) {
+            var Admin = _.filter(user.roles, {
+              title: 'Admin',
+              groupId: [req.headers._id]
+            });
+            // compare group admin and user id
+            if (Admin.length > 0) {
+              authenticate(req, res, next);
+            } else { // userid is not admin
+              res.status(403).json({
+                'status': 403,
+                'message': 'Not authorized to create Admin user',
+                'error': 'Unauthorized user action'
+              });
+            }
+          } else {
+            res.status(400).json({
+              'status': 400,
+              'message': 'User is not logged in/does not exists',
+              'error': 'User not verified'
+            });
+          }
+        },
+        function(err) { // db error
+          res.status(500).json({
+            'status': 500,
+            'message': 'Database error',
+            'error': 'User not verified ' + err
           });
-        }
-      }, function(err) { // db error
-        res.status(500).json({
-          'status': 500,
-          'message': 'Database error',
-          'error': 'User not verified ' + err
         });
-      });
     } else {
       next();
     }
@@ -202,13 +212,11 @@
     var query = {
       _id: req.params.id
     };
+
     groupFunc.retrieveData(query).then(function(group) {
       if (req.body.users) {
-        var adminUser = _.map(group.roles, {
-          title: 'Admin'
-        }).users;
-        if (req.body.pass === group.passphrase ||
-          req.headers.userid === adminUser) {
+        var validPass = bcrypt.compareSync(req.body.pass, group.passphrase);
+        if (validPass) {
           next();
         } else {
           res.status(403).json({
@@ -224,9 +232,10 @@
       res.status(500).json({
         'status': 500,
         'message': 'Database error',
-        'error': 'User not verified ' + err
+        'error': 'Group not verified ' + err
       });
     });
+
   };
 
 })();

@@ -42,10 +42,9 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                testuser = response.data;
-                assert.equal(response.message, 'Created new Users');
-                assert.equal(response.data.username + ' ' +
-                  response.data.email, 'HAhmed hahmed@project.com');
+                testuser = response;
+                assert.equal(response.username + ' ' +
+                  response.email, 'HAhmed hahmed@project.com');
                 done();
               });
           });
@@ -62,9 +61,6 @@
               .expect(409)
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                assert.equal(response.message, 'Users already exist \n ' +
-                  'Change unique data');
                 done();
               });
           });
@@ -81,9 +77,6 @@
               .expect(409)
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                assert.equal(response.message, 'Users already exist \n ' +
-                  'Change unique data');
                 done();
               });
           });
@@ -106,8 +99,8 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                var invalid = _.keys(response.error.errors);
-                assert.equal(response.error.message, 'Users validation failed');
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
                 assert.deepEqual(invalid, [keys[0]]);
                 done();
               });
@@ -127,8 +120,8 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                var invalid = _.keys(response.error.errors);
-                assert.equal(response.error.message, 'Users validation failed');
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
                 assert.deepEqual(invalid, [keys[1]]);
                 done();
               });
@@ -148,8 +141,8 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                var invalid = _.keys(response.error.errors);
-                assert.equal(response.error.message, 'Users validation failed');
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
                 assert.deepEqual(invalid, [keys[2]]);
                 done();
               });
@@ -169,8 +162,8 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                var invalid = _.keys(response.error.errors);
-                assert.equal(response.error.message, 'Users validation failed');
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
                 assert.deepEqual(invalid, [keys[3]]);
                 done();
               });
@@ -190,8 +183,8 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                var invalid = _.keys(response.error.errors);
-                assert.equal(response.error.message, 'Users validation failed');
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
                 assert.deepEqual(invalid, [keys[4]]);
                 done();
               });
@@ -310,10 +303,10 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              token = response.token;
-              assert(response.token, 'Token not generated');
-              assert.equal(typeof response.expires, 'number');
-              assert.equal(response.user.username, 'DAdams');
+              token = response.data.token;
+              assert(token, 'Token not generated');
+              assert.equal(typeof response.data.expires, 'number');
+              assert.equal(response.data.user.username, 'DAdams');
               done();
             });
         });
@@ -334,8 +327,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Users data:');
-              assert.equal(usersId[2], response.data._id);
+              assert.equal(usersId[2], response._id);
               done();
             });
         });
@@ -355,8 +347,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Users(s) do(es) not exist');
-              assert.equal(0, response.data.length, 'Userdata was retrieved');
+              assert.equal(0, response.length, 'Userdata was retrieved');
               done();
             });
         });
@@ -378,8 +369,7 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                assert.equal(response.message, 'Existing Users');
-                assert.deepEqual(_.pluck(response.data,
+                assert.deepEqual(_.pluck(response,
                   '_id'), [101, 103, 105]);
                 done();
               });
@@ -399,8 +389,7 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                assert.equal(response.message, 'Existing Groups');
-                assert.deepEqual(_.pluck(response.data,
+                assert.deepEqual(_.pluck(response,
                   '_id'), [113, 114, 115]);
                 done();
               });
@@ -420,8 +409,7 @@
               .end(function(err, res) {
                 assert.equal(null, err, 'Error encountered');
                 var response = res.body;
-                assert.equal(response.message, 'Groups data:');
-                assert.deepEqual(response.data._id, 114);
+                assert.deepEqual(response._id, 114);
                 done();
               });
           });
@@ -434,6 +422,7 @@
             .put('/api/users/' + usersId[0])
             .set({
               access_token: token,
+              userid: usersId[0]
             })
             .type('json')
             .send(userdata)
@@ -442,9 +431,8 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Updated Users');
-              assert.equal(response.data.username, 'DAdams_Love');
-              userData[0].username = response.data.username;
+              assert.equal(response.username, 'DAdams_Love');
+              userData[0].username = response.username;
               done();
             });
         });
@@ -452,23 +440,23 @@
         it('- Should be able to join a group', function(done) {
           seedGroupdata[1].users.push(usersId[0]);
           request
-            .put('/api/groups/' + groupIds[1])
+            .put('/api/groups/' + 113)
             .set({
               access_token: token,
               userid: usersId[0]
             })
             .type('json')
             .send({
-              users: seedGroupdata[1].users,
-              passphrase: groupSeed.seedGroups.group2[2]
+              users: [200, usersId[0]],
+              pass: groupSeed.testGroup[2],
+              userid: usersId[0]
             })
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Updated Groups');
-              assert.deepEqual(response.data.users, [101]);
+              assert.deepEqual(response.users, [200, 101]);
               done();
             });
         });
@@ -487,7 +475,6 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Not authorized');
               assert.equal(response.error, 'Unauthorized user');
               done();
             });

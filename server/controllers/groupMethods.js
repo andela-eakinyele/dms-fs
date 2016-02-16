@@ -130,8 +130,8 @@
         _id: req.params.id
       }).populate({
         path: 'users',
-        select: 'username name roles email'
-      });
+        select: 'username name roles email',
+      }).populate('roles');
       cm.gGetOne('Groups', query, req.params.id)
         .then(function(result) {
           result.data.passphrase = null;
