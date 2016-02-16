@@ -9,11 +9,11 @@
 
   function superAdmin(id, userid) {
     var query = User.findOne({
-      _id: id
+      _id: userid
     }).populate('roles');
 
     return new Promise(function(resolve, reject) {
-      cm.gGetOne('Users', query, id)
+      cm.gGetOne('Users', query, userid)
         .then(function(user) {
           if (user) {
             var superAdmin = _.filter(user.data.roles, {

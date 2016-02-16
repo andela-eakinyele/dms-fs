@@ -20,8 +20,7 @@
     groupSpec();
     roleSpec();
     userSpec();
-    // docSpec();
-    // adminSpec();
-
+    docSpec();
+    adminSpec();
   });
 })();

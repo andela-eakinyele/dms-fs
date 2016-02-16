@@ -30,10 +30,10 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              token = response;
-              assert(response.token, 'Token not generated');
-              assert.equal(typeof response.expires, 'number');
-              assert.equal(response.user.username, 'EAbbott');
+              token = response.data;
+              assert(response.data.token, 'Token not generated');
+              assert.equal(typeof response.data.expires, 'number');
+              assert.equal(response.data.user.username, 'EAbbott');
               done();
             });
         });
@@ -43,7 +43,7 @@
         ' other users\n',
         function() {
           // should be able to retrieve all user data
-          it('- Should be able to retrieve all user data',
+          it('- Should be able to retrieve all user data in a group',
             function(done) {
               request
                 .get('/api/users/')
@@ -61,11 +61,10 @@
                 .end(function(err, res) {
                   assert.equal(null, err, 'Error encountered');
                   var response = res.body;
-                  users = response.data;
-                  var name = _.pluck(response.data, 'username').slice(0, 4);
-                  ids = _.pluck(response.data, '_id');
-                  assert.equal(response.message, 'Existing Users');
-                  assert.deepEqual(name, ['EAbbott', 'TPerox', 'PNishi',
+                  users = response;
+                  var name = _.pluck(response, 'username').slice(0, 4);
+                  ids = _.pluck(response, '_id');
+                  assert.deepEqual(name, ['EAbbott', 'PNishi',
                     'SPolls'
                   ]);
                   done();
@@ -143,8 +142,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              var docIds = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Existing Documents');
+              var docIds = _.pluck(response, '_id');
               assert.deepEqual(docIds, [100, 102, 103]);
               done();
             });
@@ -166,42 +164,45 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              var docbyroleIds = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Document for role-3');
+              var docbyroleIds = _.pluck(response, '_id');
               assert.deepEqual(docbyroleIds, [100, 102, 103]);
               done();
             });
         });
 
-        it('- Should be able to get document by date', function(done) {
-          request
-            .get('/api/documents/date')
-            .set({
-              'Accept': 'application/json',
-              'username': userSeed.groupUsers.tuser2[2],
-              'password': userSeed.groupUsers.tuser2[3],
-              groupid: 113,
-              userid: token.user._id,
-              access_token: token.token
-            })
-            .type('json')
-            .query({
-              'date': new Date().toDateString()
-            })
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var docbydate = _.pluck(response.data, '_id');
-              assert.equal(response.message, 'Document for ' +
-                new Date().toDateString());
-              assert.deepEqual(docbydate, [100, 102, 103]);
-              done();
+      });
+
+
+      describe('Create Roles\n',
+        function() {
+          // should be able to retrieve all user data
+          it('- Should be able to create roles in a group',
+            function(done) {
+              request
+                .post('/api/roles/')
+                .set({
+                  'Accept': 'application/json',
+                  'username': userSeed.groupUsers.tuser2[2],
+                  'password': userSeed.groupUsers.tuser2[3],
+                  groupid: 113,
+                  userid: token.user._id,
+                  access_token: token.token
+                })
+                .send([{
+                  title: 'Publishers'
+                }])
+                .type('json')
+                .expect('Content-Type', /json/)
+                .expect(201)
+                .end(function(err, res) {
+                  assert.equal(null, err, 'Error encountered');
+                  var response = res.body;
+                  console.log(response);
+                  done();
+                });
             });
         });
 
-      });
 
       describe('Super Admin', function() {
 
@@ -224,8 +225,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Updated Users');
-              assert.equal(response.data.username, 'Altered username');
+              assert.equal(response.username, 'Altered username');
               done();
             });
         });
@@ -248,7 +248,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Removed Users');
+              assert.equal(response.username, 'Altered username');
               done();
             });
         });

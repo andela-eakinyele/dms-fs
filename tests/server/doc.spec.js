@@ -116,10 +116,10 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              token.push(response);
-              assert(response.token, 'Token not generated');
-              assert.equal(typeof response.expires, 'number');
-              assert.equal(response.user.username, user.username);
+              token.push(response.data);
+              assert(response.data.token, 'Token not generated');
+              assert.equal(typeof response.data.expires, 'number');
+              assert.equal(response.data.user.username, user.username);
               done();
             });
         });
@@ -140,10 +140,10 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              token.push(response);
-              assert(response.token, 'Token not generated');
-              assert.equal(typeof response.expires, 'number');
-              assert.equal(response.user.username, user.username);
+              token.push(response.data);
+              assert(response.data.token, 'Token not generated');
+              assert.equal(typeof response.data.expires, 'number');
+              assert.equal(response.data.user.username, user.username);
               done();
             });
         });
@@ -168,9 +168,8 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              testDoc = response.data;
-              assert.equal(response.message, 'Created new Documents');
-              assert.equal(response.data.label, data.testDocs[0]);
+              testDoc = response;
+              assert.equal(response.label, data.testDocs[0]);
               done();
             });
         });
@@ -194,8 +193,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Documents data:');
-              assert.equal(response.data.title, 'Staple Foods');
+              assert.equal(response.title, 'Staple Foods');
               done();
             });
         });
@@ -216,62 +214,10 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Documents(s) do(es) not exist');
-              assert.equal(0, response.data.length, 'Document was retrieved');
+              assert.equal(0, response.length, 'Document was retrieved');
               done();
             });
         });
-
-        it('-Should be able to update document with access', function(done) {
-          var docdata = docData[0];
-          docdata.title = 'Staple Foods in Nigeria';
-          request
-            .put('/api/documents/' + docIds[0])
-            .set({
-              'username': userSeed.docUsers.tuser3[2],
-              'password': userSeed.docUsers.tuser3[3],
-              groupid: 113,
-              userid: userIds[1],
-              access_token: token[1].token
-            })
-            .send(docdata)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.message, 'Updated Documents');
-              assert.equal(response.data.title, 'Staple Foods in Nigeria');
-              done();
-            });
-        });
-
-        it('-Should not be able to update document' +
-          ' without role access',
-          function(done) {
-            var docdata = docData[1];
-            docdata.title = 'Lorem Ipsum Dolor';
-            request
-              .put('/api/documents/' + docIds[1])
-              .set({
-                'username': userSeed.docUsers.tuser3[2],
-                'password': userSeed.docUsers.tuser3[3],
-                groupid: 113,
-                userid: userIds[1],
-                access_token: token[1].token
-              })
-              .send(docdata)
-              .expect('Content-Type', /json/)
-              .expect(403)
-              .end(function(err, res) {
-                assert.equal(null, err, 'Error encountered');
-                var response = res.body;
-                assert.equal(response.message,
-                  'Not authorized to update document');
-                assert.equal(response.data, '');
-                done();
-              });
-          });
 
         // should return all docs owned by user
         it('-Should be able to get document by userid', function(done) {
@@ -289,18 +235,36 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Document for id ' +
-                userIds[0]);
-              assert.equal(response.data.length, 3);
-              assert.deepEqual(_.pluck(response.data,
-                'title'), ['Staple Foods in' +
-                ' Nigeria', 'Life of a developer', 'Lorem Ipsum'
-              ]);
+              assert.equal(response.length, 3);
+              assert.deepEqual(_.pluck(response,
+                'title'), ['Staple Foods', 'Life of a developer', 'Lorem Ipsum']);
               done();
             });
         });
 
+        // should be able to update document 
+        it('-Should be able to update own document', function(done) {
+          request
+            .put('/api/documents/' + docIds[1])
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              groupid: 113,
+              userid: userIds[0],
+              access_token: token[0].token
+            })
+            .send({
 
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response._id, docIds[1]);
+              done();
+            });
+        });
         // should be able to delete document with only role access and ownerId
         it('-Should be able to delete own document', function(done) {
           request
@@ -317,8 +281,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Removed Documents');
-              assert.equal(response.data._id, docIds[1]);
+              assert.equal(response._id, docIds[1]);
               done();
             });
         });

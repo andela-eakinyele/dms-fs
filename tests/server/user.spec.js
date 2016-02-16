@@ -295,12 +295,13 @@
             .post('/api/users/login')
             .type('json')
             .send({
-              username: userData[0].username,
+              username: data.seedUsers.user1[2],
               password: data.seedUsers.user1[3]
             })
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
+              console.log(err, res.body);
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
               token = response.data.token;

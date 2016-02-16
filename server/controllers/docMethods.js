@@ -53,17 +53,15 @@
       // query for existing document
       var query = Doc.find({
         title: req.body.title
-      });
+      }).populate('roles');
 
       req.body.ownerId = userid;
       req.body.groupId = [groupid];
       cm.gCreate('Documents', req.body, Doc, query)
         .then(function(result) {
-
           // respond with new document details
           res.status(result.status).json(result.data);
         }).catch(function(err) {
-          console.log(err);
           res.status(err.status).json(err.error);
         });
 
@@ -96,12 +94,11 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-
-          if ((a[0].length && !a[0].status) ||
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if ((a[0].length && !a[0].status) ||
             (a[2].data._id === a[1].data.ownerId[0]._id)) {
             res.status(a[1].status).json(a[1].data);
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,
@@ -122,7 +119,9 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (!a[0].status &&
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if (!a[0].status &&
             (a[2].data._id === a[1].data.ownerId[0]._id)) {
             req.body.ownerId = [a[1].data.ownerId[0]._id];
             req.body.lastModified = Date.now();
@@ -135,8 +134,6 @@
               }).catch(function(err) {
                 res.status(err.status).json(err.error);
               });
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,
@@ -167,7 +164,9 @@
 
       getCmp(req.params.id, userid, groupid)
         .then(function(a) {
-          if (!a[0].status &&
+          if (a[0].status) {
+            res.status(a[0].status).json(a[0].data);
+          } else if (!a[0].status &&
             a[1].data.roles.length === 0 &&
             a[2].data._id === a[1].data.ownerId[0]._id ||
 
@@ -180,8 +179,6 @@
               }).catch(function(err) {
                 res.status(err.status).json(err.error);
               });
-          } else if (a[0].status) {
-            res.status(a[0].status).json(a[0].data);
           } else {
             res.status(403).json({
               'status': 403,
