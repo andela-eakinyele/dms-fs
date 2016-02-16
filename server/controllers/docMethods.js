@@ -59,6 +59,7 @@
       req.body.groupId = [groupid];
       cm.gCreate('Documents', req.body, Doc, query)
         .then(function(result) {
+
           // respond with new document details
           res.status(result.status).json(result.data);
         }).catch(function(err) {
@@ -158,37 +159,6 @@
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });
-    },
-
-    getDocsByRole: function(req, res) {
-      var ownerId = req.params.id;
-      var groupid = req.headers.groupid;
-      Doc.getDocsByOwnerId(ownerId, groupid)
-        .then(function(data) {
-          res.status(200).json(data);
-        }).catch(function(err) {
-          cm.resdberrors(res, 'querying database', err);
-        });
-    },
-
-    getDocsByDate: function(req, res) {
-      Doc.getDocsByDate(req.query.date).then(function(data) {
-        if (data.length) {
-          res.status(200).json({
-            'status': 200,
-            'message': 'Document for ' + req.query.date,
-            'data': data
-          });
-        } else {
-          res.status(200).json({
-            'status': 200,
-            'message': 'No Document exist for date ',
-            'data': []
-          });
-        }
-      }).catch(function(err) {
-        cm.resdberrors(res, 'querying database', err);
-      });
     },
 
     delete: function(req, res) {

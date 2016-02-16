@@ -129,21 +129,7 @@
       Doc.getDocsByRole(req.params.id,
           req.headers.groupid)
         .then(function(data) {
-          if (data.length) {
-            res.status(200).json({
-              'status': 200,
-              'message': 'Document for role-' +
-                req.params.id,
-              'data': data
-            });
-          } else {
-            res.status(200).json({
-              'status': 200,
-              'message': 'No Document exist for role-' +
-                req.params.id,
-              'data': []
-            });
-          }
+          res.status(200).json(data);
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });

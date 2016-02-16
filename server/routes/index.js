@@ -55,7 +55,6 @@
   router.get('/roles/:id/documents', roleRoute.getDocsByRole);
 
   router.get('/users/:id/documents', docRoute.getDocsById);
-  router.get('/documents/date', docRoute.getDocsByDate);
 
   // Routes that require owner/access validation
   router.route('/documents/:id')

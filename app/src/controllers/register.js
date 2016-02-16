@@ -13,36 +13,29 @@
         };
 
         $scope.createUser = function() {
-          console.log($scope.signform);
           Users.save($scope.signform, function() {
             $scope.isRegistered = true;
             Users.login({
               username: $scope.signform.username,
               password: $scope.signform.password
             }, function(err, res) {
-              console.log(res);
               if (err) {
-                $state.go('loginerror');
+                console.log(err);
+                $scope.signupErr = 'Error Logging you In';
               } else {
-                Auth.setToken(JSON.stringify(res));
-                $rootScope.activeUser = res.user;
-                if ($rootScope.activeUser.groupId.length > 0) {
-                  $state.go('dashboard', {
-                    userId: res.user._id,
-                    groupId: res.user.groupId[0]
-                  });
-                } else {
-                  $state.go('home.group', {
-                    id: res.user._id
-                  });
-                }
+                Auth.setToken(JSON.stringify(res.data), '');
+                $rootScope.activeUser = res.data.user;
+                $state.go('home.group', {
+                  id: res.data.user._id
+                });
               }
             });
           }, function(err) {
             if (err.status === 409) {
               $scope.signupErr = 'Username/Email Already Exists';
             } else {
-              $scope.signupErr = 'Error creating User';
+              $scope.signupErr = 'Error registering your details' +
+                ' /Please Try Again';
             }
           });
         };

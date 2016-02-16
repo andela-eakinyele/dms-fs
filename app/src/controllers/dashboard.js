@@ -3,43 +3,51 @@
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
       '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      'Groups', 'Users', 'Auth', 'Roles', 'activeUser', 'activeGroup',
+      'Groups', 'Users', 'Auth', 'Roles', 'Token',
       function($rootScope, $scope, $mdMedia, $state, $stateParams,
-        $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles,
-        activeUser, activeGroup) {
+        $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles, Token) {
 
         $scope.init = function() {
+
+          if (!$rootScope.activeUser) {
+            $state.go('home.login');
+          }
+          $scope.groups = $rootScope.activeUser.groupId;
+
           $scope.updateForm = {};
           $scope.newDoc = {};
-          $scope.currentUser = activeUser;
+          $scope.currentUser = $rootScope.activeUser;
+          $rootScope.activeGroup = $stateParams.groupid;
 
-          $scope.superAdmin = window._.filter(activeUser.roles, {
-            title: 'superAdmin'
+          $scope.userRole = window._.filter($rootScope.activeUser.roles, {
+            'groupId': [parseInt($stateParams.groupid)]
           });
 
-          if (activeGroup) {
-            $scope.userRole = window._.filter(activeUser.roles, {
-              title: 'Admin',
-              groupId: [activeGroup._id]
-            });
-          }
+          console.log($scope.userRole);
 
           Docs.query(function(res) {
             $scope.allDocs = res;
-            $scope.label = window._.uniq(window._.map($scope.allDocs, 'label'));
-            // Side bar navigation menu
-            $scope.sideBarMenu = [{
-              name: 'Group Documents',
-              subMenu: ['My Documents', 'Shared Documents']
-            }, {
-              name: 'Labels',
-              subMenu: $scope.label
-            }];
           }, function(err) {
             console.log(err);
           });
+        };
 
+        // Set Selected group
+        $scope.toggle = function(id) {
+          $rootScope.activeGroup = id;
+          Auth.setToken(Token.get()[0], id);
+          $state.go($state.current, {
+            id: $rootScope.activeUser._id,
+            groupid: id
+          }, {
+            reload: true
+          });
+        };
 
+        $scope.isSelected = function(id) {
+          var checked = $stateParams.groupid ?
+            parseInt($stateParams.groupid) === id : false;
+          return checked;
         };
 
 
@@ -88,7 +96,7 @@
           }
           if (ev === 'Join') {
             $state.go('home.group', {
-              id: activeUser._id
+              id: $rootScope.activeUser._id
             });
           }
         };
@@ -106,19 +114,6 @@
         $scope.openMenu = function($mdOpenMenu, ev) {
           $mdOpenMenu(ev);
         };
-
-        // Side bar navigation menu
-        $scope.sideBarMenu = [{
-          name: 'View Documents',
-          subMenu: ['My Documents', 'Shared Documents']
-        }, {
-          name: 'Labels',
-          subMenu: $scope.label
-        }];
-
-        $scope.adminSideBarMenu = [
-          'List Users', 'List Roles', 'Report'
-        ];
 
         // Header menu
         $scope.menu = [{

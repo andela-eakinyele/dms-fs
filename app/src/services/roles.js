@@ -17,9 +17,9 @@
         });
 
         obj.bulkDelete = function(roles, cb) {
-          $http.post('/api/roles/delete', roles).success(function(res) {
-            cb(null, res);
-          }).error(function(err) {
+          $http.post('/api/roles/delete', roles).then(function(res) {
+            cb(null, res.data);
+          }, function(err) {
             cb(err);
           });
         };

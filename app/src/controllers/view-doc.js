@@ -36,7 +36,6 @@
           return Utils.parseDate(date);
         };
 
-
         $scope.editDoc = function() {
           var editable = $scope.doc ?
             $rootScope.activeUser._id === $scope.doc.ownerId[0]._id : false;

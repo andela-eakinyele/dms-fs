@@ -52,6 +52,7 @@ md-content(layout ="column" flex="100" layout-margin)
                       span Delete
               md-button.md-primary(ng-if="!editDoc(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
                 md-icon(md-font-set="fa fa-external-link fa-2x" md-menu-align-target) 
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.count}}" md-on-paginate="onPaginate" md-page-select)
 
 
       

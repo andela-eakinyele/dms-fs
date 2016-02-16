@@ -35,26 +35,21 @@
         $scope.addGroup = function() {
           $scope.pform.userid = parseInt($stateParams.id);
           Groups.save($scope.pform, function(group) {
-              $scope.groupErr = 'Group saved';
-              Users.get({
-                id: $stateParams.id,
-                groupid: group._id
-              }, function(user) {
+            $scope.groupErr = 'Group saved';
+            $rootScope.activeGroup = group._id;
+            Users.get({ id: $stateParams.id }, function(user) {
                 $rootScope.activeUser = user;
-                $rootScope.activeGroup = group;
-                $state.go('dashboard.list', {
+                $state.go('dashboard.admin.docs', {
                   id: $stateParams.id,
                   groupid: group._id
                 });
-              }, function(err) {
-                console.log(err);
-                $scope.groupErr = 'Error retrieving user';
+              },
+              function() {
+                $scope.groupErr = 'Error creating new Group';
               });
-            },
-            function(err) {
-              console.log(err);
-              $scope.groupErr = 'Error creating new Group';
-            });
+          }, function() {
+            $scope.groupErr = 'Error retrieving user';
+          });
         };
 
         // join group by user
@@ -97,11 +92,13 @@
                 Users.update({
                   id: _userid
                 }, userUpdate, function(user) {
+                  console.log(user);
                   $scope.groupErr = 'Successfully added to group';
-                  $rootScope.activeGroup = user.groupId;
+                  $rootScope.activeUser = user;
+                  $rootScope.activeGroup = user.groupId[0]._id;
                   $state.go('dashboard.list', {
                     id: $rootScope.activeUser._id,
-                    groupid: user.groupId[0]
+                    groupid: user.groupId[0]._id
                   });
                 }, function() {
                   $scope.groupErr = 'Error updating user';
@@ -110,8 +107,13 @@
                 $scope.groupErr = 'Error updating role';
               });
             },
-            function() {
-              $scope.groupErr = 'Error updating group';
+            function(err) {
+              console.log(err);
+              if (err.status === 403) {
+                $scope.groupErr = 'Invalid Passphrase';
+              } else {
+                $scope.groupErr = 'Error updating group';
+              }
             });
         };
 
