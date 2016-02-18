@@ -1,7 +1,6 @@
 describe('ViewDocCtrl tests', function() {
   'use strict';
   var scope,
-
     Docs = {
       save: function(data, cb, cbb) {
         data ? cb(data) : cbb(false);
@@ -74,6 +73,24 @@ describe('ViewDocCtrl tests', function() {
     timeout = $injector.get('$timeout');
     httpBackend = $injector.get('$httpBackend');
     httpBackend
+      .whenGET('views/dashboard.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/dashheader.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/dashsidenav.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
       .whenGET('/api/session')
       .respond(200, [{
         res: 'res'
@@ -90,27 +107,23 @@ describe('ViewDocCtrl tests', function() {
 
   it('should initialize the controller and return an error', function() {
     spyOn(Docs, 'get').and.callThrough();
-    // spyOn(state, 'go');
+    spyOn(state, 'go');
     spyOn(Utils, 'showAlert').and.callThrough();
-    // scope.previousState.name = 'dashboard.list';
     scope.init();
     expect(Docs.get).toHaveBeenCalled();
     expect(scope.doc).not.toBeDefined();
     expect(Utils.showAlert).toHaveBeenCalled();
-    // expect(state.go).toHaveBeenCalled();
+    expect(state.go).toHaveBeenCalled();
   });
 
   // it('should watch fabisOpen scope variable', function() {
   //   stateParams.docId = 1;
   //   scope.init();
-  //   scope.fabisOpen = false;
-  //   scope.tooltipVisible = false;
   //   scope.$digest();
   //   scope.fabisOpen = true;
   //   scope.$digest();
   //   expect(scope.tooltipVisible).toBeTruthy();
   // });
-
 
   it('should return parse time', function() {
     spyOn(Utils, 'parseDate').and.callThrough();

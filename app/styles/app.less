@@ -1,23 +1,15 @@
-body,
-html {
-    height: auto;
-    color: rgba(0, 0, 0, .87);
-    background: #fff;
-    /*position: relative
-;*/
-}
-
 html,
 body {
+    height: 100%;
     font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
     text-transform: none;
     background: linear-gradient(rgba(72, 74, 111, 0.39), rgba(72, 74, 111, 0.48)), url('./../images/homeBckgrd.jpg');
-    /* >div.body {
-        height: 100%;
+    >div.body {
+        height: inherit;
         > .main {
-            height: 95%;
+            height: inherit;
         }
-    }*/
+    }
     >div.md-open-menu-container {
         height: auto;
     }
@@ -38,11 +30,9 @@ md-sidenav {
 }
 */
 
-.appName {
-    > span {
-        font-size: 52px;
-        font-family: 'Candara';
-    }
+span.appName {
+    font-size: 52px;
+    font-family: 'Georgia';
 }
 
 #dashContent {
@@ -59,7 +49,6 @@ md-sidenav {
 }
 
 .overlay {
-    height: inherit;
     text-align: center;
     >md-content {
         background-color: rgba(205, 216, 218, 0.9);
@@ -67,6 +56,7 @@ md-sidenav {
 }
 
 .extraView {
+    margin: 50px auto;
     .md-button {
         font-size: 1.2em;
         width: 120px;
@@ -212,7 +202,9 @@ div.right-border {
     height: 100%;
     > div {
         height: 100%;
-        > div.sidenav {}
+        > div.sidenav {
+            height: 100%
+        }
     }
     .sectionTitle {
         h3 {
@@ -240,7 +232,7 @@ md-fab-speed-dial md-fab-trigger {
     md-content {
         > div {
             >h3 {
-                font-size: 18px;
+                font-size: 20px;
                 color: indigo;
                 margin: 0;
             }
@@ -392,17 +384,10 @@ md-dialog-actions {
 }
 
 .addrole {
-    width: 90%;
     min-width: 500px;
-    text-align: center;
-    margin: 0 auto;
-    >div {
-        margin-top: 20px;
-    }
     background-color: #ECECEC;
     > md-content {
         >md-input-container {
-            width: 70%;
             > .md-input {
                 font-size: 18px;
             }
@@ -410,19 +395,12 @@ md-dialog-actions {
     }
     md-content {
         &.roleadd md-input-container {
-            margin: 0;
+            margin-top: 10px;
         }
         md-checkbox {
             text-align: left;
             font-size: 1.0em;
         }
-    }
-}
-
-.viewheader {
-    color: #1e88e5;
-    h3 {
-        margin: 0;
     }
 }
 
@@ -507,4 +485,19 @@ md-dialog-actions {
     height: 40px;
     font-size: 20px;
     border-bottom: 1px solid #EDA608;
+}
+
+.footer {
+    position: relative;
+    margin-top: 50px;
+}
+
+.dashheader {
+    text-align: left;
+    font-size: 20px;
+    color: blue;
+}
+
+.sidehead {
+    background-color: #40c4ff;
 }

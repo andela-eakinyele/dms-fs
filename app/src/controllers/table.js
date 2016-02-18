@@ -64,7 +64,8 @@
           $mdOpenMenu(ev);
         };
 
-        // Update edit/delete docs array
+        // Toggling Selection
+        // Update selection  array
         $scope.toggle = function(item, list) {
           var role = list.indexOf(item);
           if (role > -1) {
@@ -73,6 +74,26 @@
             list.push(item);
           }
         };
+
+        // toggle select all items
+        $scope.selectAll = function(items) {
+          if ($scope.selected.length > 0) {
+            $scope.selected = [];
+          } else {
+            $scope.selected = window._.map(items, '_id');
+          }
+        };
+
+        // check item selection state
+        $scope.isSelected = function(id, list) {
+          return list.indexOf(id) > -1;
+        };
+
+        // check select all state
+        $scope.all = function(items) {
+          return $scope.selected.length === window._.map(items, '_id').length;
+        };
+
 
         // Menu button action
         $scope.menuAction = function(ev, id) {
@@ -95,28 +116,27 @@
           }
         };
 
-        $scope.headers = [{
-          name: 'Label',
-          field: 'label'
-        }, {
-          name: 'Title',
-          field: 'title'
-        }, {
-          name: 'Owner',
-          field: 'ownerId'
-        }, {
-          name: 'Date Created',
-          field: 'lastModified'
-        }, {
-          name: 'Last Modified',
-          field: 'lastModified'
-        }, {
-          name: 'Shared',
-          field: 'shared'
-        }, {
-          name: '',
-          field: 'buttons '
-        }];
+
+        $scope.refreshTable = function() {
+          $scope.getDocs();
+          $scope.selectedDocs = [];
+        };
+
+        $scope.deleteSelection = function() {
+          // Docs.bulkdelete();
+
+        };
+
+
+        $scope.headers = [
+          'Label',
+          'Title',
+          'Owner',
+          'Date Created',
+          'Last Modified',
+          'Shared',
+          '',
+        ];
 
         $scope.init();
 

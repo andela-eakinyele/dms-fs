@@ -13,7 +13,7 @@
             $scope.doc = res;
           }, function() {
             Utils.showAlert('ev', 'Error', 'Error retrieving document');
-            // $state.go($rootScope.previousState.name);
+            $state.go('dashboard.list');
           });
 
           $scope.fabisOpen = false;

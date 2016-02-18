@@ -1,4 +1,4 @@
-.dashboard(layout="column" ng-cloak)
+.dashboard(layout="column" ng-cloak ng-if="activeUser")
   md-toolbar(ui-view="header")
   div(layout="row" id="dashContent")
     div.sidenav(layout="row"  ui-view="sidenav")

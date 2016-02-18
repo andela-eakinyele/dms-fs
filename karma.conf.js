@@ -32,7 +32,7 @@
         'public/lib/lodash/lodash.js',
         'public/lib/async/dist/async.js',
         'public/js/app.js',
-        'tests/unit/controllers/**/*.js'
+        'tests/unit/**/*.js'
       ],
 
 

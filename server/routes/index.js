@@ -70,7 +70,6 @@
   router.all('/*', validate.authorize);
 
   router.post('/roles', roleRoute.bulkCreate);
-  router.post('/roles/delete', roleRoute.bulkDelete);
 
   router.route('/roles/:id')
     .put(roleRoute.update)

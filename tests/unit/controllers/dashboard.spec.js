@@ -1,6 +1,7 @@
 describe('DashBoardCtrl tests', function() {
   'use strict';
   var scope,
+    open,
     Roles = {
       save: function(data, cb, cbb) {
         (data[0].title !== '') ? cb(data): cbb(false);
@@ -15,10 +16,6 @@ describe('DashBoardCtrl tests', function() {
         }) : cbb({
           message: 'error'
         });
-      },
-      bulkDelete: function(arr, cb) {
-        (arr instanceof Array) ?
-        cb(null): cb('error');
       },
       query: function(id, cb) {
         if (id) {
@@ -57,11 +54,15 @@ describe('DashBoardCtrl tests', function() {
     user = {
       _id: 1,
       groupId: [{
-        _id: 3
+        _id: 1,
+        title: 'Test Group 1'
       }],
       roles: [{
         _id: 2,
-        groupId: [1]
+        groupId: [{
+          _id: 1,
+          title: 'Test Group'
+        }]
       }]
     },
     Token = {
@@ -71,7 +72,25 @@ describe('DashBoardCtrl tests', function() {
         }, 1];
       }
     },
-    mdSidenav,
+    mdSidenav = function(dir) {
+      if (dir) {
+        return {
+          toggle: function() {
+            open = dir;
+          },
+          close: function() {
+            open = dir;
+          }
+        };
+      } else {
+        return false;
+      }
+    },
+    mdOpenMenu = function(ev) {
+      if (ev) {
+        open = true;
+      }
+    },
     state,
     stateParams,
     Utils,
@@ -90,39 +109,30 @@ describe('DashBoardCtrl tests', function() {
       $scope: scope,
       Docs: Docs,
       Roles: Roles,
-      Token: Token
+      Token: Token,
+      $mdSidenav: mdSidenav
     });
     state = $injector.get('$state');
     stateParams = $injector.get('$stateParams');
     Utils = $injector.get('Utils');
     Auth = $injector.get('Auth');
 
-    // $provide.factory('$mdSidenav', function() {
-    //   return function(dir) {
-    //     return {
-    //       toggle: function() {
-    //         return jasmine.createSpy();
-    //       },
-    //       close: function() {
-    //         return jasmine.createSpy();
-    //       }
-    //     };
-    //   };
-    // });
-
-
   }));
 
   it('should initialize the controller', function() {
     scope.activeUser = user;
     stateParams.groupid = 1;
-    spyOn(Docs, 'query').and.callThrough();
     scope.init();
     expect(scope.updateForm).toBeDefined();
     expect(scope.activeGroup).toBeDefined();
     expect(scope.userRole).toBeDefined();
-    expect(Docs.query).toHaveBeenCalled();
-    expect(scope.allDocs).toBeDefined();
+  });
+
+  it('should set scope attribute for admin dashboard', function() {
+    scope.activeUser = user;
+    state.current.name = 'dashboard.admin.group';
+    scope.init();
+    expect(scope.groupName).toBe('Admin Dashboard');
   });
 
   it('should redirect to login if no active user', function() {
@@ -192,19 +202,22 @@ describe('DashBoardCtrl tests', function() {
     });
   });
 
+  it('should open a menu', function() {
+    scope.openMenu(mdOpenMenu, 'ev');
+    expect(open).toBeTruthy();
+  });
+
   describe('Side Navigation menu', function() {
 
-    // it('should open the side navigation bar', function() {
-    //   spyOn($mdSidenav('lefty'), 'toggle').and.callThrough();
-    //   scope.openLeft();
-    //   expect($mdSidenav('lefty').toggle).toHaveBeenCalled();
-    // });
+    it('should open the side navigation bar', function() {
+      scope.openLeft();
+      expect(open).toBe('lefty');
+    });
 
-    // it('should close the side navigation bar', function() {
-    //   spyOn(mdSidenav, 'close').and.callThrough();
-    //   scope.close();
-    //   expect(mdSidenav.close).toHaveBeenCalled();
-    // });
+    it('should open the side navigation bar', function() {
+      scope.close();
+      expect(open).toBe('lefty');
+    });
 
   });
 

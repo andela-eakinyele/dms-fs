@@ -16,10 +16,6 @@ describe('DocCtrl tests', function() {
           message: 'error'
         });
       },
-      bulkDelete: function(arr, cb) {
-        (arr instanceof Array) ?
-        cb(null): cb('error');
-      },
       query: function(id) {
         return [{
           message: 'I am groot',
@@ -29,10 +25,26 @@ describe('DocCtrl tests', function() {
     },
     Docs = {
       save: function(data, cb, cbb) {
-        data ? cb(data) : cbb('error');
+        if (data === 'new') {
+          cb(data)
+        } else if (data === 'old') {
+          cbb({
+            status: 409
+          });
+        } else {
+          cbb('error');
+        }
       },
       update: function(id, data, cb, cbb) {
-        (id && data) ? cb(data): cbb(false);
+        if (id && data === 'new') {
+          cb(data);
+        } else if (id && data === 'old') {
+          cbb({
+            status: 409
+          });
+        } else {
+          cbb('error');
+        }
       },
       get: function(params, cb, cbb) {
         params.id ? cb({
@@ -118,13 +130,22 @@ describe('DocCtrl tests', function() {
     spyOn(Docs, 'save').and.callThrough();
     spyOn(Utils, 'showAlert').and.callThrough();
     spyOn(state, 'go');
-    scope.newDoc = {
-      title: 'I am Here'
-    };
+    scope.newDoc = 'new';
     scope.saveDoc('ev');
     expect(Docs.save).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
+  });
+
+  it('should not save a conflicting document', function() {
+    spyOn(Docs, 'save').and.callThrough();
+    spyOn(Utils, 'showAlert').and.callThrough();
+    spyOn(state, 'go');
+    scope.newDoc = 'old';
+    scope.saveDoc('ev');
+    expect(Docs.save).toHaveBeenCalled();
+    expect(Utils.showAlert).toHaveBeenCalled();
+    expect(state.go).not.toHaveBeenCalled();
   });
 
 
@@ -143,14 +164,23 @@ describe('DocCtrl tests', function() {
     spyOn(Docs, 'update').and.callThrough();
     spyOn(Utils, 'showAlert').and.callThrough();
     spyOn(state, 'go');
-    scope.doc = {
-      title: 'I am Here'
-    };
+    scope.doc = 'new';
     stateParams.docId = 1;
     scope.updateDoc('ev');
     expect(Docs.update).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
+  });
+
+  it('should not update a conflicting document title', function() {
+    spyOn(Docs, 'update').and.callThrough();
+    spyOn(Utils, 'showAlert').and.callThrough();
+    spyOn(state, 'go');
+    scope.doc = 'old';
+    scope.updateDoc('ev');
+    expect(Docs.update).toHaveBeenCalled();
+    expect(Utils.showAlert).toHaveBeenCalled();
+    expect(state.go).not.toHaveBeenCalled();
   });
 
 
@@ -165,11 +195,18 @@ describe('DocCtrl tests', function() {
     expect(state.go).not.toHaveBeenCalled();
   });
 
-  it('should select a share role', function() {
+  it('should unselect a share role', function() {
     var list = ['Editor', ' Publisher'];
     var item = 'Editor';
     scope.toggle(item, list);
     expect(list.length).toBe(1);
+  });
+
+  it('should select a share role', function() {
+    var list = ['Publisher'];
+    var item = 'Editor';
+    scope.toggle(item, list);
+    expect(list.length).toBe(2);
   });
 
   it('should check a role', function() {

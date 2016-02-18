@@ -24,7 +24,8 @@
             }, function(user) {
               $scope.data = user;
             },
-            function() {
+            function(err) {
+              console.log(err);
               Utils.showAlert(ev, 'Error Retrieving User',
                 $rootScope.activeUser.username);
             });
@@ -38,13 +39,6 @@
         $scope.cancel = function() {
           $mdDialog.cancel();
         };
-
-        // $scope.roleTitle = function(a, b) {
-        //   return window._.find($scope.roles, {
-        //     '_id': a,
-        //     groupId: [b]
-        //   });
-        // };
 
         // update user modal
         $scope.update = function(ev) {

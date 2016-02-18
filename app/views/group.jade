@@ -36,7 +36,7 @@ div.group(layout="column" layout-padding)
         md-input-container(flex="40")
           label(for="role") Role
           md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
-            md-option(ng-value="role" ng-repeat="role in roles") {{role.title}}
+            md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
       md-input-container.md-block
         label(for="passphrase") Enter group passphrase
         input(type="text" name="passphrase" ng-model="signform.passphrase" required ng-disabled="newgroup")

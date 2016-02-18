@@ -35,4 +35,11 @@ describe('StartPageCtrl tests', function() {
     expect(scope.showButton).toBe(false);
   });
 
+  it('should call watch the current state for home.features', function() {
+    state.current.name = 'home.features';
+    scope.$digest();
+    expect(state.current.name).toBe('home.features');
+    expect(scope.showButton).toBe(true);
+  });
+
 });

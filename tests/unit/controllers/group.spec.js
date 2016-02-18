@@ -181,6 +181,7 @@ describe('GroupCtrl tests', function() {
     expect(state.go).toHaveBeenCalled();
   });
 
+
   it('should add a user to a group', function() {
     spyOn(Groups, 'update').and.callThrough();
     spyOn(Roles, 'update').and.callThrough();

@@ -1,0 +1,20 @@
+md-toolbar.addrole(ng-init="loadRoles()")
+  .md-toolbar-tools(layout="row")
+    div(flex)
+      h3.md-subheadline Add New Roles
+    div.no-padding(layout="row") 
+      div.plusminus(layout layout-align="center center")
+        md-button.md-raised.md-icon-button(ng-click="decrease()" aria-label="remove fields")
+          md-icon(md-font-set="fa fa-minus")
+        md-button.md-raised.md-icon-button(ng-click="increase()" aria-label="add fields")
+          md-icon(md-font-set="fa fa-plus")
+      md-button.md-primary.md-raised(ng-click="create($event)" ng-disabled="!enableCreateButton(newRoles)")
+        span Create
+      md-button.md-accent.md-raised(ng-click="cancelAdd()")
+        span Cancel
+  md-content.roleadd(layout="row" layout-wrap layout-padding)
+    md-input-container(ng-repeat="i in range(num) track by $index" flex="45")
+      label {{$index +1}} 
+      md-icon(md-font-set="fa fa-dot-circle-o")
+      input(type="text" ng-model="newRoles[$index]")
+

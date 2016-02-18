@@ -30,7 +30,7 @@
       before(function(done) {
 
         mock.seedCreate(apiTest.model.user, keys,
-            data.seedUsers, 101)
+            data.seedUsers, 102)
           .then(function(users) {
             userData = users;
             usersId = _.pluck(users, '_id');
@@ -376,7 +376,7 @@
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
               assert.deepEqual(_.pluck(response,
-                '_id'), [101, 103, 105]);
+                '_id'), [102, 104, 106]);
               done();
             });
         });
@@ -462,7 +462,7 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.deepEqual(response.users, [200, 101]);
+            assert.deepEqual(response.users, [200, 102]);
             done();
           });
       });

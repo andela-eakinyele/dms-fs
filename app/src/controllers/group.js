@@ -47,10 +47,10 @@
                 });
               },
               function() {
-                $scope.groupErr = 'Error creating new Group';
+                $scope.groupErr = 'Error Updating User';
               });
           }, function() {
-            $scope.groupErr = 'Error retrieving user';
+            $scope.groupErr = 'The Title has been used already';
           });
         };
 

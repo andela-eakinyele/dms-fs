@@ -38,8 +38,6 @@
     'ui.router',
     'ngMaterial',
     'md.data.table',
-    'ui.grid',
-    'ui.grid.pagination',
     'ngAria',
     'ngAnimate'
   ])
@@ -110,14 +108,6 @@
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
-              resolve: {
-                'activeUser': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeUser;
-                }],
-                'activeGroup': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeGroup;
-                }]
-              },
               controller: 'DashBoardCtrl'
             },
             'header@dashboard': {
@@ -201,29 +191,11 @@
             },
           }
         })
-        .state('dashboard.admin.viewdoc', {
-          url: '/:groupid/documents/list',
+        .state('dashboard.admin.doc', {
+          url: '/:groupid/documents',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-docs.html',
-              controller: 'AdminListCtrl'
-            },
-          }
-        })
-        .state('dashboard.admin.viewrole', {
-          url: '/:groupid/roles/list',
-          views: {
-            'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-roles.html',
-              controller: 'AdminListCtrl'
-            },
-          }
-        })
-        .state('dashboard.admin.viewuser', {
-          url: '/:groupid/users',
-          views: {
-            'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-users.html',
+              templateUrl: 'views/admin-table-docs.html',
               controller: 'AdminListCtrl'
             },
           }
@@ -232,7 +204,25 @@
           url: '/:groupid/roles',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/admin-role.html',
+              templateUrl: 'views/admin-table-roles.html',
+              controller: 'AdminListCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.viewuser', {
+          url: '/:groupid/users',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-table-users.html',
+              controller: 'AdminListCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.role.add', {
+          url: '/add',
+          views: {
+            'inner@dashboard.admin.role': {
+              templateUrl: 'views/add-role.html',
               controller: 'AdminRoleCtrl'
             },
           }
@@ -241,17 +231,18 @@
           url: '/users',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/add-user.html',
-              resolve: {
-                'activeUser': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeUser;
-                }],
-                'activeGroup': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeGroup;
-                }]
-              }
-              // controller: 'AdminCtrl'
+              templateUrl: 'views/admin-users.html',
+              controller: 'AdminListCtrl'
             },
+          }
+        })
+        .state('dashboard.admin.group', {
+          url: '/groups',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-table-groups.html',
+              controller: 'AdminListCtrl'
+            }
           }
         })
         .state('loginerror', {
@@ -307,44 +298,50 @@
               Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
             }
 
-            //check for Admin user
-            var Admin = window._
-              .filter(res.data.user.roles, {
-                'title': 'Admin'
+            if (!res.group && res.data.user.groupId.length === 0) {
+              $state.go('home.group', {
+                id: res.data.user._id
               });
-
-            if (Admin.length > 0) {
-              $state.go('dashboard.admin.viewdoc', {
-                id: res.data.user._id,
-                groupid: $rootScope.activeGroup
-              });
-
-              // not admin user
-            } else {
-
-              //check for superAdmin user
-              var superAdmin = window._
-                .filter(res.data.user.roles, {
-                  'title': 'superAdmin'
-                });
-
-              console.log(superAdmin);
-              if (superAdmin.length > 0) {
-                $state.go('dashboard.admin.user', {
-                  id: res.data.user._id
-                });
-              } else if (!res.group && res.data.user.groupId.length === 0) {
-                $state.go('home.group', {
-                  id: res.data.user._id
-                });
-                // use user group or last set header group
-              } else {
-                $state.go('dashboard.list', {
-                  id: res.data.user._id,
-                  groupid: $rootScope.activeGroup
-                });
-              }
             }
+
+            // //check for Admin user
+            // var Admin = window._
+            //   .filter(res.data.user.roles, {
+            //     'title': 'Admin'
+            //   });
+
+            // if (Admin.length > 0) {
+            //   // $state.go('dashboard.admin.doc', {
+            //   //   id: res.data.user._id,
+            //   //   groupid: $rootScope.activeGroup
+            //   // });
+
+            //   // not admin user
+            // } else {
+
+            //check for superAdmin user
+            var superAdmin = window._
+              .filter(res.data.user.roles, {
+                'title': 'superAdmin'
+              });
+
+            if (superAdmin.length > 0) {
+              $state.go('dashboard.admin.group', {
+                id: res.data.user._id
+              });
+            }
+            // } else if (!res.group && res.data.user.groupId.length === 0) {
+            //     $state.go('home.group', {
+            //       id: res.data.user._id
+            //     });
+            //     // use user group or last set header group
+            //   } else {
+            //     $state.go('dashboard.list', {
+            //       id: res.data.user._id,
+            //       groupid: $rootScope.activeGroup
+            //     });
+            //   }
+            // }
           }
         }
       });

@@ -16,10 +16,6 @@ describe('UserCtrl tests', function() {
           message: 'error'
         });
       },
-      bulkDelete: function(arr, cb) {
-        (arr instanceof Array) ?
-        cb(null): cb('error');
-      },
       query: function(params, cb, cbb) {
         if (params.groupid) {
           if (!cb && !cbb) {
@@ -180,10 +176,24 @@ describe('UserCtrl tests', function() {
     spyOn(Roles, 'query').and.callThrough();
     spyOn(Users, 'get').and.callThrough();
     scope.init();
-    expect(scope.data).toBeDefined();
+    expect(scope.data.data).toBeDefined();
     expect(scope.roles).toBeDefined();
     expect(Roles.query).toHaveBeenCalled();
     expect(Users.get).toHaveBeenCalled();
+  });
+
+  it('should initialize the controller to an error', function() {
+    stateParams.groupid = 1;
+    scope.activeUser = user;
+    spyOn(Roles, 'query').and.callThrough();
+    spyOn(Users, 'get').and.callThrough();
+    spyOn(Utils, 'showAlert').and.callThrough();
+    scope.init();
+    expect(scope.data.data).not.toBeDefined();
+    expect(scope.roles).toBeDefined();
+    expect(Roles.query).toHaveBeenCalled();
+    expect(Users.get).toHaveBeenCalled();
+    expect(Utils.showAlert).toHaveBeenCalled();
   });
 
   it('should hide dialog forms', function() {

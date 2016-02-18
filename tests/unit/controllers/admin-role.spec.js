@@ -16,10 +16,6 @@ describe('AdminRoleCtrl tests', function() {
           message: 'error'
         });
       },
-      bulkDelete: function(arr, cb) {
-        return (arr.length) ?
-          cb(null, 'deleted') : cb('error', null);
-      },
       query: function(params, cb, cbb) {
         return (params.groupid) ?
           cb([{
@@ -50,14 +46,6 @@ describe('AdminRoleCtrl tests', function() {
     stateParams = $injector.get('$stateParams');
 
   }));
-
-  it('should load group roles', function() {
-    spyOn(Roles, 'query').and.callThrough();
-    stateParams.groupid = 2;
-    scope.loadRoles();
-    expect(Roles.query).toHaveBeenCalled();
-    expect(scope.roles).toBeDefined();
-  });
 
   it('should return a new array', function() {
     var newArr = scope.range(2);
@@ -91,13 +79,11 @@ describe('AdminRoleCtrl tests', function() {
 
   it('should create a new role', function() {
     spyOn(Roles, 'save').and.callThrough();
-    spyOn(scope, 'loadRoles').and.callThrough();
     spyOn(scope, 'cancelAdd').and.callThrough();
     stateParams.groupid = 1;
     scope.newRoles = ['Editor', '  '];
     scope.create('ev');
     expect(scope.saveRoles).toBeDefined();
-    expect(scope.loadRoles).toHaveBeenCalled();
     expect(scope.cancelAdd).toHaveBeenCalled();
   });
 
@@ -116,54 +102,5 @@ describe('AdminRoleCtrl tests', function() {
     scope.cancelAdd();
     expect(scope.newRoles.length).toBe(0);
     expect(scope.num).toBe(0);
-  });
-
-  it('should remove role', function() {
-    var list = ['Editor', ' Publisher'];
-    var item = 'Editor';
-    scope.toggle(item, list);
-    expect(list.length).toBe(1);
-  });
-
-  it('should add role', function() {
-    var list = ['Editor'];
-    var item = 'Publisher';
-    scope.toggle(item, list);
-    expect(list.length).toBe(2);
-  });
-
-  it('should delete roles', function() {
-    spyOn(Roles, 'bulkDelete').and.callThrough();
-    spyOn(Utils, 'showAlert').and.callThrough();
-    spyOn(scope, 'loadRoles').and.callThrough();
-    scope.editRoles = [{
-      _id: 1
-    }, {
-      _id: 2
-    }];
-    scope.deleteRoles('ev');
-    expect(scope.loadRoles).toHaveBeenCalled();
-    expect(scope.editRoles.length).toBe(0);
-    expect(Utils.showAlert).toHaveBeenCalled();
-  });
-
-  it('should not delete roles', function() {
-    spyOn(Roles, 'bulkDelete').and.callThrough();
-    spyOn(Utils, 'showAlert').and.callThrough();
-    spyOn(scope, 'loadRoles').and.callThrough();
-    scope.editRoles = false;
-    scope.deleteRoles('ev');
-    expect(scope.loadRoles).not.toHaveBeenCalled();
-    expect(Utils.showAlert).toHaveBeenCalled();
-  });
-
-  it('should cancel delete action', function() {
-    scope.editRoles = [{
-      _id: 1
-    }, {
-      _id: 2
-    }];
-    scope.cancelEdit();
-    expect(scope.editRoles.length).toBe(0);
   });
 });

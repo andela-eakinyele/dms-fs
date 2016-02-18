@@ -3,6 +3,7 @@
   var Doc = require('./../models/document');
   var User = require('./../models/user');
   var _ = require('lodash');
+  var _async = require('async');
 
   var cm = require('./helpers');
 
@@ -175,6 +176,7 @@
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)
               .then(function(result) {
+
                 res.status(result.status).json(result.data);
               }).catch(function(err) {
                 res.status(err.status).json(err.error);
@@ -192,6 +194,7 @@
 
     }
   };
+
 
   module.exports = docFunctions;
 })();

@@ -26,11 +26,11 @@
             'or send them the group passphrase '
         }, {
           'title': 'Create and Share Documents',
-          'content': 'Team members can create and share documents' +
+          'content': 'Team members can create and share documents ' +
             'with other team members '
         }, {
           'title': 'Manage your Documents',
-          'content': 'Documents are managed by role assignment' +
+          'content': 'Documents are managed by role assignment ' +
             'and ownership '
         }];
 

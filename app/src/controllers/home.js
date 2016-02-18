@@ -15,7 +15,6 @@
             $scope.showButton = false;
           }
         });
-
       }
     ]);
 })();

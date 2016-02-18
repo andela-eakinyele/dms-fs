@@ -1,25 +1,15 @@
 .header.md-toolbar-tools(layout ="row" layout-align="center center" layout-padding)
   md-button(ng-click="openLeft()" aria-label="openLeftMenu" hide-gt-md id="hdrbtn")
     md-icon(md-font-set="fa fa-bars fa-2x")
-  span Logo 
-  span(hide-xs hide-sm) ProDocs
-  span(flex)
+  div.dashheader(layout layout-margin flex)
+    h3 Prodocs - 
+    h3(ng-if="groupName") {{groupName}} Dashboard
   div.right-border(layout layout-align="center center" ng-if="userRole[0].title === \"superAdmin\"")
     md-button(ui-sref="dashboard.admin.user")
       md-icon(md-font-set="fa fa-user-plus fa-2x" md-menu-origin)
       span Add User
       md-tooltip Add User
 
-  div.right-border(hide-xs hide-sm layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
-    md-button(ui-sref="dashboard.new")
-      md-icon(md-font-set="fa fa-file-text-o fa-2x") 
-      span(hide-xs hide-sm) New Doc
-      md-tooltip New Doc
-  div.right-border(layout hide-xs hide-sm layout-align="center center" ng-if="userRole[0].title === \"Admin\"")
-    md-button(ui-sref="dashboard.admin.role")
-      md-icon(md-font-set="fa fa-briefcase fa-2x") 
-      span(hide-xs hide-sm) Add/Edit Roles
-      md-tooltip Add Group Roles
   div.right-border(layout ng-repeat="i in menu" hide-xs hide-sm layout-align="center center")
     md-button(ng-click="menuAction(i.click)")
       md-icon(md-font-set="{{i.icon}}") 
@@ -32,11 +22,6 @@
         span Menu &nbsp;
         md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
       md-menu-content(width="4")
-        md-menu-item(ng-if="userRole[0].title === \"Admin\"")
-          md-button.md-primary(ui-sref="dashboard.admin.role({id: currentUser._id, groupid: activeGroup._id})")
-            md-icon(md-font-set="fa fa-briefcase fa-2x" md-menu-align-target) 
-            span Add/Edit Roles
-            md-tooltip Add Group Roles
         md-menu-item
           md-button.md-primary(ui-sref="dashboard.new")
             md-icon(md-font-set="fa fa-file-text-o fa-2x" md-menu-align-target) 

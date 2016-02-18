@@ -9,22 +9,42 @@
 
         $scope.init = function() {
 
+          // check if user is logged in or redirect to login
           if (!$rootScope.activeUser) {
             $state.go('home.login');
           } else {
+            // check for state name and stateParams
             $scope.groups = $rootScope.activeUser.groupId;
 
+            // if user is a not member of a group and not superadmin
+            //  redirect to group
+            if ($scope.groups.length > 0 &&
+              $state.current.name !== 'dashboard.admin.group') {
+
+              // get group name
+              $scope.groupName = window._.filter($scope.groups, {
+                '_id': parseInt($stateParams.groupid)
+              })[0].title;
+            }
+
+            // check if current state is superadmin
+            if ($state.current.name === 'dashboard.admin.group') {
+              $scope.groupName = 'Admin Dashboard';
+            }
+
+            // initialize form for user update
             $scope.updateForm = {};
+            // set active group
             $rootScope.activeGroup = $stateParams.groupid;
 
+            // get user role check for admin privileges
             $scope.userRole = window._.filter($rootScope.activeUser.roles, {
               'groupId': [parseInt($stateParams.groupid)]
             });
 
-            Docs.query(function(res) {
-              $scope.allDocs = res;
-            }, function(err) {
-              console.log(err);
+            // check for super admin
+            $scope.superAdmin = window._.filter($rootScope.activeUser.roles, {
+              title: 'superAdmin'
             });
           }
         };
@@ -32,7 +52,9 @@
         // Set Selected group
         $scope.toggle = function(id) {
           $rootScope.activeGroup = id;
+
           Auth.setToken(Token.get()[0], id);
+          // reload state for groups
           $state.go($state.current, {
             id: $rootScope.activeUser._id,
             groupid: id
@@ -41,16 +63,16 @@
           });
         };
 
+        // check selected items
         $scope.isSelected = function(id) {
           var checked = $stateParams.groupid ?
             parseInt($stateParams.groupid) === id : false;
           return checked;
         };
 
-
         // Load Dialog with form template
-        $scope.updateUserModal = function(ev) {
-          Utils.custom(ev,
+        $scope.updateUserModal = function() {
+          Utils.custom(null,
             'views/update.html', 'UserCtrl');
         };
 
@@ -115,7 +137,6 @@
           click: 'logout'
         }];
 
-        $scope.init();
 
       }
 

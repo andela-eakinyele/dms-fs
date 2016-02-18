@@ -16,10 +16,6 @@ describe('TableCtrl tests', function() {
           message: 'error'
         });
       },
-      bulkDelete: function(arr, cb) {
-        (arr instanceof Array) ?
-        cb(null): cb('error');
-      },
       query: function(params, cb, cbb) {
         if (params.groupid) {
           if (!cb && !cbb) {
@@ -124,6 +120,11 @@ describe('TableCtrl tests', function() {
             data: [1, 3, 4]
           }];
         }
+      }
+    },
+    mdOpenMenu = function(ev) {
+      if (ev) {
+        open = true;
       }
     },
     user = {
@@ -267,6 +268,11 @@ describe('TableCtrl tests', function() {
     expect(date.time).toBeDefined();
   });
 
+  it('should open a menu', function() {
+    scope.openMenu(mdOpenMenu, 'ev');
+    expect(open).toBeTruthy();
+  });
+
   it('should unselect a document', function() {
     var list = [1, 2];
     var item = 1;
@@ -293,6 +299,69 @@ describe('TableCtrl tests', function() {
     expect(Docs.delete).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
+  });
+
+  it('should refresh the table', function() {
+    spyOn(scope, 'getDocs');
+    scope.refreshTable()
+    expect(scope.getDocs).toHaveBeenCalled();
+    expect(scope.selectedDocs.length).toBe(0);
+  });
+
+  describe('when selecting checkboxes', function() {
+    it('should unselect a document', function() {
+      var list = [1, 2];
+      var item = 1;
+      scope.toggle(item, list);
+      expect(list.length).toBe(1);
+    });
+
+    it('should select a document', function() {
+      var list = [2];
+      var item = 1;
+      scope.toggle(item, list);
+      expect(list.length).toBe(2);
+    });
+
+    it('should select all items', function() {
+      scope.selected = [];
+      var list = [{
+        '_id': 1
+      }, {
+        '_id': 2
+      }];
+      scope.selectAll(list);
+      expect(scope.selected.length).toBe(2);
+    });
+
+    it('should unselect all items', function() {
+      scope.selected = [1, 2];
+      var list = [{
+        '_id': 1
+      }, {
+        '_id': 2
+      }];
+      scope.selectAll(list);
+      expect(scope.selected.length).toBe(0);
+    });
+
+    it('should check if item is selected', function() {
+      var list = [1, 2];
+      expect(scope.isSelected(1, list)).toBeTruthy();
+    });
+
+    it('should check if all items are selected', function() {
+      scope.selected = [1, 2];
+      var list = [{
+        '_id': 1
+      }, {
+        '_id': 2
+      }];
+      expect(scope.all(list)).toBeTruthy();
+      scope.selected = false;
+      expect(scope.all(list)).toBeFalsy();
+    });
+
   });
 
 });

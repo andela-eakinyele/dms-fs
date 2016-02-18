@@ -2,9 +2,102 @@
   'use strict';
   var Role = require('./../models/role');
   var Doc = require('./../models/document');
+  var User = require('./../models/user');
   var _ = require('lodash');
-
+  var _async = require('async');
   var cm = require('./helpers');
+
+  var cascadeDelete = function(id, cb) {
+    _async.waterfall([
+
+      // find all users with role
+      function(done) {
+        User.find()
+          .where('roles').in([id])
+          .then(function(users) {
+            var userIds = _.map(users, '_id');
+            var data = _.map(users, function(user) {
+              var pos = user.roles.indexOf(id);
+              user.roles.splice(pos, 1);
+              return {
+                roles: user.roles
+              };
+            });
+            done(null, data, userIds);
+          }, function(err) {
+            done(err, null);
+          });
+      },
+
+      // update roles for all users
+      function(data, userIds, done) {
+        _async.forEachOf(userIds, function(id, index, cb) {
+          User.findByIdAndUpdate(id, data[index], {
+            new: true
+          }).then(function() {
+            cb(null, true);
+          }, function(err) {
+            cb(err, null);
+          });
+        }, function(err) {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null);
+          }
+        });
+      },
+
+      // find all docs with roles
+      function(done) {
+        Doc.find()
+          .where('roles').in([id])
+          .then(function(docs) {
+            var docsId = _.map(docs, '_id');
+            var data = _.map(docs, function(doc) {
+              var pos = doc.roles.indexOf(id);
+              doc.roles.splice(pos, 1);
+              return {
+                roles: doc.roles
+              };
+            });
+            done(null, data, docsId);
+          }, function(err) {
+            done(err, null);
+          });
+      },
+
+      // update roles for all documents
+      function(data, docsId, done) {
+        _async.forEachOf(docsId, function(id, index, cb) {
+          Doc.findByIdAndUpdate(id, data[index], {
+            new: true
+          }).then(function() {
+            cb(null, true);
+          }, function(err) {
+            cb(err, null);
+          });
+        }, function(err) {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null, {
+              success: true
+            });
+          }
+        });
+      }
+    ], function(err, result) {
+      if (err) {
+        cb(err, null);
+      } else {
+        cb(null, result);
+      }
+    });
+  };
+
+
+
 
   var roleFunctions = {
     bulkCreate: function(req, res) {
@@ -43,17 +136,20 @@
     },
 
     all: function(req, res) {
-      var groupid = parseInt(req.headers.groupid) ||
-        parseInt(req.query.groupid);
-      var query = Role.find({
-        groupId: [groupid]
-      });
-      cm.gGetAll('Roles', query)
-        .then(function(result) {
-          res.status(result.status).json(result.data);
-        }).catch(function(err) {
-          res.status(err.status).json(err.error);
-        });
+      var groupid = req.headers.groupid || req.query.groupid;
+      var params = {};
+      if (groupid !== undefined && groupid !== '') {
+        params.groupId = [parseInt(groupid)];
+        var query = Role.find(params);
+        cm.gGetAll('Roles', query)
+          .then(function(result) {
+            res.status(result.status).json(result.data);
+          }).catch(function(err) {
+            res.status(err.status).json(err.error);
+          });
+      } else {
+        res.status(200).json([{}]);
+      }
     },
 
     get: function(req, res) {
@@ -87,24 +183,19 @@
     delete: function(req, res) {
       var query = Role.findByIdAndRemove(req.params.id);
       cm.gDelete('Roles', query, req.params.id)
-        .then(function(result) {
-          res.status(result.status).json(result.data);
+        .then(function() {
+          cascadeDelete(parseInt(req.params.id), function(err, result) {
+            if (err) {
+              res.status(err.status).json(err.error);
+            } else {
+              res.status(200).json(result);
+            }
+          });
         }).catch(function(err) {
-          res.status(err.status).json(err.error);
+          res.status(err.status).json(err);
         });
     },
 
-    bulkDelete: function(req, res) {
-      Role.remove({})
-        .where('_id').in(req.body)
-        .exec(function(err, deleted) {
-          if (err) {
-            res.status(500).json(err.error);
-          } else {
-            res.status(200).json(deleted);
-          }
-        });
-    },
 
     getDocsByRole: function(req, res) {
       Doc.getDocsByRole(req.params.id,
@@ -117,6 +208,8 @@
     }
 
   };
+
+
 
   module.exports = roleFunctions;
 })();

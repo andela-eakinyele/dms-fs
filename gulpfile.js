@@ -133,7 +133,7 @@
         read: false
       })
       .pipe(cover.instrument({
-        pattern: ['server/**/*.js'],
+        pattern: ['server/**/*.js', '!server/config/initApi.js'],
         debugDirectory: 'debug'
       }))
       .pipe(mocha({
