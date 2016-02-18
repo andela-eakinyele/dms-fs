@@ -6,10 +6,8 @@
       function($rootScope, $scope, $state, Users, Auth) {
 
         $scope.init = function() {
-
           $scope.signupErr = 'Please fill in your details below';
           $scope.signform = {};
-          // $scope.signform.name = {};
         };
 
         $scope.createUser = function() {

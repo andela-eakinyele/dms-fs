@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('tableCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
+    .controller('TableCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
       'Docs', 'Utils',
       function($rootScope, $scope, $state, $stateParams, Docs, Utils) {
 
@@ -14,15 +14,15 @@
           if (/mydocs/.test($state.current.name)) {
             Docs.getUserDocs($stateParams.id, function(err, res) {
               if (err) {
-                console.log('Error retrieving docs for users');
+                // console.log('Error retrieving docs for users');
               } else {
                 $scope.docs = res;
               }
             });
           } else if (/shared/.test($state.current.name)) {
-            Docs.getRoleDocs($state.params.roleid, function(err, res) {
+            Docs.getRoleDocs($stateParams.roleid, function(err, res) {
               if (err) {
-                console.log('Error retrieving Shared Docs');
+                // console.log('Error retrieving Shared Docs');
               } else {
                 $scope.docs = res;
               }
@@ -87,8 +87,10 @@
             }, function() {
               Utils.showAlert(ev, 'Delete Action', 'Document' +
                 'successfully deleted');
-              $state.reload();
-
+              $state.go('dashboard.list.mydocs', {
+                id: $stateParams._id,
+                groupid: $stateParams.groupid
+              });
             });
           }
         };

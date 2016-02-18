@@ -108,7 +108,7 @@ describe('LoginCtrl tests', function() {
     scope.login();
     expect(Users.login).toHaveBeenCalled();
     expect(Auth.setToken).toHaveBeenCalled();
-    expect(state.go).toHaveBeenCalledWith('dashboard.admin.viewdocs', {
+    expect(state.go).toHaveBeenCalledWith('dashboard.admin.user', {
       id: 1
     });
     expect(scope.loginErr).toBe('');

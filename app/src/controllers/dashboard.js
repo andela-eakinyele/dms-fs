@@ -3,33 +3,30 @@
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
       '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      'Groups', 'Users', 'Auth', 'Roles', 'Token',
+      'Auth', 'Roles', 'Token',
       function($rootScope, $scope, $mdMedia, $state, $stateParams,
-        $mdSidenav, $timeout, Utils, Docs, Groups, Users, Auth, Roles, Token) {
+        $mdSidenav, $timeout, Utils, Docs, Auth, Roles, Token) {
 
         $scope.init = function() {
 
           if (!$rootScope.activeUser) {
             $state.go('home.login');
+          } else {
+            $scope.groups = $rootScope.activeUser.groupId;
+
+            $scope.updateForm = {};
+            $rootScope.activeGroup = $stateParams.groupid;
+
+            $scope.userRole = window._.filter($rootScope.activeUser.roles, {
+              'groupId': [parseInt($stateParams.groupid)]
+            });
+
+            Docs.query(function(res) {
+              $scope.allDocs = res;
+            }, function(err) {
+              console.log(err);
+            });
           }
-          $scope.groups = $rootScope.activeUser.groupId;
-
-          $scope.updateForm = {};
-          $scope.newDoc = {};
-          $scope.currentUser = $rootScope.activeUser;
-          $rootScope.activeGroup = $stateParams.groupid;
-
-          $scope.userRole = window._.filter($rootScope.activeUser.roles, {
-            'groupId': [parseInt($stateParams.groupid)]
-          });
-
-          console.log($scope.userRole);
-
-          Docs.query(function(res) {
-            $scope.allDocs = res;
-          }, function(err) {
-            console.log(err);
-          });
         };
 
         // Set Selected group
@@ -57,13 +54,6 @@
             'views/update.html', 'UserCtrl');
         };
 
-        // delete a Document/Role/User
-        $scope.delete = function(ev, name) {
-          Utils.showConfirm(ev, 'Delete Documents', name +
-            'will be deleted', 'Delete',
-            function() {});
-        };
-
         // Load roles in a group
         $scope.loadRoles = function() {
           Roles.query({
@@ -71,11 +61,6 @@
           }, function(role) {
             $scope.roles = role;
           });
-        };
-
-        // Cancel create document, return to dashboard
-        $scope.upState = function() {
-          $state.go('^');
         };
 
         // Log out user and delete token

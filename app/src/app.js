@@ -73,7 +73,7 @@
           views: {
             'feature@home': {
               templateUrl: 'views/feature.html',
-              controller: 'featCtrl'
+              controller: 'FeatCtrl'
             },
           }
         })
@@ -142,7 +142,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/group-table.html',
-              controller: 'tableCtrl'
+              controller: 'TableCtrl'
             }
           }
         })
@@ -152,7 +152,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'tableCtrl'
+              controller: 'TableCtrl'
             }
           }
         })
@@ -161,7 +161,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'tableCtrl'
+              controller: 'TableCtrl'
             }
           }
         })

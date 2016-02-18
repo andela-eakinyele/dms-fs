@@ -1,9 +1,9 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('StartPageCtrl', ['$mdMedia', '$rootScope', '$scope',
+    .controller('StartPageCtrl', ['$rootScope', '$scope',
       '$state',
-      function($mdMedia, $rootScope, $scope, $state) {
+      function(rootScope, $scope, $state) {
         $scope.showButton = true;
 
         $scope.$watch(function() {

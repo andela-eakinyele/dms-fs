@@ -11,9 +11,9 @@
             id: $stateParams.docId
           }, function(res) {
             $scope.doc = res;
-          }, function(err) {
-            console.log(err);
-            console.log('Error retrieving docs');
+          }, function() {
+            Utils.showAlert('ev', 'Error', 'Error retrieving document');
+            // $state.go($rootScope.previousState.name);
           });
 
           $scope.fabisOpen = false;
@@ -36,6 +36,16 @@
           return Utils.parseDate(date);
         };
 
+        // delete a Document/Role/User
+        $scope.delete = function(ev, name) {
+          Utils.showConfirm(ev, 'Delete Documents', name +
+            'will be deleted', 'Delete',
+            function() {
+
+            });
+        };
+
+
         $scope.editDoc = function() {
           var editable = $scope.doc ?
             $rootScope.activeUser._id === $scope.doc.ownerId[0]._id : false;
@@ -55,7 +65,10 @@
             }, function() {
               Utils.showAlert(ev, 'Delete Action', 'Document' +
                 'successfully deleted');
-              $state.reload();
+              $state.go('dashboard.list.mydocs', {
+                id: $stateParams._id,
+                groupid: $stateParams.groupid
+              });
             });
           }
         };

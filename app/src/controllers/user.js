@@ -8,11 +8,10 @@
 
         $scope.init = function(ev) {
           $scope.data = {};
-          $scope.currentGroup = $stateParams.groupid;
           // check user admin privilege
           $scope.userRole = window._.filter($rootScope.activeUser.roles, {
             title: 'Admin',
-            groupId: [$scope.currentGroup._id]
+            groupId: [$stateParams.groupid]
           });
 
           $scope.roles = Roles.query({
@@ -25,8 +24,7 @@
             }, function(user) {
               $scope.data = user;
             },
-            function(err) {
-              console.log(err);
+            function() {
               Utils.showAlert(ev, 'Error Retrieving User',
                 $rootScope.activeUser.username);
             });
@@ -41,12 +39,12 @@
           $mdDialog.cancel();
         };
 
-        $scope.roleTitle = function(a, b) {
-          return window._.find($scope.roles, {
-            '_id': a,
-            groupId: [b]
-          });
-        };
+        // $scope.roleTitle = function(a, b) {
+        //   return window._.find($scope.roles, {
+        //     '_id': a,
+        //     groupId: [b]
+        //   });
+        // };
 
         // update user modal
         $scope.update = function(ev) {

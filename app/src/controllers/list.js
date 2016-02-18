@@ -14,22 +14,30 @@
           $scope.gridOptions1 = {
             paginationPageSizes: [10, 20, 30],
             paginationPageSize: 10,
-            columnDefs: [
-              { name: 'username' },
-              { name: 'email' },
-              { name: 'name.first' },
-              { name: 'name.last' },
-              { name: 'Role' }
-            ]
+            columnDefs: [{
+              name: 'username'
+            }, {
+              name: 'email'
+            }, {
+              name: 'name.first'
+            }, {
+              name: 'name.last'
+            }, {
+              name: 'Role'
+            }]
           };
 
           function roledata(role) {
-            return window._.filter($scope.roles, { '_id': role });
+            return window._.filter($scope.roles, {
+              '_id': role
+            });
           }
 
-          Groups.get({ id: $stateParams.groupid },
+          Groups.get({
+              id: $stateParams.groupid
+            },
             function(res) {
-              if (res.length > 0) {
+              if (res) {
                 var data = res.users;
                 data = window._.map(data, function(a) {
                   window._.forEach(a.roles, function(b) {
@@ -47,7 +55,6 @@
             },
             function() {
               $scope.userErr = 'Error retrieving group users';
-
             });
         };
 
@@ -55,11 +62,13 @@
           $scope.gridOptions2 = {
             paginationPageSizes: [10, 20, 30],
             paginationPageSize: 10,
-            columnDefs: [
-              { name: '_id' },
-              { name: 'title' },
-              { name: 'NoOfUsers' }
-            ]
+            columnDefs: [{
+              name: '_id'
+            }, {
+              name: 'title'
+            }, {
+              name: 'NoOfUsers'
+            }]
           };
 
           Roles.query({
@@ -84,28 +93,31 @@
           $scope.gridOptions3 = {
             paginationPageSizes: [10, 20, 30],
             paginationPageSize: 10,
-            columnDefs: [
-              { name: '_id' },
-              { name: 'label' },
-              { name: 'title' },
-              { name: 'Owner' }
-            ]
+            columnDefs: [{
+              name: '_id'
+            }, {
+              name: 'label'
+            }, {
+              name: 'title'
+            }, {
+              name: 'Owner'
+            }]
           };
 
           Docs.query(function(res) {
             if (res.length > 0) {
               $scope.docs = res;
               var data = window._.map($scope.docs, function(a) {
-                a.Owner = a.OwnerId[0].name.first + ' ' +
-                  a.OwnerId[0].name.last;
+                a.Owner = a.ownerId[0].name.first + ' ' +
+                  a.ownerId[0].name.last;
                 return a;
               });
-              $scope.gridOptions2.data = data;
+              $scope.gridOptions3.data = data;
             } else {
-              $scope.roleErr = 'There are no roles in this group';
+              $scope.docErr = 'There are no documents in this group';
             }
           }, function() {
-            $scope.roleErr = 'Error retrieving group roles';
+            $scope.docErr = 'Error retrieving group documents';
           });
         };
 

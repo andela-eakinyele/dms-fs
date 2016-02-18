@@ -10,7 +10,7 @@
       span Add User
       md-tooltip Add User
 
-  div.right-border(hide-xs hide-sm layout layout-align="center center")
+  div.right-border(hide-xs hide-sm layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
     md-button(ui-sref="dashboard.new")
       md-icon(md-font-set="fa fa-file-text-o fa-2x") 
       span(hide-xs hide-sm) New Doc

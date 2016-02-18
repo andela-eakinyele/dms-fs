@@ -40,7 +40,7 @@
                   title: 'superAdmin'
                 });
                 if (superAdmin.length > 0) {
-                  $state.go('dashboard.admin.viewdocs', {
+                  $state.go('dashboard.admin.user', {
                     id: res.data.user._id
                   });
                 } else {

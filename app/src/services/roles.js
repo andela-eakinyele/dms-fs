@@ -6,7 +6,7 @@
       function roleFactory($resource, $http) {
         var obj = $resource('/api/roles/:id', {
           id: '@id',
-          groupId: '@groupid'
+          groupid: '@groupid'
         }, {
           update: {
             // this method issues a PUT request

@@ -19,10 +19,7 @@
             id: $stateParams.docId
           }, function(res) {
             $scope.doc = res;
-          }, function(err) {
-            console.log(err);
-            console.log('Error retrieving docs');
-          });
+          }, function() {});
         };
 
         // save a new document

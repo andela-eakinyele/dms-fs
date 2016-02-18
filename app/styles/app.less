@@ -1,13 +1,23 @@
-html body {
+body,
+html {
+    height: auto;
+    color: rgba(0, 0, 0, .87);
+    background: #fff;
+    /*position: relative
+;*/
+}
+
+html,
+body {
     font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
     text-transform: none;
     background: linear-gradient(rgba(72, 74, 111, 0.39), rgba(72, 74, 111, 0.48)), url('./../images/homeBckgrd.jpg');
-    >div {
+    /* >div.body {
         height: 100%;
         > .main {
             height: 95%;
         }
-    }
+    }*/
     >div.md-open-menu-container {
         height: auto;
     }
@@ -19,6 +29,20 @@ body > md-toolbar {
 
 h1 h2 h3 h4 {
     margin: 0;
+}
+
+
+/*.md-sidenav-left,
+md-sidenav {
+    height: 100%;
+}
+*/
+
+.appName {
+    > span {
+        font-size: 52px;
+        font-family: 'Candara';
+    }
 }
 
 #dashContent {
@@ -477,4 +501,10 @@ md-dialog-actions {
     height: 100%;
     width: 100%;
     background-color: #E1ECEE;
+}
+
+.ui-grid-header {
+    height: 40px;
+    font-size: 20px;
+    border-bottom: 1px solid #EDA608;
 }

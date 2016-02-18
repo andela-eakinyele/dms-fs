@@ -13,7 +13,7 @@
 
       // frameworks to use
       // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-      frameworks: ['jasmine', 'sinon'],
+      frameworks: ['jasmine'],
 
 
       // list of files / patterns to load in the browser
@@ -39,6 +39,11 @@
       // list of files to exclude
       exclude: [],
 
+      // plugins: [
+      //   'karma-coverage',
+      //   'karma-phantomjs-launcher',
+      // ],
+
 
       // preprocess matching files before serving them to the browser
       // available preprocessors: 
@@ -50,7 +55,8 @@
 
       // test results reporter to use
       /* possible values: 'dots', 'progress' 
-       available reporters: https://npmjs.org/browse/keyword/karma-reporter*/
+       available reporters: https: //npmjs.org/browse/keyword/karma-reporter
+*/
       reporters: ['progress', 'coverage'],
 
 
@@ -70,22 +76,22 @@
 
       /* enable / disable watching file and
        executing tests whenever any file changes*/
-      autoWatch: false,
+      autoWatch: true,
 
 
       // start these browsers
       /*available browser launchers: 
       https://npmjs.org/browse/keyword/karma-launcher*/
-      browsers: ['Chrome'],
+      browsers: ['PhantomJS'],
 
 
       // Continuous Integration mode
       // if true, Karma captures browsers, runs the tests and exits
-      singleRun: false,
+      singleRun: true,
 
       coverageReporter: {
         // specify a common output directory
-        dir: 'coverage',
+        dir: 'coverage/fend',
         reporters: [
           // reporters not supporting the `file` property
           {

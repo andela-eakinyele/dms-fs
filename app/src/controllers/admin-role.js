@@ -17,6 +17,8 @@
             groupid: parseInt($stateParams.groupid)
           }, function(role) {
             $scope.roles = role;
+          }, function() {
+            Utils.showAlert('ev', 'Loading', 'Error Loading Roles');
           });
         };
 
@@ -40,19 +42,20 @@
 
         $scope.create = function(ev) {
 
+
           var gId = parseInt($stateParams.groupid);
           $scope.newRoles = window._.map($scope.newRoles,
             function(role) {
               return role.trim();
             });
-          var saveRoles = $scope.newRoles.map(function(a) {
+          $scope.saveRoles = $scope.newRoles.map(function(a) {
             return {
               title: a,
               groupId: [gId]
             };
           });
           $scope.newRoles = [];
-          Roles.save(saveRoles, function() {
+          Roles.save($scope.saveRoles, function() {
             $scope.loadRoles();
             $scope.cancelAdd();
           }, function() {
@@ -80,11 +83,11 @@
           var dRole = window._.map($scope.editRoles, '_id');
           Roles.bulkDelete(dRole, function(err) {
             if (err) {
-              console.log(err);
+              Utils.showAlert(ev, 'Delete', 'Error Deleting Role(s)');
             } else {
               $scope.loadRoles();
               $scope.editRoles = [];
-              Utils.showAlert(ev, 'Delete', 'Roles successfully deleted');
+              Utils.showAlert(ev, 'Delete', 'Role(s) successfully deleted');
             }
           });
         };
