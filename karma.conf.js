@@ -28,9 +28,11 @@
         'public/lib/angular-resource/angular-resource.min.js',
         'public/lib/angular-messages/angular-messages.min.js',
         'public/lib/angular-material-data-table/dist/md-data-table.min.js',
-        'public/lib/angular-ui-grid/ui-grid.min.js',
         'public/lib/lodash/lodash.js',
         'public/lib/async/dist/async.js',
+        'public/lib/tinymce-dist/tinymce.js',
+        'public/lib/angular-ui-tinymce/src/tinymce.js',
+        'public/lib/angular-sanitize/angular-sanitize.js',
         'public/js/app.js',
         'tests/unit/**/*.js'
       ],

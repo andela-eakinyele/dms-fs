@@ -23,17 +23,6 @@ h1 h2 h3 h4 {
     margin: 0;
 }
 
-.wordwrap {
-    white-space: pre-wrap;
-    /* CSS3 */
-    white-space: -moz-pre-wrap;
-    /* Firefox */
-    white-space: -o-pre-wrap;
-    /* Opera 7 */
-    word-wrap: break-word;
-    /* IE */
-}
-
 md-sidenav.md-locked-open md-sidenav.md-locked-open.md-closed,
 md-sidenav.md-locked-open.md-closed.md-sidenav-left {
     height: 100%;
@@ -211,6 +200,9 @@ div.right-border {
     height: 100%;
     > div {
         height: 100%;
+        > div.sidenav {
+            height: 100%
+        }
     }
     .sectionTitle {
         h3 {
@@ -235,17 +227,27 @@ md-fab-speed-dial md-fab-trigger {
 }
 
 .sidenav {
-    span {
-        margin: 0;
+    md-content {
+        > div {
+            >h3 {
+                font-size: 20px;
+                color: indigo;
+                margin: 0;
+            }
+            md-checkbox {
+                font-size: 16px;
+                margin-top: 5px;
+                margin-left: 15px;
+            }
+            font-style: italic;
+            width: 100%;
+            padding: 0;
+        }
     }
-    md-checkbox {
-        font-size: 16px;
-        margin-top: 5px;
-        margin-left: 15px;
-    }
-    font-style: italic;
-    width: 100%;
-    padding: 0;
+}
+
+md-toolbar:not(.md-menu-toolbar).username {
+    background-color: #E3EFE4;
 }
 
 .btn-style {
@@ -255,6 +257,11 @@ md-fab-speed-dial md-fab-trigger {
     width: 100%;
     padding: 10px 0 10px 15px;
     text-transform: none;
+    &.sidehead {
+        color: white;
+        background-color: #528D54;
+        font-size: 20px;
+    }
 }
 
 a {
@@ -452,7 +459,11 @@ md-dialog-actions {
 .docdata {
     width: inherit;
     .md-whiteframe-4dp {
-        width: inherit;
+        width: 60%;
+        background-color: #fff;
+        margin: 0 auto;
+        margin-top: 10px;
+        border-radius: 10px;
         > div.head {
             width: inherit;
         }

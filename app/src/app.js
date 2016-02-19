@@ -38,6 +38,8 @@
     'ui.router',
     'ngMaterial',
     'md.data.table',
+    'ui.tinymce',
+    'ngSanitize',
     'ngAria',
     'ngAnimate'
   ])
@@ -108,6 +110,14 @@
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
+              resolve: {
+                'activeUser': ['$rootScope', function($rootScope) {
+                  return $rootScope.activeUser;
+                }],
+                'activeGroup': ['$rootScope', function($rootScope) {
+                  return $rootScope.activeGroup;
+                }]
+              },
               controller: 'DashBoardCtrl'
             },
             'header@dashboard': {
@@ -285,11 +295,11 @@
           $rootScope.activeUser = res.data.user;
 
           // check for group 
-          if (res.data.group === '' && res.data.user.groupId.length === 0) {
+          if (res.group === '' && res.data.user.groupId.length === 0) {
             Auth.setToken(JSON.stringify(res.data), '');
           } else {
-            $rootScope.activeGroup = (res.data.group === '') ?
-              res.data.user.groupId[0]._id : res.data.group;
+            $rootScope.activeGroup = (res.group === '') ?
+              res.data.user.groupId[0]._id : res.group;
             Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
           }
 
@@ -306,7 +316,7 @@
 
           } else {
             // check if user belongs to a group
-            if (!res.data.group && res.data.user.groupId.length === 0) {
+            if (!res.group && res.data.user.groupId.length === 0) {
               $state.go('home.group', {
                 id: res.data.user._id
               });

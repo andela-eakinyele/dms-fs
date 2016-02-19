@@ -25,7 +25,7 @@ div.docForm(layout="column" ng-init="loadDoc()")
                 div(ng-message="maxlength") Title Exceeds maximum character length
         .formContent(layout-padding)
           md-input-container.md-block(md-no-float)
-            textarea(ng-model="doc.content" columns="1" rows="50" placeholder="Enter Text")
+            textarea(ui-tinymce="tinymceOptions" ng-model="doc.content")
       div(layout="column" flex)
         md-toolbar
           .md-toolbar-tools

@@ -16,7 +16,7 @@ md-content(layout ="column" flex="100" layout-margin)
   md-toolbar.table.alternate(ng-if="selectedDocs.length > 0")
     .md-toolbar-tools.sectionTitle(layout="row")
       span(flex) {{selectedDocs.length}} Selected
-      md-button.md-primary.md-raised(aria-label="View Selected")
+      md-button.md-primary.md-raised(aria-label="View Selected" ng-click="viewSelection()")
         md-icon(md-font-set="fa fa-external-link fa-2x") 
         span View
 
@@ -31,7 +31,7 @@ md-content(layout ="column" flex="100" layout-margin)
         tbody.md-body
           tr.md-row(md-auto-select ng-repeat="doc in docs track by $index")
             td.md-cell.md-checkbox-cell
-              md-checkbox(aria-label="Select Row" ng-checked="isSelected(role._id, selectedDocs)" ng-click="toggle(doc._id, selectedDocs)" role="checkbox")
+              md-checkbox(aria-label="Select Row" ng-checked="isSelected(doc._id, selectedDocs)" ng-click="toggle(doc._id, selectedDocs)" role="checkbox")
             td.md-cell {{doc.label}}
             td.md-cell(ui-sref="dashboard.doc.view({docId:doc._id})") {{doc.title}}
             td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
@@ -45,11 +45,11 @@ md-content(layout ="column" flex="100" layout-margin)
                   md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
                 md-menu-content(width="1")
                   md-menu-item
-                    md-button.md-primary(aria-label="Edit doc" ng-click="menuAction(\"edit\", doc._id)")
+                    md-button.md-primary(aria-label="Edit doc" ng-click="menuAction(\"edit\", doc._id, $event)")
                       md-icon(md-font-set="fa fa-pencil-square-o fa-2x" md-menu-align-target) 
                       span Edit doc
                   md-menu-item
-                    md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id)")
+                    md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $event)")
                       md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
                       span Delete
               md-button.md-primary(ng-if="!editDoc(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
