@@ -3,7 +3,7 @@
     md-icon(md-font-set="fa fa-bars fa-2x")
   div.dashheader(layout layout-margin flex)
     h3 Prodocs - 
-    h3(ng-if="groupName") {{groupName}} Dashboard
+    h3 {{groupName}} Dashboard
   div.right-border(layout layout-align="center center" ng-if="userRole[0].title === \"superAdmin\"")
     md-button(ui-sref="dashboard.admin.user")
       md-icon(md-font-set="fa fa-user-plus fa-2x" md-menu-origin)
@@ -22,11 +22,6 @@
         span Menu &nbsp;
         md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
       md-menu-content(width="4")
-        md-menu-item
-          md-button.md-primary(ui-sref="dashboard.new")
-            md-icon(md-font-set="fa fa-file-text-o fa-2x" md-menu-align-target) 
-            span New Doc
-            md-tooltip New Doc
         md-menu-item(ng-repeat="i in menu")
           md-button.md-primary(ng-click="menuAction(i.click)")
             md-icon(md-font-set="{{i.icon}}" md-menu-align-target) 

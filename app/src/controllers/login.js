@@ -2,10 +2,10 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('LoginCtrl', ['$rootScope', '$scope',
-      '$state', '$stateParams', 'Users', 'Auth',
+      '$state', '$stateParams', 'Users', 'Auth', 'Utils',
 
       function($rootScope, $scope, $state, $stateParams,
-        Users, Auth) {
+        Users, Auth, Utils) {
         $scope.loginForm = {};
         $scope.loginErr = 'Enter your credentials below';
 
@@ -44,6 +44,8 @@
                     id: res.data.user._id
                   });
                 } else {
+                  Utils.showAlert(null, 'Logged In', 'You are Logged in, ' +
+                    'Please create or Select a group');
                   $state.go('home.group', {
                     id: res.data.user._id
                   });

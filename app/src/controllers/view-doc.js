@@ -37,12 +37,22 @@
         };
 
         // delete a Document/Role/User
-        $scope.delete = function(ev, name) {
-          Utils.showConfirm(ev, 'Delete Documents', name +
-            'will be deleted', 'Delete',
-            function() {
-
-            });
+        $scope.delete = function() {
+       
+              Docs.delete({
+                id: $stateParams.docId
+              }, function() {
+                Utils.showAlert(null, 'Delete Action', 'Document ' +
+                  'successfully deleted');
+                $state.go('dashboard.list.mydocs', {
+                  id: $stateParams._id,
+                  groupid: $stateParams.groupid
+                });
+              },
+function() {
+  Utils.showAlert(null, 'Delete Action', 'Error ' +
+    'deleting document');
+});
         };
 
 
@@ -60,16 +70,7 @@
             });
           }
           if (ev === 'delete') {
-            Docs.delete({
-              id: $stateParams.docId
-            }, function() {
-              Utils.showAlert(ev, 'Delete Action', 'Document' +
-                'successfully deleted');
-              $state.go('dashboard.list.mydocs', {
-                id: $stateParams._id,
-                groupid: $stateParams.groupid
-              });
-            });
+            $scope.delete();
           }
         };
 

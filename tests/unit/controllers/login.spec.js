@@ -48,6 +48,7 @@ describe('LoginCtrl tests', function() {
     },
     state,
     Auth,
+    Utils,
     controller;
 
   beforeEach(function() {
@@ -62,6 +63,7 @@ describe('LoginCtrl tests', function() {
       $scope: scope,
       Users: Users
     });
+    Utils = $injector.get('Utils');
     Auth = $injector.get('Auth');
     state = $injector.get('$state');
   }));
@@ -117,6 +119,7 @@ describe('LoginCtrl tests', function() {
   it('should call the login service and go to group page', function() {
     spyOn(Users, 'login').and.callThrough();
     spyOn(Auth, 'setToken');
+    spyOn(Utils, 'showAlert').and.callThrough();
     spyOn(state, 'go');
     scope.loginForm.userdata = 'newUser';
     scope.loginForm.password = true;
@@ -124,6 +127,7 @@ describe('LoginCtrl tests', function() {
     scope.login();
     expect(Users.login).toHaveBeenCalled();
     expect(Auth.setToken).toHaveBeenCalled();
+    expect(Utils.showAlert).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalledWith('home.group', {
       id: 1
     });

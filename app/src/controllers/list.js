@@ -53,14 +53,14 @@
         };
 
         // Menu button action
-        $scope.menuAction = function(ev, id) {
+        $scope.menuAction = function(ev, id, index) {
           if (ev === 'edit') {
             $state.go('dashboard.doc.edit', {
               docId: id
             });
           }
           if (ev === 'delete') {
-            $scope.deleteOne(id);
+            $scope.deleteOne(id, index);
           }
         };
 
@@ -180,6 +180,7 @@
         };
 
         $scope.deleteOne = function(id, index) {
+          console.log(id, index);
           if ($scope.listName === 'docs') {
             Docs.delete({
                 id: id
@@ -197,6 +198,7 @@
               id: id
             }, function() {
               $scope.roles.splice(index, 1);
+              console.log($scope.roles);
               Utils.showAlert(null, 'Delete Action', 'Role ' +
                 'successfully deleted');
             }, function() {

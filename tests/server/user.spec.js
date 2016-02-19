@@ -92,278 +92,243 @@
             });
         });
 
-      it('- Should throw validation error for duplicate data: ' +
-        'username',
-        function(done) {
-          var userdata = mock.parseData(keys, data.testUsers.tuser1);
-          userdata.username = 'HAhmed123';
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(409)
-            .end(function(err) {
-              assert.equal(null, err, 'Error encountered');
-              done();
-            });
-        });
+      describe('Persistence Validation', function() {
 
-      it('- Should throw validation error for duplicate data: ' +
-        'email',
-        function(done) {
-          var userdata = mock.parseData(keys, data.testUsers.tuser1);
-          userdata.email = 'hahmed123@project.com';
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(409)
-            .end(function(err) {
-              assert.equal(null, err, 'Error encountered');
-              done();
-            });
-        });
+        it('- Should throw validation error for duplicate data: ' +
+          'username',
+          function(done) {
+            var userdata = mock.parseData(keys, data.testUsers.tuser1);
+            userdata.username = 'HAhmed123';
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(409)
+              .end(function(err) {
+                assert.equal(null, err, 'Error encountered');
+                done();
+              });
+          });
 
-      /* check email, username, firstname, passsword, empty or
-      invalid role*/
-      it('- Should throw error for invalid userdata: ' +
-        'firstname',
-        function(done) {
-          var userdata = mock.parseData(keys,
-            data.invalidData);
-          delete userdata['name.first'];
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var invalid = _.keys(response.errors);
-              assert.equal(response.message, 'Users validation failed');
-              assert.deepEqual(invalid, [keys[0]]);
-              done();
-            });
-        });
+        it('- Should throw validation error for duplicate data: ' +
+          'email',
+          function(done) {
+            var userdata = mock.parseData(keys, data.testUsers.tuser1);
+            userdata.email = 'hahmed123@project.com';
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(409)
+              .end(function(err) {
+                assert.equal(null, err, 'Error encountered');
+                done();
+              });
+          });
 
-      it('- Should throw error for invalid userdata: ' +
-        'lastname',
-        function(done) {
-          var userdata = mock.parseData(keys,
-            data.invalidData);
-          delete userdata['name.last'];
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var invalid = _.keys(response.errors);
-              assert.equal(response.message, 'Users validation failed');
-              assert.deepEqual(invalid, [keys[1]]);
-              done();
-            });
-        });
+        /* check email, username, firstname, passsword, empty or
+        invalid role*/
+        it('- Should throw error for invalid userdata: ' +
+          'firstname',
+          function(done) {
+            var userdata = mock.parseData(keys,
+              data.invalidData);
+            delete userdata['name.first'];
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
+                assert.deepEqual(invalid, [keys[0]]);
+                done();
+              });
+          });
 
-      it('- Should throw error for invalid userdata: ' +
-        'username',
-        function(done) {
-          var userdata = mock.parseData(keys,
-            data.invalidData);
-          delete userdata.username;
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var invalid = _.keys(response.errors);
-              assert.equal(response.message, 'Users validation failed');
-              assert.deepEqual(invalid, [keys[2]]);
-              done();
-            });
-        });
+        it('- Should throw error for invalid userdata: ' +
+          'lastname',
+          function(done) {
+            var userdata = mock.parseData(keys,
+              data.invalidData);
+            delete userdata['name.last'];
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
+                assert.deepEqual(invalid, [keys[1]]);
+                done();
+              });
+          });
 
-      it('- Should throw error for invalid userdata: ' +
-        'password',
-        function(done) {
-          var userdata = mock.parseData(keys,
-            data.invalidData);
-          delete userdata.password;
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var invalid = _.keys(response.errors);
-              assert.equal(response.message, 'Users validation failed');
-              assert.deepEqual(invalid, [keys[3]]);
-              done();
-            });
-        });
+        it('- Should throw error for invalid userdata: ' +
+          'username',
+          function(done) {
+            var userdata = mock.parseData(keys,
+              data.invalidData);
+            delete userdata.username;
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
+                assert.deepEqual(invalid, [keys[2]]);
+                done();
+              });
+          });
 
-      it('- Should throw error for invalid userdata: ' +
-        'email',
-        function(done) {
-          var userdata = mock.parseData(keys,
-            data.invalidData);
-          delete userdata.email;
-          request
-            .post('/api/users')
-            .type('json')
-            .send(userdata)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              var invalid = _.keys(response.errors);
-              assert.equal(response.message, 'Users validation failed');
-              assert.deepEqual(invalid, [keys[4]]);
-              done();
-            });
-        });
+        it('- Should throw error for invalid userdata: ' +
+          'password',
+          function(done) {
+            var userdata = mock.parseData(keys,
+              data.invalidData);
+            delete userdata.password;
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
+                assert.deepEqual(invalid, [keys[3]]);
+                done();
+              });
+          });
 
+        it('- Should throw error for invalid userdata: ' +
+          'email',
+          function(done) {
+            var userdata = mock.parseData(keys,
+              data.invalidData);
+            delete userdata.email;
+            request
+              .post('/api/users')
+              .type('json')
+              .send(userdata)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                var invalid = _.keys(response.errors);
+                assert.equal(response.message, 'Users validation failed');
+                assert.deepEqual(invalid, [keys[4]]);
+                done();
+              });
+          });
+      });
 
-      // users should be logged in before crud
-      it('Should require a login/access_token for' +
-        ' retrieve or update',
-        function(done) {
-          request
-            .get('/api/users/' + usersId[0])
-            .type('json')
-            .expect('Content-Type', /json/)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.message, 'Invalid Token or Key');
-              assert.equal(undefined, response.data);
-              done();
-            });
-        });
+      describe('Authentication of users', function() {
 
-      // invalid username or password
-      it('- Should validate username',
-        function(done) {
-          var username = 'HAhmed123';
+        // users should be logged in before crud
+        it('Should require a login/access_token for' +
+          ' retrieve or update',
+          function(done) {
+            request
+              .get('/api/users/' + usersId[0])
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid Token or Key');
+                assert.equal(undefined, response.data);
+                done();
+              });
+          });
+
+        // invalid username or password
+        it('- Should validate username',
+          function(done) {
+            var username = 'HAhmed123';
+            request
+              .post('/api/users/login')
+              .type('json')
+              .send({
+                username: username,
+                password: password
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid credentials');
+                assert.equal(undefined, response.token,
+                  'Token was generated');
+                done();
+              });
+          });
+
+        it('- Should validate password',
+          function(done) {
+            var password = 'HAhmed123';
+            request
+              .post('/api/users/login')
+              .type('json')
+              .send({
+                username: username,
+                password: password
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Invalid credentials');
+                assert.equal(undefined, response.token,
+                  'Token was generated');
+                done();
+              });
+          });
+
+        // successful login and token
+        it('- Should return a token on Successful login', function(done) {
           request
             .post('/api/users/login')
             .type('json')
             .send({
-              username: username,
-              password: password
+              username: data.seedUsers.user1[2],
+              password: data.seedUsers.user1[3]
             })
             .expect('Content-Type', /json/)
-            .expect(400)
+            .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response.message, 'Invalid credentials');
-              assert.equal(undefined, response.token,
-                'Token was generated');
+              token = response.data.token;
+              assert(token, 'Token not generated');
+              assert.equal(typeof response.data.expires, 'number');
+              assert.equal(response.data.user.username, 'DAdams');
               done();
             });
         });
+      });
 
-      it('- Should validate password',
-        function(done) {
-          var password = 'HAhmed123';
+      describe('Create, retrieve, update and delete', function() {
+
+        // retrieve any user data
+        it('- Should retrieve any user data in group', function(done) {
           request
-            .post('/api/users/login')
-            .type('json')
-            .send({
-              username: username,
-              password: password
-            })
-            .expect('Content-Type', /json/)
-            .expect(400)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.message, 'Invalid credentials');
-              assert.equal(undefined, response.token,
-                'Token was generated');
-              done();
-            });
-        });
-
-      // successful login and token
-      it('- Should return a token on Successful login', function(done) {
-        request
-          .post('/api/users/login')
-          .type('json')
-          .send({
-            username: data.seedUsers.user1[2],
-            password: data.seedUsers.user1[3]
-          })
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            token = response.data.token;
-            assert(token, 'Token not generated');
-            assert.equal(typeof response.data.expires, 'number');
-            assert.equal(response.data.user.username, 'DAdams');
-            done();
-          });
-      });
-
-      // retrieve any user data
-      it('- Should retrieve any user data in group', function(done) {
-        request
-          .get('/api/users/' + usersId[2] + '/?groupId=' +
-            userData[0].groupId)
-          .set({
-            username: userData[0].username,
-            access_token: token,
-            groupId: userData[0].groupId
-          })
-          .type('json')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(usersId[2], response._id);
-            done();
-          });
-      });
-
-
-      // should return not exist for invalid user
-      it('- Should not find invalid users', function(done) {
-        request
-          .get('/api/users/600')
-          .set({
-            username: userData[0].username,
-            access_token: token,
-            groupId: userData[0].groupId
-          })
-          .type('json')
-          .expect(400)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(0, response.length, 'Userdata was retrieved');
-            done();
-          });
-      });
-
-      // should be able to retrieve all user data
-      it('- Should be able to retrieve all' +
-        ' user data in group',
-        function(done) {
-          request
-            .get('/api/users/')
+            .get('/api/users/' + usersId[2] + '/?groupId=' +
+              userData[0].groupId)
             .set({
               username: userData[0].username,
               access_token: token,
@@ -375,165 +340,208 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.deepEqual(_.pluck(response,
-                '_id'), [102, 104, 106]);
+              assert.equal(usersId[2], response._id);
               done();
             });
         });
 
-      // should be able to retrieve all group
-      it('- Should be able to retrieve all group',
-        function(done) {
+
+        // should return not exist for invalid user
+        it('- Should not find invalid users', function(done) {
           request
-            .get('/api/groups')
+            .get('/api/users/600')
             .set({
+              username: userData[0].username,
               access_token: token,
+              groupId: userData[0].groupId
             })
             .type('json')
+            .expect(400)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(0, response.length, 'Userdata was retrieved');
+              done();
+            });
+        });
+
+        // should be able to retrieve all user data
+        it('- Should be able to retrieve all' +
+          ' user data in group',
+          function(done) {
+            request
+              .get('/api/users/')
+              .set({
+                username: userData[0].username,
+                access_token: token,
+                groupId: userData[0].groupId
+              })
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.deepEqual(_.pluck(response,
+                  '_id'), [102, 104, 106]);
+                done();
+              });
+          });
+
+        // should be able to retrieve all group
+        it('- Should be able to retrieve all group',
+          function(done) {
+            request
+              .get('/api/groups')
+              .set({
+                access_token: token,
+              })
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.deepEqual(_.pluck(response,
+                  '_id'), [113, 114, 115]);
+                done();
+              });
+          });
+
+        // should be able to retrieve a group
+        it('- Should be able to retrieve a group',
+          function(done) {
+            request
+              .get('/api/groups/' + groupIds[0])
+              .set({
+                access_token: token
+              })
+              .type('json')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.deepEqual(response._id, 114);
+                done();
+              });
+          });
+
+        // update own user data
+        it('- Should be able to update own data', function(done) {
+          var userdata = mock.parseData(keys, data.testUsers.PM);
+          userdata.username = 'DAdams_Love';
+          request
+            .put('/api/users/' + usersId[0])
+            .set({
+              access_token: token,
+              userid: usersId[0]
+            })
+            .type('json')
+            .send(userdata)
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.deepEqual(_.pluck(response,
-                '_id'), [113, 114, 115]);
+              assert.equal(response.username, 'DAdams_Love');
+              userData[0].username = response.username;
               done();
             });
         });
 
-      // should be able to retrieve a group
-      it('- Should be able to retrieve a group',
-        function(done) {
+        it('- Should be able to join a group', function(done) {
+          seedGroupdata[1].users.push(usersId[0]);
           request
-            .get('/api/groups/' + groupIds[0])
+            .put('/api/groups/' + 113)
             .set({
+              access_token: token,
+              userid: usersId[0]
+            })
+            .type('json')
+            .send({
+              users: [200, usersId[0]],
+              pass: groupSeed.testGroup[2],
+              userid: usersId[0]
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.deepEqual(response.users, [200, 102]);
+              done();
+            });
+        });
+
+        // should not be able to delete own userdata
+        it('- Should not be able to delete own data', function(done) {
+          request
+            .delete('/api/users/' + usersId[0])
+            .set({
+              userid: usersId[0],
               access_token: token
             })
             .type('json')
             .expect('Content-Type', /json/)
-            .expect(200)
+            .expect(403)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.deepEqual(response._id, 114);
+              assert.equal(response.error, 'Unauthorized user');
               done();
             });
         });
 
-      // update own user data
-      it('- Should be able to update own data', function(done) {
-        var userdata = mock.parseData(keys, data.testUsers.PM);
-        userdata.username = 'DAdams_Love';
-        request
-          .put('/api/users/' + usersId[0])
-          .set({
-            access_token: token,
-            userid: usersId[0]
-          })
-          .type('json')
-          .send(userdata)
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(response.username, 'DAdams_Love');
-            userData[0].username = response.username;
-            done();
-          });
-      });
 
-      it('- Should be able to join a group', function(done) {
-        seedGroupdata[1].users.push(usersId[0]);
-        request
-          .put('/api/groups/' + 113)
-          .set({
-            access_token: token,
-            userid: usersId[0]
-          })
-          .type('json')
-          .send({
-            users: [200, usersId[0]],
-            pass: groupSeed.testGroup[2],
-            userid: usersId[0]
-          })
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.deepEqual(response.users, [200, 102]);
-            done();
-          });
-      });
+        // should not be able to delete other user data
+        it('- Should not be able to delete other users data', function(done) {
+          request
+            .delete('/api/users/' + usersId[1])
+            .set({
+              userid: usersId[0],
+              access_token: token
+            })
+            .type('json')
+            .expect('Content-Type', /json/)
+            .expect(403)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.message, 'Not authorized');
+              assert.equal(response.error, 'Unauthorized user');
+              done();
+            });
+        });
 
-      // should not be able to delete own userdata
-      it('- Should not be able to delete own data', function(done) {
-        request
-          .delete('/api/users/' + usersId[0])
-          .set({
-            userid: usersId[0],
-            access_token: token
-          })
-          .type('json')
-          .expect('Content-Type', /json/)
-          .expect(403)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(response.error, 'Unauthorized user');
-            done();
-          });
-      });
+        // should not be able to create Admin user
+        it('- Should not be able to create admin user', function(done) {
+          var userdata = mock.parseData(keys, data.testUsers.tuser);
+          userdata.roles = [{
+            _id: 1,
+            title: 'Admin'
+          }];
 
-
-      // should not be able to delete other user data
-      it('- Should not be able to delete other users data', function(done) {
-        request
-          .delete('/api/users/' + usersId[1])
-          .set({
-            userid: usersId[0],
-            access_token: token
-          })
-          .type('json')
-          .expect('Content-Type', /json/)
-          .expect(403)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(response.message, 'Not authorized');
-            assert.equal(response.error, 'Unauthorized user');
-            done();
-          });
-      });
-
-      // should not be able to create Admin user
-      it('- Should not be able to create admin user', function(done) {
-        var userdata = mock.parseData(keys, data.testUsers.tuser);
-        userdata.roles = [{
-          _id: 1,
-          title: 'Admin'
-        }];
-
-        request
-          .post('/api/users')
-          .set({
-            userid: usersId[0],
-            access_token: token,
-            groupid: 113
-          })
-          .type('json')
-          .send(userdata)
-          .expect('Content-Type', /json/)
-          .expect(403)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            assert.equal(response.message, 'Not authorized ' +
-              'to create Admin user');
-            assert.equal(response.error, 'Unauthorized user action');
-            done();
-          });
+          request
+            .post('/api/users')
+            .set({
+              userid: usersId[0],
+              access_token: token,
+              groupid: 113
+            })
+            .type('json')
+            .send(userdata)
+            .expect('Content-Type', /json/)
+            .expect(403)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.message, 'Not authorized ' +
+                'to create Admin user');
+              assert.equal(response.error, 'Unauthorized user action');
+              done();
+            });
+        });
       });
 
     });

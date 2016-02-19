@@ -50,8 +50,5 @@ md-dialog(aria-label="Forms", ng-cloak class="forms" ng-init="init()")
     md-divider
     div.update(layout="column" layout-align="start center")
       h3.md-header Group List
-      md-list
-        md-list-item.md-3-line(ng-repeat="group in data.groupId")
-          div.md-list-item-text(layout="column")
-            h3 {{group.title}}
-            p {{group.description}}
+    div(layout="row" layout-margin layout-wrap layout-align="center center")
+      h3(ng-repeat="group in data.groupId" flex="25") {{group.title}}

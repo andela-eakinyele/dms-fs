@@ -37,6 +37,7 @@
           Groups.save($scope.pform, function(group) {
             $scope.groupErr = 'Group saved';
             $rootScope.activeGroup = group._id;
+
             Users.get({
                 id: $stateParams.id
               }, function(user) {

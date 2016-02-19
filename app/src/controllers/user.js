@@ -6,7 +6,7 @@
       function($rootScope, $scope, $mdDialog, $state, $stateParams,
         Utils, Users, Roles) {
 
-        $scope.init = function(ev) {
+        $scope.init = function() {
           $scope.data = {};
           // check user admin privilege
           $scope.userRole = window._.filter($rootScope.activeUser.roles, {
@@ -26,7 +26,7 @@
             },
             function(err) {
               console.log(err);
-              Utils.showAlert(ev, 'Error Retrieving User',
+              Utils.showAlert(null, 'Error Retrieving User',
                 $rootScope.activeUser.username);
             });
         };
@@ -41,19 +41,24 @@
         };
 
         // update user modal
-        $scope.update = function(ev) {
+        $scope.update = function() {
           if ($scope.data.password === 'undefined') {
             delete $scope.data.password;
           }
 
+          $rootScope.activeUser.username = $scope.data.username;
+          $rootScope.activeUser.name = $scope.data.name;
+          $rootScope.activeUser.email = $scope.data.email;
+
+
           Users.update({
             id: $stateParams.id
           }, $scope.data, function() {
-            Utils.showAlert(ev, 'Updated User Profile',
+            Utils.showAlert(null, 'Updated User Profile',
               $rootScope.activeUser.username +
               ' \nsuccessfully updated');
           }, function() {
-            Utils.showAlert(ev, 'Error Updating User',
+            Utils.showAlert(null, 'Error Updating User',
               $rootScope.activeUser.username);
           });
         };

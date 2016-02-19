@@ -8,7 +8,6 @@
         $mdSidenav, $timeout, Utils, Docs, Auth, Roles, Token) {
 
         $scope.init = function() {
-
           // check if user is logged in or redirect to login
           if (!$rootScope.activeUser) {
             $state.go('home.login');
@@ -29,7 +28,7 @@
 
             // check if current state is superadmin
             if ($state.current.name === 'dashboard.admin.group') {
-              $scope.groupName = 'Admin Dashboard';
+              $scope.groupName = 'Admin';
             }
 
             // initialize form for user update
@@ -55,7 +54,7 @@
 
           Auth.setToken(Token.get()[0], id);
           // reload state for groups
-          $state.go($state.current, {
+          $state.go('dashboard.list', {
             id: $rootScope.activeUser._id,
             groupid: id
           }, {
@@ -137,6 +136,7 @@
           click: 'logout'
         }];
 
+        $scope.init();
 
       }
 

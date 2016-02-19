@@ -1,50 +1,123 @@
-// describe('User Service', function() {
-//   var UserService,
-//     httpBackend;
+describe('User Service', function() {
+  var httpBackend,
+    Users,
+    error, response;
+  beforeEach(function() {
+    // load the module.
+    module('prodocs');
+  });
 
-//   beforeEach(function() {
-//     // load the module.
-//     module('prodocs');
-//   });
+  // get your service, also get $httpBackend
+  beforeEach(inject(function($injector) {
+    Users = $injector.get('Users');
+    httpBackend = $injector.get('$httpBackend');
 
-//   // get your service, also get $httpBackend
-//   beforeEach(inject(function($injector) {
-//     UserService = $injector.get('Users');
-//     httpBackend = $injector.get('$httpBackend');
-//   }));
+    httpBackend
+      .whenGET('/api/session')
+      .respond(200, {
+        data: {
+          user: {
+            _id: 1,
+            groupId: [{
+              _id: 1
+            }]
+          },
+          token: 'ertytyty'
+        },
+        group: 1
+      });
 
-//   afterEach(function() {
-//     httpBackend.verifyNoOutstandingExpectation();
-//     httpBackend.verifyNoOutstandingRequest();
-//   });
+    httpBackend
+      .whenGET('views/home.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
 
-//   it('should request all users endpoint', function() {
+    httpBackend
+      .whenGET('views/dashboard.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
 
-//     httpBackend.expectGET('/api/users/1').respond([]);
+    httpBackend
+      .whenGET('views/dashheader.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
 
-//     httpBackend.flush();
+    httpBackend
+      .whenGET('views/dashsidenav.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/feature.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/table.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/group-table.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/register.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+    httpBackend
+      .whenGET('views/group.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+  }));
+
+  afterEach(function() {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
 
 
-//   });
+  describe('Users unit tests', function() {
 
-//   it('should respond', function() {
-//     var returnedPromise = UserService.get('/api/users/1');
-//     // set up a handler for the response, that will put the result
-//     // into a variable in this scope for you to test.
-//     var result;
-//     returnedPromise.then(function(response) {
-//       result = response;
-//     });
-//     // flush the backend to "execute" the request to do the expectedGET assertion.
-//     httpBackend.flush();
-//     expect(result).toEqual(returnData);
+    it('login should be a function', function() {
+      expect(Users.login).toBeDefined();
+      expect(typeof Users.login).toBe('function');
+      httpBackend.flush();
+    });
 
-//     var returnData = {
-//       username: 'test',
-//       _id: 1,
-//       users: [],
-//       roles: []
-//     };
-//   });
+    it('should login a user', function() {
 
-// });
+      httpBackend.when('POST', '/api/users/login').respond(200, {
+        res: 'res'
+      });
+      Users.login({
+        userdata: 'user'
+      }, function(err, res) {
+        if (err) {
+          error = err;
+          response = null;
+        } else {
+          err = null;
+          response = res
+        }
+      });
+
+      httpBackend.flush();
+      expect(error).not.toBeDefined();
+      expect(response.res).toBe('res');
+    });
+  });
+
+});

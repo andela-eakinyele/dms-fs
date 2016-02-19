@@ -4,9 +4,15 @@ div(layout="column" layout-margin)
     md-toolbar.table
       .md-toolbar-tools.sectionTitle(layout="row")
         span(flex) Group Documents - Access
-        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="init()")
-          md-icon(md-font-set="fa fa-refresh fa-2x") 
-          span Refresh
+        div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
+          md-button(ui-sref="dashboard.new")
+            md-icon(md-font-set="fa fa-file-text-o fa-2x") 
+            span New Doc
+            md-tooltip New Doc
+          md-button.md-accent.md-raised(aria-label="Refresh Table")
+            md-icon(md-font-set="fa fa-refresh fa-2x") 
+            span Refresh
+
 
 
     md-toolbar.table.alternate(ng-if="selectedDocs.length > 0")
@@ -26,7 +32,7 @@ div(layout="column" layout-margin)
             tr.headerSection.md-row
               th.md-column.md-checkbox-cell
                 md-checkbox(aria-label="Select Column" ng-click="selectAll()" role="checkbox")
-              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header.name}}
+              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header}}
           tbody.md-body
             tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="accessDoc(doc)")
               td.md-cell.md-checkbox-cell
@@ -60,10 +66,15 @@ div(layout="column" layout-margin)
     md-toolbar.table
       .md-toolbar-tools.sectionTitle(layout="row")
         span(flex) Group Documents - No Access
-        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="init()")
-          md-icon(md-font-set="fa fa-refresh fa-2x") 
-          span Refresh
-
+        div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
+          md-button(ui-sref="dashboard.new")
+            md-icon(md-font-set="fa fa-file-text-o fa-2x") 
+            span New Doc
+            md-tooltip New Doc
+          md-button.md-accent.md-raised(aria-label="Refresh Table")
+            md-icon(md-font-set="fa fa-refresh fa-2x") 
+            span Refresh
+       
     md-content.listDocs(layout="column" layout-margin)
       md-table-container
         table.md-table(md-row-select="true" md-progress="promise")
@@ -71,7 +82,7 @@ div(layout="column" layout-margin)
             tr.headerSection.md-row
               th.md-column.md-checkbox-cell
                 md-checkbox(aria-label="Select Column" ng-click="selectAll()" role="checkbox")
-              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header.name}}
+              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header}}
           tbody.md-body
             tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="!accessDoc(doc)")
               td.md-cell -

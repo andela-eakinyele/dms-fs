@@ -22,6 +22,11 @@ describe('StartPageCtrl tests', function() {
       .respond(200, [{
         res: 'res'
       }]);
+    httpBackend
+      .whenGET('views/home.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
   }));
 
   it('should call initialize the controller', function() {

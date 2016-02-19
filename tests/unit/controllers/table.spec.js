@@ -293,6 +293,7 @@ describe('TableCtrl tests', function() {
     expect(state.go).toHaveBeenCalledWith('dashboard.doc.edit', {
       docId: 1
     });
+    spyOn(Utils, 'showConfirm').and.callThrough();
     spyOn(Docs, 'delete').and.callThrough();
     spyOn(Utils, 'showAlert').and.callThrough();
     scope.menuAction('delete', 1);
@@ -324,25 +325,25 @@ describe('TableCtrl tests', function() {
     });
 
     it('should select all items', function() {
-      scope.selected = [];
+      scope.selectedDocs = [];
       var list = [{
         '_id': 1
       }, {
         '_id': 2
       }];
       scope.selectAll(list);
-      expect(scope.selected.length).toBe(2);
+      expect(scope.selectedDocs.length).toBe(2);
     });
 
     it('should unselect all items', function() {
-      scope.selected = [1, 2];
+      scope.selectedDocs = [1, 2];
       var list = [{
         '_id': 1
       }, {
         '_id': 2
       }];
       scope.selectAll(list);
-      expect(scope.selected.length).toBe(0);
+      expect(scope.selectedDocs.length).toBe(0);
     });
 
     it('should check if item is selected', function() {
@@ -351,14 +352,14 @@ describe('TableCtrl tests', function() {
     });
 
     it('should check if all items are selected', function() {
-      scope.selected = [1, 2];
+      scope.selectedDocs = [1, 2];
       var list = [{
         '_id': 1
       }, {
         '_id': 2
       }];
       expect(scope.all(list)).toBeTruthy();
-      scope.selected = false;
+      scope.selectedDocs = false;
       expect(scope.all(list)).toBeFalsy();
     });
 

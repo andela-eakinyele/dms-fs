@@ -12,7 +12,6 @@
 
   var group = {
     create: function(req, res) {
-
       var query = Group.find({
         title: req.body.title
       });
@@ -106,7 +105,6 @@
         ],
         function(err, result) {
           if (err) {
-            console.log(err);
             res.status(500).json(err);
           } else {
             res.status(result.status).json(result.data);
@@ -120,7 +118,6 @@
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
-          console.log(err);
           res.status(err.status).json(err.error);
         });
     },

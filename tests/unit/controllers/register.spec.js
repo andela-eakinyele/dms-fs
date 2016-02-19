@@ -57,6 +57,7 @@ describe('SignupCtrl tests', function() {
     },
     state,
     Auth,
+    Utils,
     controller;
 
   beforeEach(function() {
@@ -72,6 +73,7 @@ describe('SignupCtrl tests', function() {
       Users: Users
     });
     Auth = $injector.get('Auth');
+    Utils = $injector.get('Utils');
     state = $injector.get('$state');
   }));
 
@@ -83,6 +85,7 @@ describe('SignupCtrl tests', function() {
   it('should call the save function in the Users service', function() {
     spyOn(Users, 'save').and.callThrough();
     spyOn(Users, 'login').and.callThrough();
+    spyOn(Utils, 'showAlert').and.callThrough();
     spyOn(Auth, 'setToken');
     spyOn(state, 'go');
     scope.signform.username = 'newUser';
@@ -92,6 +95,8 @@ describe('SignupCtrl tests', function() {
     expect(Users.save).toHaveBeenCalled();
     expect(Users.login).toHaveBeenCalled();
     expect(Auth.setToken).toHaveBeenCalled();
+    expect(Utils.showAlert).toHaveBeenCalled();
+
     expect(state.go).toHaveBeenCalledWith('home.group', {
       id: 1
     });

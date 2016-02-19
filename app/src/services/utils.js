@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('prodocs.services')
-    .service('Utils', function($mdToast, $mdDialog, $http, $filter) {
+    .service('Utils', function($mdToast, $mdDialog, $http, $filter, $mdMedia) {
 
       // format date data
       this.parseDate = function(date) {
@@ -43,14 +43,16 @@
 
 
       this.custom = function(ev, tmpl, ctrl) {
+
         $mdDialog.show({
           controller: ctrl,
           templateUrl: tmpl,
-          parent: angular.element(document.querySelector('#dashContent')),
+          parent: angular.element(document.querySelector('body')),
           targetEvent: ev,
           clickOutsideToClose: true,
           fullscreen: true
         });
+
       };
 
       this.fetch = function(path) {

@@ -132,7 +132,7 @@ describe('DashBoardCtrl tests', function() {
     scope.activeUser = user;
     state.current.name = 'dashboard.admin.group';
     scope.init();
-    expect(scope.groupName).toBe('Admin Dashboard');
+    expect(scope.groupName).toBe('Admin');
   });
 
   it('should redirect to login if no active user', function() {

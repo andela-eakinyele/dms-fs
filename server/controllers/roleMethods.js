@@ -138,7 +138,8 @@
     all: function(req, res) {
       var groupid = req.headers.groupid || req.query.groupid;
       var params = {};
-      if (groupid !== undefined && groupid !== '') {
+
+      if (!isNaN(parseInt(groupid))) {
         params.groupId = [parseInt(groupid)];
         var query = Role.find(params);
         cm.gGetAll('Roles', query)

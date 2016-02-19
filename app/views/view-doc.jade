@@ -16,7 +16,7 @@ md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="colu
             md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
           md-button.md-primary(aria-label="delete doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"delete\")")
             md-icon(md-font-set="fa fa-trash fa-2x")
-  div.contentView
+  div.contentView.wordwrap
     | {{doc.content}}
   md-divider
   div

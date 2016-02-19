@@ -2,8 +2,8 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('SignupCtrl', ['$rootScope', '$scope', '$state',
-      'Users', 'Auth',
-      function($rootScope, $scope, $state, Users, Auth) {
+      'Users', 'Auth', 'Utils',
+      function($rootScope, $scope, $state, Users, Auth, Utils) {
 
         $scope.init = function() {
           $scope.signupErr = 'Please fill in your details below';
@@ -21,8 +21,11 @@
                 console.log(err);
                 $scope.signupErr = 'Error Logging you In';
               } else {
+                Utils.showAlert(null, 'Logged In', 'You are Logged in, ' +
+                  'Please create or Select a group');
                 Auth.setToken(JSON.stringify(res.data), '');
                 $rootScope.activeUser = res.data.user;
+
                 $state.go('home.group', {
                   id: res.data.user._id
                 });

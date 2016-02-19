@@ -170,12 +170,17 @@
     get: function(req, res) {
       var groupid = req.headers.groupid || req.query.groupid;
       var params = {
-        _id: req.params.id
-      };
-      if (groupid !== undefined && groupid !== '') {
-        params.groupId = [parseInt(groupid)];
+          _id: req.params.id
+        },
+        groupId, query;
+
+      var _query = User.findOne(params);
+
+      if (!isNaN(parseInt(groupid))) {
+        groupId = [parseInt(groupid)];
+        _query = _query.where('groupId').in(groupId);
       }
-      var query = User.findOne(params)
+      query = _query
         .select('username email roles name groupId')
         .populate({
           path: 'roles',
@@ -189,7 +194,6 @@
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
-          console.log(err);
           res.status(err.status).json(err.error);
         });
     },
@@ -230,9 +234,11 @@
 
       var groupid = req.headers.groupid || req.query.groupid;
       var params = {};
-      if (groupid !== undefined && groupid !== '') {
+
+      if (!isNaN(parseInt(groupid))) {
         params.groupId = [parseInt(groupid)];
       }
+
       var query = User.find(params)
         .select('username email roles name')
         .populate({

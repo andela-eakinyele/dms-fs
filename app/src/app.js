@@ -61,7 +61,7 @@
       $stateProvider
         .state('home', { // route for home page
           abstract: true,
-          url: '/prodocs',
+          url: '/',
           templateUrl: 'views/home.html',
           controller: 'StartPageCtrl'
         })
@@ -76,7 +76,7 @@
           }
         })
         .state('home.group', {
-          url: '/users/:id/group',
+          url: 'users/:id/group',
           views: {
             'nextView@home': {
               templateUrl: 'views/group.html',
@@ -85,7 +85,7 @@
           }
         })
         .state('home.adduser', {
-          url: '/newuser',
+          url: 'signup',
           views: {
             'nextView@home': {
               controller: 'SignupCtrl',
@@ -94,7 +94,7 @@
           }
         })
         .state('home.login', {
-          url: '/login',
+          url: 'login',
           views: {
             'nextView@home': {
               controller: 'LoginCtrl',
@@ -104,7 +104,7 @@
         })
         .state('dashboard', {
           abstract: true,
-          url: '/prodocs/users/:id/dashboard/:groupid/documents',
+          url: '/users/:id/dashboard/:groupid/documents',
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
@@ -184,7 +184,7 @@
         })
         .state('dashboard.admin', {
           abstract: true,
-          url: '^/prodocs/users/:id/dashboard/admin',
+          url: '^/users/:id/dashboard/admin',
           views: {
             'add@dashboard': {
               templateUrl: 'views/admin.html'
@@ -246,7 +246,7 @@
           }
         })
         .state('loginerror', {
-          url: '/prodocs/error',
+          url: '/error',
           templateUrl: '',
           controller: ''
         });
@@ -271,7 +271,7 @@
 
       //back button function called from back button's ng-click="back()"
       $rootScope.back = function() {
-        if ($rootScope.previousState.name === 'dashboard') {
+        if (/dashboard/.test($rootScope.previousState.name)) {
           $state.go($rootScope.previousState.name,
             $rootScope.previousState.params);
         } else {
@@ -282,66 +282,53 @@
       // Check if the user's session is still being persisted in the servers
       Users.session(function(err, res) {
         if (!err) {
-          // response with expired or invalid token
-          if (!res || res.error) {
-            $state.go('home.login');
-            // response with valid renewed token
+          $rootScope.activeUser = res.data.user;
+
+          // check for group 
+          if (res.data.group === '' && res.data.user.groupId.length === 0) {
+            Auth.setToken(JSON.stringify(res.data), '');
           } else {
-            $rootScope.activeUser = res.data.user;
+            $rootScope.activeGroup = (res.data.group === '') ?
+              res.data.user.groupId[0]._id : res.data.group;
+            Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
+          }
 
-            // check for group 
-            if (res.group === '' && res.data.user.groupId.length === 0) {
-              Auth.setToken(JSON.stringify(res.data), '');
-            } else {
-              $rootScope.activeGroup = (res.group === '') ?
-                res.data.user.groupId[0]._id : res.group;
-              Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
-            }
+          //check for superAdmin user
+          var superAdmin = window._
+            .filter(res.data.user.roles, {
+              'title': 'superAdmin'
+            });
 
-            if (!res.group && res.data.user.groupId.length === 0) {
+          if (superAdmin.length > 0) {
+            $state.go('dashboard.admin.group', {
+              id: res.data.user._id
+            });
+
+          } else {
+            // check if user belongs to a group
+            if (!res.data.group && res.data.user.groupId.length === 0) {
               $state.go('home.group', {
                 id: res.data.user._id
               });
-            }
 
-            // //check for Admin user
-            // var Admin = window._
-            //   .filter(res.data.user.roles, {
-            //     'title': 'Admin'
-            //   });
-
-            // if (Admin.length > 0) {
-            //   // $state.go('dashboard.admin.doc', {
-            //   //   id: res.data.user._id,
-            //   //   groupid: $rootScope.activeGroup
-            //   // });
-
-            //   // not admin user
-            // } else {
-
-            //check for superAdmin user
-            var superAdmin = window._
-              .filter(res.data.user.roles, {
-                'title': 'superAdmin'
-              });
-
-            if (superAdmin.length > 0) {
-              $state.go('dashboard.admin.group', {
-                id: res.data.user._id
+              // use user group or last set header group
+            } else {
+              $state.go('dashboard.list', {
+                id: res.data.user._id,
+                groupid: $rootScope.activeGroup
               });
             }
-            // } else if (!res.group && res.data.user.groupId.length === 0) {
-            //     $state.go('home.group', {
-            //       id: res.data.user._id
-            //     });
-            //     // use user group or last set header group
-            //   } else {
-            //     $state.go('dashboard.list', {
-            //       id: res.data.user._id,
-            //       groupid: $rootScope.activeGroup
-            //     });
-            //   }
-            // }
+          }
+        } else {
+          if (/Token/.test(err.data.message)) {
+            Auth.logout();
+            $state.go('home.features');
+          } else if (/User/.test(err.data.message)) {
+            Auth.logout();
+            $state.go('home.adduser');
+          } else {
+            Auth.logout();
+            $state.go('home.features');
           }
         }
       });

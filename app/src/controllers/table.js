@@ -14,7 +14,7 @@
           if (/mydocs/.test($state.current.name)) {
             Docs.getUserDocs($stateParams.id, function(err, res) {
               if (err) {
-                // console.log('Error retrieving docs for users');
+                Utils.showAlert(null, 'Error retrieving user documents');
               } else {
                 $scope.docs = res;
               }
@@ -22,7 +22,7 @@
           } else if (/shared/.test($state.current.name)) {
             Docs.getRoleDocs($stateParams.roleid, function(err, res) {
               if (err) {
-                // console.log('Error retrieving Shared Docs');
+                Utils.showAlert(null, 'Error retrieving shared documents');
               } else {
                 $scope.docs = res;
               }
@@ -77,10 +77,10 @@
 
         // toggle select all items
         $scope.selectAll = function(items) {
-          if ($scope.selected.length > 0) {
-            $scope.selected = [];
+          if ($scope.selectedDocs.length > 0) {
+            $scope.selectedDocs = [];
           } else {
-            $scope.selected = window._.map(items, '_id');
+            $scope.selectedDocs = window._.map(items, '_id');
           }
         };
 
@@ -91,7 +91,12 @@
 
         // check select all state
         $scope.all = function(items) {
-          return $scope.selected.length === window._.map(items, '_id').length;
+          if ($scope.selectedDocs) {
+            return $scope.selectedDocs.length === window._
+              .map(items, '_id').length;
+          } else {
+            return false;
+          }
         };
 
 
@@ -106,12 +111,15 @@
             Docs.delete({
               id: id
             }, function() {
-              Utils.showAlert(ev, 'Delete Action', 'Document' +
+              Utils.showAlert(null, 'Delete Action', 'Document ' +
                 'successfully deleted');
               $state.go('dashboard.list.mydocs', {
                 id: $stateParams._id,
                 groupid: $stateParams.groupid
               });
+            }, function() {
+              Utils.showAlert(null, 'Delete Action', 'Error ' +
+                'deleting document');
             });
           }
         };
@@ -122,8 +130,7 @@
           $scope.selectedDocs = [];
         };
 
-        $scope.deleteSelection = function() {
-          // Docs.bulkdelete();
+        $scope.viewSelection = function() {
 
         };
 
