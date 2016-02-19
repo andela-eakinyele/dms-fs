@@ -37,22 +37,24 @@
         };
 
         // delete a Document/Role/User
-        $scope.delete = function() {
-       
+        $scope.delete = function(evt) {
+          Utils.showConfirm(evt, 'Delete', 'Document will be deleted', 'Delete',
+            function() {
               Docs.delete({
-                id: $stateParams.docId
-              }, function() {
-                Utils.showAlert(null, 'Delete Action', 'Document ' +
-                  'successfully deleted');
-                $state.go('dashboard.list.mydocs', {
-                  id: $stateParams._id,
-                  groupid: $stateParams.groupid
+                  id: $stateParams.docId
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Document ' +
+                    'successfully deleted');
+                  $state.go('dashboard.list.mydocs', {
+                    id: $stateParams.id,
+                    groupid: $stateParams.groupid
+                  });
+                },
+                function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                    'deleting document');
                 });
-              },
-function() {
-  Utils.showAlert(null, 'Delete Action', 'Error ' +
-    'deleting document');
-});
+            });
         };
 
 
@@ -63,14 +65,14 @@ function() {
         };
 
         // Menu button action
-        $scope.menuAction = function(ev) {
+        $scope.menuAction = function(ev, evt) {
           if (ev === 'edit') {
             $state.go('dashboard.doc.edit', {
               docId: $stateParams.docId
             });
           }
           if (ev === 'delete') {
-            $scope.delete();
+            $scope.delete(evt);
           }
         };
 

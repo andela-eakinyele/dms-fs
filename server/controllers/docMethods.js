@@ -191,7 +191,32 @@
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });
+    },
 
+    bulkDelete: function(req, res) {
+      if (req.body.length > 0) {
+        Doc.remove({}).where('_id')
+          .in(req.body)
+          .then(function(result) {
+            res.status(200).json(result);
+          }, function(err) {
+            res.status(500).json(err);
+          });
+      }
+    },
+
+
+    bulkView
+: function(req, res) {
+      if (req.body.length > 0) {
+        Doc.find({}).where('_id')
+          .in(req.body)
+          .then(function(result) {
+            res.status(200).json(result);
+          }, function(err) {
+            res.status(500).json(err);
+          });
+      }
     }
   };
 

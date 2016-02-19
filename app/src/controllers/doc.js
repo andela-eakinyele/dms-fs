@@ -2,9 +2,9 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('DocCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
-      'Utils', 'Docs', 'Roles',
+      '$timeout', 'Utils', 'Docs', 'Roles',
       function($rootScope, $scope, $state, $stateParams,
-        Utils, Docs, Roles) {
+        $timeout, Utils, Docs, Roles) {
 
         $scope.init = function() {
           $scope.newDoc = {};
@@ -18,8 +18,31 @@
           Docs.get({
             id: $stateParams.docId
           }, function(res) {
+            // res.content = $sce.trustAsHtml(res.content);
             $scope.doc = res;
-          }, function() {});
+          }, function() {
+            Utils.showAlert(null, 'View Document',
+              'Document could not be retrieved');
+          });
+        };
+
+
+        $scope.tinymceOptions = {
+          trusted: true,
+          resize: false,
+          width: '100%',
+          min_height: 500,
+          plugins: 'textcolor lists autolink link image spellchecker advlist',
+          toolbar: 'undo redo styleselect bold italic fontsizeselect' +
+            ' forecolor backcolor paste wordcount spellchecker' +
+            'alignleft aligncenter alignright',
+          fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+          menubar: 'file edit insert view format table tools',
+          advlist_bullet_styles: 'square',
+          font_formats: 'Arial=arial,helvetica,sans-serif;' +
+            ' Courier New=courier new,courier,monospace;' +
+            'Robot, Verdana',
+          theme: 'modern'
         };
 
         // save a new document

@@ -8,28 +8,38 @@
         $mdSidenav, $timeout, Utils, Docs, Auth, Roles, Token) {
 
         $scope.init = function() {
+
+
           // check if user is logged in or redirect to login
           if (!$rootScope.activeUser) {
             $state.go('home.login');
           } else {
             // check for state name and stateParams
             $scope.groups = $rootScope.activeUser.groupId;
+            console.log($scope.groups);
 
             // if user is a not member of a group and not superadmin
             //  redirect to group
-            if ($scope.groups.length > 0 &&
-              $state.current.name !== 'dashboard.admin.group') {
-
-              // get group name
-              $scope.groupName = window._.filter($scope.groups, {
-                '_id': parseInt($stateParams.groupid)
-              })[0].title;
-            }
-
             // check if current state is superadmin
-            if ($state.current.name === 'dashboard.admin.group') {
-              $scope.groupName = 'Admin';
-            }
+            $scope.$watch(function() {
+              return $state.current.name;
+            }, function(name) {
+              if (name === 'dashboard.admin.group' ||
+                name === 'dashboard.admin.user') {
+                $timeout(function() {
+                  $scope.groupName = 'Admin';
+                }, 600);
+              } else {
+                if ($scope.groups.length > 0 &&
+                  (name === 'dashboard.admin.group' ||
+                    name === 'dashboard.admin.user')) {
+                  // get group name
+                  $scope.groupName = window._.filter($scope.groups, {
+                    '_id': parseInt($stateParams.groupid)
+                  })[0].title;
+                }
+              }
+            });
 
             // initialize form for user update
             $scope.updateForm = {};

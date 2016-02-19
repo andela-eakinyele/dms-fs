@@ -101,26 +101,30 @@
 
 
         // Menu button action
-        $scope.menuAction = function(ev, id) {
+        $scope.menuAction = function(ev, id, evt) {
           if (ev === 'edit') {
             $state.go('dashboard.doc.edit', {
               docId: id
             });
           }
           if (ev === 'delete') {
-            Docs.delete({
-              id: id
-            }, function() {
-              Utils.showAlert(null, 'Delete Action', 'Document ' +
-                'successfully deleted');
-              $state.go('dashboard.list.mydocs', {
-                id: $stateParams._id,
-                groupid: $stateParams.groupid
+            Utils.showConfirm(evt, 'Delete', 'Document will be deleted',
+              'Delete',
+              function() {
+                Docs.delete({
+                  id: id
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Document ' +
+                    'successfully deleted');
+                  $state.go('dashboard.list.mydocs', {
+                    id: $stateParams._id,
+                    groupid: $stateParams.groupid
+                  });
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                    'deleting document');
+                });
               });
-            }, function() {
-              Utils.showAlert(null, 'Delete Action', 'Error ' +
-                'deleting document');
-            });
           }
         };
 
@@ -131,7 +135,20 @@
         };
 
         $scope.viewSelection = function() {
+          console.log($scope.selectedDocs);
 
+          Docs.bulkview($scope.selectedDocs, function(err, res) {
+            $scope.selectedDocs = [];
+            console.log(res, err);
+          });
+        };
+
+        $scope.deleteSelection = function() {
+          Docs.bulkdelete($scope.selectedDocs, function(err, res) {
+            $scope.selectedDocs = [];
+            console.log(res);
+            console.log(err);
+          });
         };
 
 

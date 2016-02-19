@@ -53,14 +53,14 @@
         };
 
         // Menu button action
-        $scope.menuAction = function(ev, id, index) {
+        $scope.menuAction = function(ev, id, index, evt) {
           if (ev === 'edit') {
             $state.go('dashboard.doc.edit', {
               docId: id
             });
           }
           if (ev === 'delete') {
-            $scope.deleteOne(id, index);
+            $scope.deleteOne(id, index, evt);
           }
         };
 
@@ -179,57 +179,60 @@
           });
         };
 
-        $scope.deleteOne = function(id, index) {
-          console.log(id, index);
-          if ($scope.listName === 'docs') {
-            Docs.delete({
-                id: id
-              }, function() {
-                $scope.docs.splice(index, 1);
-                Utils.showAlert(null, 'Delete Action', 'Document ' +
-                  'successfully deleted');
-              },
-              function() {
-                Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
-                  'document');
-              });
-          } else if ($scope.listName === 'roles') {
-            Roles.delete({
-              id: id
-            }, function() {
-              $scope.roles.splice(index, 1);
-              console.log($scope.roles);
-              Utils.showAlert(null, 'Delete Action', 'Role ' +
-                'successfully deleted');
-            }, function() {
-              Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
-                'document');
-            });
-          } else if ($scope.listName === 'groups') {
-            Groups.delete({
-                id: id
-              }, function() {
-                $scope.groups.splice(index, 1);
+        $scope.deleteOne = function(id, index, evt) {
+          Utils.showConfirm(evt, 'Delete', 'Selection will be deleted',
+            'Delete',
+            function() {
+              if ($scope.listName === 'docs') {
+                Docs.delete({
+                    id: id
+                  }, function() {
+                    $scope.docs.splice(index, 1);
+                    Utils.showAlert(evt, 'Delete Action', 'Document ' +
+                      'successfully deleted');
+                  },
+                  function() {
+                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                      'document');
+                  });
+              } else if ($scope.listName === 'roles') {
+                Roles.delete({
+                  id: id
+                }, function() {
+                  $scope.roles.splice(index, 1);
+                  console.log($scope.roles);
+                  Utils.showAlert(evt, 'Delete Action', 'Role ' +
+                    'successfully deleted');
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                    'document');
+                });
+              } else if ($scope.listName === 'groups') {
+                Groups.delete({
+                    id: id
+                  }, function() {
+                    $scope.groups.splice(index, 1);
 
-                Utils.showAlert(null, 'Delete Action', 'Groups ' +
-                  'successfully deleted');
-              },
-              function() {
-                Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
-                  'document');
-              });
-          } else if ($scope.listName === 'adminUsers') {
-            Users.delete({
-              id: id
-            }, function() {
-              $scope.allUsers.splice(index, 1);
-              Utils.showAlert(null, 'Delete Action', 'Users ' +
-                'successfully deleted');
-            }, function() {
-              Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
-                'document');
+                    Utils.showAlert(evt, 'Delete Action', 'Groups ' +
+                      'successfully deleted');
+                  },
+                  function() {
+                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                      'document');
+                  });
+              } else if ($scope.listName === 'adminUsers') {
+                Users.delete({
+                  id: id
+                }, function() {
+                  $scope.allUsers.splice(index, 1);
+                  Utils.showAlert(null, 'Delete Action', 'Users ' +
+                    'successfully deleted');
+                }, function() {
+                  Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
+                    'document');
+                });
+              }
             });
-          }
         };
 
         // populate group table
