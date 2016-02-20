@@ -5,7 +5,7 @@ test:
   override:
     - gulp build
     - npm test
-    - CODECLIMATE_REPO_TOKEN=$CodeClimateToken codeclimate-test-reporter< coverage/fend/report-lcov/lcov.info
+    - CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN codeclimate-test-reporter< coverage/fend/report-lcov/lcov.info
 dependencies:
   cache_directories:
     - "node_modules"
