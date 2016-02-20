@@ -139,7 +139,7 @@
 
         httpBackend.flush();
 
-        expect(error).not.toBeDefined();
+        expect(error).toBe(null);
         expect(response.res).toBe('res');
       });
 
