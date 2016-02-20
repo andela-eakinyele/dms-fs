@@ -19,6 +19,8 @@
     "before",
     "mocha",
     "beforeEach",
+    "afterEach",
+    "spyOn",
     "describe",
     "expect",
     "it",

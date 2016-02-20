@@ -3,7 +3,6 @@
   var Doc = require('./../models/document');
   var User = require('./../models/user');
   var _ = require('lodash');
-  var _async = require('async');
 
   var cm = require('./helpers');
 
@@ -206,8 +205,7 @@
     },
 
 
-    bulkView
-: function(req, res) {
+    bulkView: function(req, res) {
       if (req.body.length > 0) {
         Doc.find({}).where('_id')
           .in(req.body)

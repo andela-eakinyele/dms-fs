@@ -7,7 +7,7 @@
       module('prodocs');
     });
 
-    var Documents,
+    var Documents, cb,
       $resource, response, error,
       $http, httpBackend;
 
@@ -16,6 +16,16 @@
       $resource = $injector.get('$resource');
       $http = $injector.get('$http');
       httpBackend = $injector.get('$httpBackend');
+
+      cb = function(err, res) {
+        if (err) {
+          error = err;
+          response = null;
+        } else {
+          error = null;
+          response = res;
+        }
+      };
 
       httpBackend
         .whenGET('/api/session')
@@ -126,15 +136,7 @@
               }]
             });
 
-          Documents.getUserDocs(1, function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.getUserDocs(1, cb);
 
           httpBackend.flush();
 
@@ -151,15 +153,7 @@
               err: 'err'
             });
 
-          Documents.getUserDocs(1, function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.getUserDocs(1, cb);
 
           httpBackend.flush();
 
@@ -179,15 +173,7 @@
               }]
             });
 
-          Documents.getRoleDocs(1, function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.getRoleDocs(1, cb);
 
           httpBackend.flush();
 
@@ -204,15 +190,7 @@
               err: 'err'
             });
 
-          Documents.getRoleDocs(1, function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.getRoleDocs(1, cb);
 
           httpBackend.flush();
 
@@ -229,15 +207,7 @@
               data: true
             });
 
-          Documents.bulkdelete([1, 2, 3], function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.bulkdelete([1, 2, 3], cb);
 
           httpBackend.flush();
 
@@ -251,20 +221,12 @@
           httpBackend
             .whenPOST('/api/documents/bulkdelete', [1, 2])
             .respond(400, true);
-          Documents.bulkdelete([1, 2], function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.bulkdelete([1, 2], cb);
 
           httpBackend.flush();
 
           expect(response).toBe(null);
-          expect(error).toBeTruthy;
+          expect(error).toBeTruthy();
         });
 
         it('should get selected documents', function() {
@@ -276,15 +238,7 @@
               data: [1, 2, 3]
             });
 
-          Documents.bulkview([1, 2, 3], function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.bulkview([1, 2, 3], cb);
 
           httpBackend.flush();
 
@@ -299,20 +253,12 @@
             .whenPOST('/api/documents/bulkview', [1, 2, 3])
             .respond(400, true);
 
-          Documents.bulkview([1, 2, 3], function(err, res) {
-            if (err) {
-              error = err;
-              response = null;
-            } else {
-              error = null;
-              response = res
-            }
-          });
+          Documents.bulkview([1, 2, 3], cb);
 
           httpBackend.flush();
 
           expect(response).toBe(null);
-          expect(error).toBeTruthy;
+          expect(error).toBeTruthy();
         });
       });
 

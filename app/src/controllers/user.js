@@ -24,7 +24,7 @@
             }, function(user) {
               $scope.data = user;
             },
-            function(err) {
+            function() {
               Utils.showAlert(null, 'Error Retrieving User',
                 $rootScope.activeUser.username);
             });

@@ -87,7 +87,7 @@
           response = null;
         } else {
           error = null;
-          response = res
+          response = res;
         }
       };
 
@@ -139,7 +139,7 @@
 
         httpBackend.flush();
 
-        expect(error).not.toBeDefined;
+        expect(error).not.toBeDefined();
         expect(response.res).toBe('res');
       });
 

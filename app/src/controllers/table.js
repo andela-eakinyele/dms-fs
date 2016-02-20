@@ -11,6 +11,8 @@
         };
 
         $scope.getDocs = function() {
+
+          // get document by user id
           if (/mydocs/.test($state.current.name)) {
             Docs.getUserDocs($stateParams.id, function(err, res) {
               if (err) {
@@ -19,6 +21,8 @@
                 $scope.docs = res;
               }
             });
+
+            // get shared documents
           } else if (/shared/.test($state.current.name)) {
             Docs.getRoleDocs($stateParams.roleid, function(err, res) {
               if (err) {
@@ -27,6 +31,8 @@
                 $scope.docs = res;
               }
             });
+
+            // get all douments in group
           } else {
             $scope.docs = Docs.query();
           }
@@ -99,7 +105,6 @@
           }
         };
 
-
         // Menu button action
         $scope.menuAction = function(ev, id, evt) {
           if (ev === 'edit') {
@@ -128,26 +133,22 @@
           }
         };
 
-
         $scope.refreshTable = function() {
           $scope.getDocs();
           $scope.selectedDocs = [];
         };
 
         $scope.viewSelection = function() {
-          Docs.bulkview($scope.selectedDocs, function(err, res) {
+          Docs.bulkview($scope.selectedDocs, function() {
             $scope.selectedDocs = [];
           });
         };
 
         $scope.deleteSelection = function() {
-          Docs.bulkdelete($scope.selectedDocs, function(err, res) {
+          Docs.bulkdelete($scope.selectedDocs, function() {
             $scope.selectedDocs = [];
-            console.log(res);
-            console.log(err);
           });
         };
-
 
         $scope.headers = [
           'Label',
@@ -162,6 +163,5 @@
         $scope.init();
 
       }
-
     ]);
 })();
