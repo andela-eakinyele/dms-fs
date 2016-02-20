@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  describe('TableCtrl tests', function() {
+  describe('DocTableCtrl tests', function() {
 
     var scope, open,
 
@@ -71,7 +71,7 @@
       var $controller = $injector.get('$controller');
       scope = $injector.get('$rootScope');
 
-      controller = $controller('TableCtrl', {
+      controller = $controller('DocTableCtrl', {
         $scope: scope,
         Docs: Docs
       });

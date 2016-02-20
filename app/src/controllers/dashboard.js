@@ -27,15 +27,14 @@
                 name === 'dashboard.admin.user') {
                 $scope.groupName = 'Admin';
               } else {
+                var testName = window.
+                _.filter($rootScope.activeUser.groupId, {
+                  _id: parseInt($stateParams.groupid)
+                });
 
-                if ($scope.groups.length > 0 &&
-                  (name !== 'dashboard.admin.group' ||
-                    name !== 'dashboard.admin.user')) {
+                if ($rootScope.activeUser.groupId && testName) {
                   // get group name
-                  $scope.groupName = window.
-                  _.filter($rootScope.activeUser.groupId, {
-                    _id: parseInt($stateParams.groupid)
-                  })[0].title;
+                  $scope.groupName = (testName[0]) ? testName[0].title : '';
                 }
               }
             });

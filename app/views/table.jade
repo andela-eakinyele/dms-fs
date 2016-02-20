@@ -1,10 +1,13 @@
 md-content(layout ="column" flex="100" layout-margin)
 
   md-toolbar.table
-    .md-toolbar-tools.sectionTitle(layout="row")
+    .md-toolbar-tools.sectionTitle(layout="row" layout-margin)
       span(flex) My Documents
-    
-      md-button.md-accent.md-raised(aria-label="Refresh Table")
+      span.hint Click on the title or select checkboxes
+      md-input-container.md-block(md-no-float)
+        label(for="search")
+        input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
+      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
         md-icon(md-font-set="fa fa-refresh fa-2x") 
         span Refresh
 
@@ -15,17 +18,20 @@ md-content(layout ="column" flex="100" layout-margin)
       md-button.md-primary.md-raised(aria-label="View Selected" ng-click="viewSelection()")
         md-icon(md-font-set="fa fa-external-link fa-2x") 
         span View
+      md-button.md-warn.md-raised(aria-label="View Selected" ng-click="deleteSelection($event)")
+        md-icon(md-font-set="fa fa-trash fa-2x") 
+        span Delete
 
   md-content.listDocs(layout="column" layout-margin)
     md-table-container
-      table.md-table(md-row-select="true" md-progress="promise")
+      table.md-table(md-row-select md-progress="promise")
         thead.md-head(md-order="query.order")
           tr.headerSection.md-row
             th.md-column.md-checkbox-cell
               md-checkbox(aria-label="Select Column" ng-checked="all(docs)" ng-click="selectAll(docs)" role="checkbox")
-            th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header}}
+            th.md-column(md-order-by="header.field" ng-repeat="header in headers") {{header.name}}
         tbody.md-body
-          tr.md-row(md-auto-select ng-repeat="doc in docs track by $index")
+          tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search")
             td.md-cell.md-checkbox-cell
               md-checkbox(aria-label="Select Row" ng-checked="isSelected(doc._id, selectedDocs)" ng-click="toggle(doc._id, selectedDocs)" role="checkbox")
             td.md-cell {{doc.label}}
@@ -50,7 +56,7 @@ md-content(layout ="column" flex="100" layout-margin)
                       span Delete
               md-button.md-primary(ng-if="!editDoc(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
                 md-icon(md-font-set="fa fa-external-link fa-2x" md-menu-align-target) 
-    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.count}}" md-on-paginate="onPaginate" md-page-select)
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginate" md-page-select)
 
 
       

@@ -113,13 +113,34 @@
     },
 
     all: function(req, res) {
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
+
       var query = Group.find({});
+
+      if (limit && page) {
+        page = parseInt(page) - 1;
+        query = query
+          .limit(limit)
+          .skip(limit * page)
+          .sort('dateCreated');
+      }
       cm.gGetAll('Groups', query)
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
+    },
+
+    count: function(req, res) {
+      Group.count({}, function(err, count) {
+        if (err) {
+          cm.resdberrors(res, 'querying database', err);
+        } else {
+          res.status(200).json(count);
+        }
+      });
     },
 
     get: function(req, res) {

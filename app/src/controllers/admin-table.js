@@ -1,16 +1,18 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('AdminListCtrl', ['$rootScope', '$scope', '$state',
+    .controller('AdminTableCtrl', ['$rootScope', '$scope', '$state',
       '$stateParams', 'Groups', 'Users', 'Roles', 'Docs', 'Utils',
       function($rootScope, $scope, $state, $stateParams, Groups,
         Users, Roles, Docs, Utils) {
 
         $scope.init = function() {
           $scope.selected = [];
+
+          // set pagination parameters
+          $scope.query = $stateParams.query;
         };
 
-        $scope.init();
 
         // Toggling Selection
         // Update selection  array
@@ -69,25 +71,9 @@
           return Utils.parseDate(date);
         };
 
-        // set pagination parameters
-        $scope.query = {
-          order: 'Title',
-          limit: 5,
-          page: 1
-        };
 
         // populate user table
-        $scope.userList = function() {
-          $scope.listName = 'users';
-          $scope.userHeaders = [
-            'Username',
-            'Email',
-            'Firstname',
-            'LastName',
-            'Role'
-          ];
-
-          $scope.query.order = 'FirstName';
+        $scope.getGroupUsers = function(query) {
 
           $scope.roles = Roles.query({
             groupid: $stateParams.groupid
@@ -99,22 +85,32 @@
             });
           }
 
-          Groups.get({
-              id: $stateParams.groupid
-            },
+          var userParams = query;
+          userParams.groupid = $stateParams.groupid;
+
+          Users.query(userParams,
             function(res) {
               if (res) {
-                var data = res.users;
+                var data = res;
                 data = window._.map(data, function(a) {
                   window._.forEach(a.roles, function(b) {
-                    var role = roledata(b);
+                    var role = roledata(b._id);
                     if (role.length) {
                       a.Role = role[0].title;
                     }
                   });
                   return a;
                 });
+
                 $scope.users = data;
+                Users.count(function(err, count) {
+                  if (err) {
+                    Utils.showAlert(null, 'Error retrieving ' +
+                      'users');
+                  } else {
+                    $scope.count = count;
+                  }
+                });
               } else {
                 $scope.userErr = 'There are no users in this group';
               }
@@ -124,28 +120,47 @@
             });
         };
 
-        // populate role table
-        $scope.roleList = function() {
-          $scope.listName = 'roles';
+        $scope.userList = function() {
 
-          $scope.roleHeaders = [
-            'ID',
-            'Title',
-            'No of Users'
+          $scope.listName = 'users';
+          $scope.userHeaders = [
+            'Username',
+            'Email',
+            'Firstname',
+            'LastName',
+            'Role'
           ];
+          $scope.init();
+          $scope.query.order = 'username';
+          $scope.getGroupUsers($scope.query);
+        };
 
-          $scope.query.order = 'ID';
+        $scope.onPaginateUsers = function(page, limit) {
+          $scope.selected = [];
+          $scope.getGroupUsers(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
+        };
 
-          Roles.query({
-            groupid: $stateParams.groupid
-          }, function(res) {
+        // populate role table
+        $scope.getRoles = function(query) {
+          var roleParams = query;
+          roleParams.groupid = $stateParams.groupid;
+
+
+          Roles.query(roleParams, function(res) {
             if (res.length > 0) {
               $scope.roles = res;
-              var data = window._.map($scope.roles, function(a) {
-                a.NoOfUsers = a.users.length;
-                return a;
+
+              Roles.count(function(err, count) {
+                if (err) {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'roles');
+                } else {
+                  $scope.count = count;
+                }
               });
-              $scope.roles = data;
             } else {
               $scope.roleErr = 'There are no roles in this group';
             }
@@ -154,29 +169,69 @@
           });
         };
 
+        $scope.roleList = function() {
+          $scope.init();
+
+          $scope.listName = 'roles';
+          $scope.query.order = 'title';
+
+          $scope.roleHeaders = [
+            'ID',
+            'Title',
+            'No of Users'
+          ];
+
+          $scope.getRoles($scope.query);
+        };
+
+        $scope.onPaginateRole = function(page, limit) {
+          $scope.selected = [];
+          $scope.getRoles(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
+        };
+
         // populate document table
-        $scope.docList = function() {
-          $scope.listName = 'docs';
+        $scope.getDocs = function(query) {
 
-          $scope.docHeaders = ['Label', 'Title', 'Owner', 'Date Created', ''];
+          var docParams = query;
+          docParams.groupid = $stateParams.groupid;
 
-          $scope.query.order = 'Title';
-
-          Docs.query(function(res) {
+          Docs.query(query, function(res) {
             if (res.length > 0) {
               $scope.docs = res;
-              var data = window._.map($scope.docs, function(a) {
-                a.Owner = a.ownerId[0].name.first + ' ' +
-                  a.ownerId[0].name.last;
-                return a;
+
+              Docs.count(function(err, res) {
+                if (err) {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'documents');
+                } else {
+                  $scope.count = res;
+                }
               });
-              $scope.docs = data;
             } else {
               $scope.docErr = 'There are no documents in this group';
             }
           }, function() {
             $scope.docErr = 'Error retrieving group documents';
           });
+        };
+
+        $scope.docList = function() {
+          $scope.init();
+          $scope.listName = 'docs';
+          $scope.docHeaders = ['Label', 'Title', 'Owner', 'Date Created', ''];
+          $scope.query.order = 'title';
+          $scope.getDocs($scope.query);
+        };
+
+        $scope.onPaginateDoc = function(page, limit) {
+          $scope.selected = [];
+          $scope.getDocs(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
         };
 
         $scope.deleteOne = function(id, index, evt) {
@@ -219,7 +274,7 @@
                     Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
                       'document');
                   });
-              } else if ($scope.listName === 'adminUsers') {
+              } else if ($scope.listName === 'appUsers') {
                 Users.delete({
                   id: id
                 }, function() {
@@ -235,22 +290,20 @@
         };
 
         // populate group table
-        $scope.groupList = function() {
-          $scope.listName = 'groups';
-          $scope.groupHeaders = [
-            'ID',
-            'Title',
-            'Description',
-            'No of Users',
-            'No of Roles',
-            'No of Documents'
-          ];
+        $scope.getGroups = function(query) {
 
-          $scope.query.order = 'Title';
-
-          Groups.query(function(res) {
+          Groups.query(query, function(res) {
               if (res.length > 0) {
                 $scope.groups = res;
+
+                Groups.count(function(err, res) {
+                  if (err) {
+                    Utils.showAlert(null, 'Error retrieving ' +
+                      'groups');
+                  } else {
+                    $scope.count = res;
+                  }
+                });
               } else {
                 $scope.groupErr = 'There are no groups';
               }
@@ -260,23 +313,42 @@
             });
         };
 
+        $scope.groupList = function() {
+          $scope.init();
+
+          $scope.query.order = 'title';
+
+          $scope.listName = 'groups';
+          $scope.groupHeaders = [
+            'ID',
+            'Title',
+            'Description',
+            'No of Users'
+          ];
+          $scope.getGroups($scope.query);
+        };
+
+        $scope.onPaginateGroup = function(page, limit) {
+          $scope.getGroups(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
+        };
 
         // populate user table
-        $scope.appUsers = function() {
-          $scope.listName = 'adminUsers';
-          $scope.userHeaders = [
-            'Username',
-            'Email',
-            'Firstname',
-            'LastName',
-            'No of Groups'
-          ];
+        $scope.getAppUsers = function(query) {
 
-          $scope.query.order = 'Title';
-
-          Users.query(function(res) {
+          Users.query(query, function(res) {
             if (res.length > 0) {
               $scope.allUsers = res;
+              Users.count(function(err, res) {
+                if (err) {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'users');
+                } else {
+                  $scope.count = res;
+                }
+              });
             } else {
               $scope.userErr = 'There are no users';
             }
@@ -285,17 +357,45 @@
           });
         };
 
+        $scope.appUsers = function() {
+          $scope.init();
+
+          $scope.listName = 'appUsers';
+          $scope.userHeaders = [
+            'ID',
+            'Username',
+            'Email',
+            'Firstname',
+            'LastName',
+            'No of Groups'
+          ];
+
+          $scope.query.order = 'name.first';
+          $scope.getAppUsers($scope.query);
+        };
+
+
+        $scope.onPaginateappUsers = function(page, limit) {
+          $scope.selected = [];
+          $scope.getGroups(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
+        };
+
 
         $scope.refreshTable = function() {
           $scope.selected = [];
           if ($scope.listName === 'users') {
-            $scope.userList();
+            $scope.getGroupUsers($scope.query);
           } else if ($scope.listName === 'docs') {
-            $scope.docList();
+            $scope.getDocs($scope.query);
           } else if ($scope.listName === 'roles') {
-            $scope.roleList();
-          } else if ($scope.listName === 'adminUsers') {
-            $scope.appUsers();
+            $scope.getRoles($scope.query);
+          } else if ($scope.listName === 'appUsers') {
+            $scope.getAppUsers($scope.query);
+          } else if ($scope.listName === 'groups') {
+            $scope.getGroups($scope.query);
           }
         };
 

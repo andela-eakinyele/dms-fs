@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  describe('AdminListCtrl tests', function() {
+  describe('AdminTableCtrl tests', function() {
 
     var scope,
       Roles = {
@@ -181,7 +181,7 @@
     beforeEach(inject(function($injector) {
       var $controller = $injector.get('$controller');
       scope = $injector.get('$rootScope');
-      controller = $controller('AdminListCtrl', {
+      controller = $controller('AdminTableCtrl', {
         $scope: scope,
         Docs: Docs,
         Roles: Roles,

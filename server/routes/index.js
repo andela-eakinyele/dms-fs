@@ -29,10 +29,15 @@
   // Routes that can be accessed only by authenticated users
   router.all('/*', validate.authenticate);
 
+
   router.get('/users', userRoute.all);
+  router.get('/usercount', userRoute.count);
+
   router.route('/users/:id')
     .get(userRoute.get)
     .put(userRoute.update);
+
+  router.get('/groupcount', groupRoute.count);
 
   router.route('/groups')
     .get(groupRoute.all)
@@ -45,6 +50,8 @@
   router.post('/documents/bulkdelete', docRoute.bulkDelete);
   router.post('/documents/bulkview', docRoute.bulkView);
 
+  router.get('/documentcount', docRoute.count);
+
   router.route('/documents')
     .get(docRoute.all)
     .post(docRoute.create);
@@ -56,8 +63,10 @@
     .get(roleRoute.get);
 
   router.get('/roles/:id/documents', roleRoute.getDocsByRole);
+  router.get('/roles/:id/documents/count', roleRoute.getDocsByRoleCount);
 
   router.get('/users/:id/documents', docRoute.getDocsById);
+  router.get('/users/:id/documents/count', docRoute.getDocsByIdCount);
 
   // Routes that require owner/access validation
   router.route('/documents/:id')
@@ -72,7 +81,10 @@
   // Routes that can be accessed only by authenticated and authorized users
   router.all('/*', validate.authorize);
 
+  router.get('/rolecount', roleRoute.count);
+
   router.post('/roles', roleRoute.bulkCreate);
+
 
   router.route('/roles/:id')
     .put(roleRoute.update)

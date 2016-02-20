@@ -2,11 +2,13 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Roles', ['$resource',
-      function roleFactory($resource) {
-        return $resource('/api/roles/:id', {
+    .factory('Roles', ['$resource', '$http',
+      function roleFactory($resource, $http) {
+        var obj = $resource('/api/roles/:id', {
           id: '@id',
-          groupid: '@groupid'
+          groupid: '@groupid',
+          page: '@page',
+          limit: '@limit'
         }, {
           update: {
             // this method issues a PUT request
@@ -15,6 +17,19 @@
         }, {
           stripTrailingSlashes: false
         });
+
+        obj.count = function(cb) {
+          return $http.get('/api/rolecount')
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              console.log(err);
+              cb(err, null);
+            });
+        };
+
+        return obj;
+
 
       }
     ]);

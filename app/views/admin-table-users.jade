@@ -3,6 +3,9 @@ md-content(layout ="column" flex="100" layout-margin ng-init="userList()")
   md-toolbar.table
     .md-toolbar-tools.sectionTitle(layout="row")
       span(flex)  List of Users {{userErr}}
+      md-input-container.md-block(md-no-float)
+        label(for="search")
+        input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
       md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
         md-icon(md-font-set="fa fa-refresh fa-2x") 
         span Refresh
@@ -14,13 +17,13 @@ md-content(layout ="column" flex="100" layout-margin ng-init="userList()")
           tr.headerSection.md-row
             th.md-column(md-order-by="nameToLower" ng-repeat="header in userHeaders") {{header}}
         tbody.md-body
-          tr.md-row(md-auto-select ng-repeat="user in users track by $index")
+          tr.md-row(md-auto-select ng-repeat="user in users | orderBy: query.order | filter : search track by $index")
             td.md-cell {{user.username}}
             td.md-cell {{user.email}}
             td.md-cell {{user.name.first}}
             td.md-cell {{user.name.last}}
             td.md-cell {{user.Role}}
-    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.count}}" md-on-paginate="onPaginate" md-page-select)
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateUsers" md-page-select)
 
 
       
