@@ -21,7 +21,11 @@
 
   var validateDB = function(username, password, cb) {
     var query = {
-      'username': username
+      $or: [{
+        'username': username,
+      }, {
+        'email': username
+      }]
     };
     userFunc.retrieveData(query).then(function(result) {
       if (result) {

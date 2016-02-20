@@ -5,6 +5,7 @@ test:
   override:
     - gulp build
     - npm test
+    - CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN codeclimate-test-reporter< coverage/fend/report-lcov/lcov.info
 dependencies:
   cache_directories:
     - "node_modules"
@@ -15,3 +16,13 @@ dependencies:
     - npm install gulp -g
     - npm install mocha -g
     - npm install codeclimate-test-reporter -g
+
+deployment:
+  production:
+    branch: master
+    heroku:
+      appname: prodocs
+  staging:
+    branch: dev-fullstack
+    heroku:
+      appname: prodocs-develop

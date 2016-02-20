@@ -1,0 +1,30 @@
+md-content(layout ="column" flex="100" layout-margin ng-init="groupList()")
+
+  md-toolbar.table
+    .md-toolbar-tools.sectionTitle(layout="row")
+      span(flex)  List of Groups {{groupErr}}
+      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+        md-icon(md-font-set="fa fa-refresh fa-2x") 
+        span Refresh
+
+  md-content.listDocs(layout="column" layout-margin)
+    md-table-container
+      table.md-table(md-row-select="true" md-progress="promise")
+        thead.md-head(md-order="query.order")
+          tr.headerSection.md-row
+            th.md-column(md-order-by="nameToLower" ng-repeat="header in groupHeaders") {{header}}
+        tbody.md-body
+          tr.md-row(md-auto-select ng-repeat="group in groups track by $index")
+            td.md-cell {{$index + 1}}
+            td.md-cell {{group._id}}
+            td.md-cell {{group.title}}
+            td.md-cell {{group.description}}
+            td.md-cell {{group.description}}
+            td.md-cell {{group.description}}
+            td.md-cell {{group.description}}
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{groups.length}}" md-on-paginate="onPaginate" md-page-select)
+
+md-content(layout ="column" flex="100" layout-margin ui-view="inner")
+
+
+      

@@ -28,7 +28,7 @@
           userFunc.retrieveData(query).then(function(user) {
             if (user) {
               var groupid = req.headers.groupid !== 'undefined' ?
-                req.headers.groupid : '';
+                req.headers.groupid : user.groupId[0]._id;
               res.json({
                 data: auth.getToken(user),
                 group: groupid
@@ -56,7 +56,7 @@
       res.status(400).json({
         'status': 400,
         'message': 'Invalid Token or Key',
-        'error': 'Invalid token'
+        'error': 'Invalid Token'
       });
       return;
     }

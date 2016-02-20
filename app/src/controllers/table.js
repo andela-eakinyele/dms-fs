@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('tableCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
+    .controller('TableCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
       'Docs', 'Utils',
       function($rootScope, $scope, $state, $stateParams, Docs, Utils) {
 
@@ -11,22 +11,28 @@
         };
 
         $scope.getDocs = function() {
+
+          // get document by user id
           if (/mydocs/.test($state.current.name)) {
             Docs.getUserDocs($stateParams.id, function(err, res) {
               if (err) {
-                console.log('Error retrieving docs for users');
+                Utils.showAlert(null, 'Error retrieving user documents');
               } else {
                 $scope.docs = res;
               }
             });
+
+            // get shared documents
           } else if (/shared/.test($state.current.name)) {
-            Docs.getRoleDocs($state.params.roleid, function(err, res) {
+            Docs.getRoleDocs($stateParams.roleid, function(err, res) {
               if (err) {
-                console.log('Error retrieving Shared Docs');
+                Utils.showAlert(null, 'Error retrieving shared documents');
               } else {
                 $scope.docs = res;
               }
             });
+
+            // get all douments in group
           } else {
             $scope.docs = Docs.query();
           }
@@ -64,7 +70,8 @@
           $mdOpenMenu(ev);
         };
 
-        // Update edit/delete docs array
+        // Toggling Selection
+        // Update selection  array
         $scope.toggle = function(item, list) {
           var role = list.indexOf(item);
           if (role > -1) {
@@ -74,51 +81,87 @@
           }
         };
 
+        // toggle select all items
+        $scope.selectAll = function(items) {
+          if ($scope.selectedDocs.length > 0) {
+            $scope.selectedDocs = [];
+          } else {
+            $scope.selectedDocs = window._.map(items, '_id');
+          }
+        };
+
+        // check item selection state
+        $scope.isSelected = function(id, list) {
+          return list.indexOf(id) > -1;
+        };
+
+        // check select all state
+        $scope.all = function(items) {
+          if ($scope.selectedDocs) {
+            return $scope.selectedDocs.length === window._
+              .map(items, '_id').length;
+          } else {
+            return false;
+          }
+        };
+
         // Menu button action
-        $scope.menuAction = function(ev, id) {
+        $scope.menuAction = function(ev, id, evt) {
           if (ev === 'edit') {
             $state.go('dashboard.doc.edit', {
               docId: id
             });
           }
           if (ev === 'delete') {
-            Docs.delete({
-              id: id
-            }, function() {
-              Utils.showAlert(ev, 'Delete Action', 'Document' +
-                'successfully deleted');
-              $state.reload();
-
-            });
+            Utils.showConfirm(evt, 'Delete', 'Document will be deleted',
+              'Delete',
+              function() {
+                Docs.delete({
+                  id: id
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Document ' +
+                    'successfully deleted');
+                  $state.go('dashboard.list.mydocs', {
+                    id: $stateParams._id,
+                    groupid: $stateParams.groupid
+                  });
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                    'deleting document');
+                });
+              });
           }
         };
 
-        $scope.headers = [{
-          name: 'Label',
-          field: 'label'
-        }, {
-          name: 'Title',
-          field: 'title'
-        }, {
-          name: 'Owner',
-          field: 'ownerId'
-        }, {
-          name: 'Date Created',
-          field: 'lastModified'
-        }, {
-          name: 'Last Modified',
-          field: 'lastModified'
-        }, {
-          name: 'Shared',
-          field: 'shared'
-        }, {
-          name: '',
-          field: 'buttons '
-        }];
+        $scope.refreshTable = function() {
+          $scope.getDocs();
+          $scope.selectedDocs = [];
+        };
+
+        $scope.viewSelection = function() {
+          Docs.bulkview($scope.selectedDocs, function() {
+            $scope.selectedDocs = [];
+          });
+        };
+
+        $scope.deleteSelection = function() {
+          Docs.bulkdelete($scope.selectedDocs, function() {
+            $scope.selectedDocs = [];
+          });
+        };
+
+        $scope.headers = [
+          'Label',
+          'Title',
+          'Owner',
+          'Date Created',
+          'Last Modified',
+          'Shared',
+          '',
+        ];
 
         $scope.init();
 
       }
-
     ]);
 })();

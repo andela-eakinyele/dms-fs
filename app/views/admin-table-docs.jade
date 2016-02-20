@@ -1,0 +1,57 @@
+md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
+
+  md-toolbar.table
+    .md-toolbar-tools.sectionTitle(layout="row")
+      span(flex)  List of Documents {{docErr}}
+      div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
+        md-button(ui-sref="dashboard.new")
+          md-icon(md-font-set="fa fa-file-text-o fa-2x") 
+          span New Doc
+          md-tooltip New Doc
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+          md-icon(md-font-set="fa fa-refresh fa-2x") 
+          span Refresh
+
+
+  md-toolbar.table.alternate(ng-if="selected.length > 0")
+    .md-toolbar-tools.sectionTitle(layout="row")
+      span(flex) {{selected.length}} Selected
+      md-button.md-warn.md-raised(aria-label="Delete Selected" ng-disabled="listName==\"users\" && superAdmin.length < 0" ng-click="deleteSelection()")
+        md-icon(md-font-set="fa fa-trash fa-2x") 
+        span Delete
+
+  md-content.listDocs(layout="column" layout-margin)
+    md-table-container
+      table.md-table(md-row-select="true" md-progress="promise")
+        thead.md-head(md-order="query.order")
+          tr.headerSection.md-row
+            th.md-column No
+            th.md-column(md-order-by="nameToLower" ng-repeat="header in docHeaders") {{header}}
+        tbody.md-body
+          tr.md-row(md-auto-select ng-repeat="doc in docs track by $index")
+            td.md-cell {{$index + 1}}
+            td.md-cell {{doc.label}}
+            td.md-cell {{doc.title}}
+            td.md-cell {{doc.Owner}}
+            td.md-cell {{getDate(doc.dateCreated).day}}
+            td.md-cell
+              md-menu
+                  md-button(aria-label="doc options" ng-click="openMenu($mdOpenMenu, $event)")
+                    md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
+                  md-menu-content(width="1")
+                    md-menu-item
+                      md-button.md-primary(aria-label="Edit doc" ng-click="menuAction(\"edit\", doc._id, $index, $event)")
+                        md-icon(md-font-set="fa fa-pencil-square-o fa-2x" md-menu-align-target) 
+                        span Edit doc
+                    md-menu-item(ng-if="!editDoc(doc)" )
+                      md-button.md-primary(aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
+                        md-icon(md-font-set="fa fa-external-link fa-2x" md-menu-align-target) 
+                        span View doc
+                    md-menu-item
+                      md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $index, $event)")
+                        md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
+                        span Delete
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.length}}" md-on-paginate="onPaginate" md-page-select)
+
+
+      

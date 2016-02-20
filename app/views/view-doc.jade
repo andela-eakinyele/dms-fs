@@ -12,12 +12,11 @@ md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="colu
             md-tooltip(md-direction="top" md-visible="tooltipVisible") Options
             md-icon(md-font-set="fa fa-ellipsis-v fa-2x")
         md-fab-actions
-          md-button.md-primary(aria-label="edit doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"edit\")")
+          md-button.md-primary(aria-label="edit doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"edit\", $event)")
             md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
-          md-button.md-primary(aria-label="delete doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"delete\")")
+          md-button.md-primary(aria-label="delete doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"delete\", $event)")
             md-icon(md-font-set="fa fa-trash fa-2x")
-  div.contentView
-    | {{doc.content}}
+  div(ng-bind-html="doc.content")
   md-divider
   div
     span {{doc.label}} - {{getDate(doc.dateCreated).day}} by {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}

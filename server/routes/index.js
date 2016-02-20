@@ -42,6 +42,9 @@
     .put(validate.joinGroup, groupRoute.update)
     .get(groupRoute.get);
 
+  router.post('/documents/bulkdelete', docRoute.bulkDelete);
+  router.post('/documents/bulkview', docRoute.bulkView);
+
   router.route('/documents')
     .get(docRoute.all)
     .post(docRoute.create);
@@ -70,7 +73,6 @@
   router.all('/*', validate.authorize);
 
   router.post('/roles', roleRoute.bulkCreate);
-  router.post('/roles/delete', roleRoute.bulkDelete);
 
   router.route('/roles/:id')
     .put(roleRoute.update)

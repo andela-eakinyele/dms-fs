@@ -33,6 +33,24 @@
             });
         };
 
+        obj.bulkdelete = function(data, cb) {
+          return $http.post('/api/documents/bulkdelete', data)
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.bulkview = function(data, cb) {
+          return $http.post('/api/documents/bulkview', data)
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
         return obj;
       }
     ]);

@@ -1,0 +1,26 @@
+md-content(layout ="column" flex="100" layout-margin ng-init="userList()")
+
+  md-toolbar.table
+    .md-toolbar-tools.sectionTitle(layout="row")
+      span(flex)  List of Users {{userErr}}
+      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+        md-icon(md-font-set="fa fa-refresh fa-2x") 
+        span Refresh
+
+  md-content.listDocs(layout="column" layout-margin)
+    md-table-container
+      table.md-table(md-row-select="true" md-progress="promise")
+        thead.md-head(md-order="query.order")
+          tr.headerSection.md-row
+            th.md-column(md-order-by="nameToLower" ng-repeat="header in userHeaders") {{header}}
+        tbody.md-body
+          tr.md-row(md-auto-select ng-repeat="user in users track by $index")
+            td.md-cell {{user.username}}
+            td.md-cell {{user.email}}
+            td.md-cell {{user.name.first}}
+            td.md-cell {{user.name.last}}
+            td.md-cell {{user.Role}}
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.count}}" md-on-paginate="onPaginate" md-page-select)
+
+
+      

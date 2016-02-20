@@ -157,7 +157,7 @@
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response.title, 'Librarian');
+            assert.equal(response.success, true);
             done();
           });
       });

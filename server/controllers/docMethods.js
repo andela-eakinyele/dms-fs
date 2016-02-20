@@ -175,6 +175,7 @@
             var query = Doc.findByIdAndRemove(req.params.id);
             cm.gDelete('Documents', query, req.params.id)
               .then(function(result) {
+
                 res.status(result.status).json(result.data);
               }).catch(function(err) {
                 res.status(err.status).json(err.error);
@@ -189,9 +190,34 @@
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });
+    },
 
+    bulkDelete: function(req, res) {
+      if (req.body.length > 0) {
+        Doc.remove({}).where('_id')
+          .in(req.body)
+          .then(function(result) {
+            res.status(200).json(result);
+          }, function(err) {
+            res.status(500).json(err);
+          });
+      }
+    },
+
+
+    bulkView: function(req, res) {
+      if (req.body.length > 0) {
+        Doc.find({}).where('_id')
+          .in(req.body)
+          .then(function(result) {
+            res.status(200).json(result);
+          }, function(err) {
+            res.status(500).json(err);
+          });
+      }
     }
   };
+
 
   module.exports = docFunctions;
 })();

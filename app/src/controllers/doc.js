@@ -2,15 +2,21 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('DocCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
-      'Utils', 'Docs', 'Roles',
+      '$timeout', 'Utils', 'Docs', 'Roles',
       function($rootScope, $scope, $state, $stateParams,
-        Utils, Docs, Roles) {
+        $timeout, Utils, Docs, Roles) {
 
         $scope.init = function() {
           $scope.newDoc = {};
           $scope.newDoc.roles = [];
-          $scope.roles = Roles.query({
+          Roles.query({
             groupid: $stateParams.groupid
+          }, function(roles) {
+            $scope.roles = roles;
+          }, function() {
+            Utils.showAlert(null, 'Error',
+              'Document data could not be retrieved' +
+              '\n Please reload page');
           });
         };
 
@@ -19,10 +25,30 @@
             id: $stateParams.docId
           }, function(res) {
             $scope.doc = res;
-          }, function(err) {
-            console.log(err);
-            console.log('Error retrieving docs');
+          }, function() {
+            Utils.showAlert(null, 'Error',
+              'Document could not be retrieved');
           });
+        };
+
+
+        $scope.tinymceOptions = {
+          trusted: true,
+          resize: false,
+          width: '100%',
+          min_height: 500,
+          plugins: 'textcolor lists autolink link image spellchecker advlist',
+          toolbar: 'undo redo styleselect bold italic fontsizeselect' +
+            ' forecolor backcolor paste wordcount spellchecker' +
+            'alignleft aligncenter alignright',
+          fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+          menubar: 'file edit insert view format table tools',
+          advlist_bullet_styles: 'square',
+          font_formats: 'Arial=arial,helvetica,sans-serif;' +
+            ' Courier New=courier new,courier,monospace;' +
+            'Robot, Verdana',
+          elements: 'elm1',
+          theme: 'modern'
         };
 
         // save a new document

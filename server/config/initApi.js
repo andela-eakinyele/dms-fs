@@ -13,6 +13,18 @@
       users: [100]
     };
 
+    var dummyUser = {
+      name: {
+        first: 'Dummy',
+        last: 'Dummy'
+      },
+      email: 'dummy@dummy.com',
+      password: bcrypt.hashSync('ImpossibleYouAreMyFriend'),
+      roles: [],
+      _id: 101,
+      username: 'Dummy'
+    };
+
     var password = bcrypt.hashSync(process.env.ADMIN_PASSWORD);
     var superAdmin = {
       username: process.env.ADMIN_USERNAME,
@@ -25,10 +37,15 @@
       roles: [1]
     };
 
-    function createAdmin() {
+    function createAdminDummy() {
       Role.create(superRole).then(function() {
         User.create(superAdmin).then(function() {
-          console.log('Server Initialized');
+          User.create(dummyUser).then(function() {
+            console.log('Server Initialized');
+          }, function(err) {
+            console.log('Error Initializing Server', err);
+            process.exit(1);
+          });
         }, function(err) {
           console.log('Error Initializing Server', err);
           process.exit(1);
@@ -48,7 +65,7 @@
       if (role && role.users[0].username === process.env.ADMIN_USERNAME) {
         console.log('Server Initialized');
       } else {
-        createAdmin();
+        createAdminDummy();
       }
     }, function(err) {
       console.log('Error Initializing Server', err);

@@ -2,7 +2,10 @@ div.group(layout="column" layout-padding)
   span.md-warn {{groupErr}}
 
   
-  md-checkbox(ng-model="newgroup" aria-label="New Group" ng-change="toggle()") New Group
+  div(layout="row" layout-margin)
+    md-checkbox(ng-model="newgroup" aria-label="New Group" ng-change="toggle()") New Group
+    md-checkbox(ng-model="joingroup" aria-label="Join Group" ng-change="toggle()") Join a Group
+
   fieldset(ng-show="newgroup")
     legend Fill the fields
     form(name="newGroup" method="post" autocomplete="off")
@@ -24,7 +27,6 @@ div.group(layout="column" layout-padding)
             div(ng-message="required") Passphrase is required
 
 
-  md-checkbox(ng-model="joingroup" aria-label="Join Group" ng-change="toggle()") Join a Group
   fieldset(ng-show="joingroup")
     legend Select a Group and Role
     form(name="groupForm" method="post" autocomplete="off")
@@ -36,7 +38,7 @@ div.group(layout="column" layout-padding)
         md-input-container(flex="40")
           label(for="role") Role
           md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
-            md-option(ng-value="role" ng-repeat="role in roles") {{role.title}}
+            md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
       md-input-container.md-block
         label(for="passphrase") Enter group passphrase
         input(type="text" name="passphrase" ng-model="signform.passphrase" required ng-disabled="newgroup")

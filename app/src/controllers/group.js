@@ -37,18 +37,21 @@
           Groups.save($scope.pform, function(group) {
             $scope.groupErr = 'Group saved';
             $rootScope.activeGroup = group._id;
-            Users.get({ id: $stateParams.id }, function(user) {
+
+            Users.get({
+                id: $stateParams.id
+              }, function(user) {
                 $rootScope.activeUser = user;
-                $state.go('dashboard.admin.docs', {
+                $state.go('dashboard.admin.role', {
                   id: $stateParams.id,
                   groupid: group._id
                 });
               },
               function() {
-                $scope.groupErr = 'Error creating new Group';
+                $scope.groupErr = 'Error Updating User';
               });
           }, function() {
-            $scope.groupErr = 'Error retrieving user';
+            $scope.groupErr = 'The Title has been used already';
           });
         };
 
@@ -92,7 +95,6 @@
                 Users.update({
                   id: _userid
                 }, userUpdate, function(user) {
-                  console.log(user);
                   $scope.groupErr = 'Successfully added to group';
                   $rootScope.activeUser = user;
                   $rootScope.activeGroup = user.groupId[0]._id;
@@ -108,7 +110,6 @@
               });
             },
             function(err) {
-              console.log(err);
               if (err.status === 403) {
                 $scope.groupErr = 'Invalid Passphrase';
               } else {

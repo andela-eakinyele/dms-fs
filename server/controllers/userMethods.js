@@ -1,9 +1,13 @@
 (function() {
   'use strict';
 
+  var Role = require('./../models/role');
+  var Doc = require('./../models/document');
   var User = require('./../models/user');
+  var Group = require('./../models/group');
   var cm = require('./helpers'); // common methods
   var _ = require('lodash');
+  var _async = require('async');
   var bcrypt = require('bcrypt-nodejs');
 
 
@@ -29,6 +33,114 @@
     });
   }
 
+
+  var cascadeDelete = function(id, cb) {
+    _async.waterfall([
+      // find all groups with user
+      function(done) {
+        Group.find()
+          .where('users').in([id])
+          .then(function(groups) {
+            var groupIds = _.map(groups, '_id');
+            var data = _.map(groups, function(group) {
+              var pos = group.users.indexOf(id);
+              group.users.splice(pos, 1);
+              return {
+                users: group.users
+              };
+            });
+            done(null, data, groupIds);
+          }, function(err) {
+            done(err, null);
+          });
+      },
+
+      // update users for all groups
+      function(data, groupIds, done) {
+        _async.forEachOf(groupIds, function(id, index, cb) {
+          User.findByIdAndUpdate(id, data[index], {
+            new: true
+          }).then(function() {
+            cb(null, true);
+          }, function(err) {
+            cb(err, null);
+          });
+        }, function(err) {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null);
+          }
+        });
+      },
+
+      // find all roles with user
+      function(done) {
+        Role.find()
+          .where('users').in([id])
+          .then(function(roles) {
+            var roleIds = _.map(roles, '_id');
+            var data = _.map(roles, function(role) {
+              var pos = role.users.indexOf(id);
+              role.users.splice(pos, 1);
+              return {
+                users: role.users
+              };
+            });
+            done(null, data, roleIds);
+          }, function(err) {
+            done(err, null);
+          });
+      },
+
+      // update roles for all documents
+      function(data, roleIds, done) {
+        _async.forEachOf(roleIds, function(id, index, cb) {
+          Role.findByIdAndUpdate(id, data[index], {
+            new: true
+          }).then(function() {
+            cb(null, true);
+          }, function(err) {
+            cb(err, null);
+          });
+        }, function(err) {
+          if (err) {
+            done(err, null);
+          } else {
+            done(null, {
+              success: true
+            });
+          }
+        });
+      }
+    ], function(err) {
+      if (err) {
+        cb(err, null);
+      } else {
+
+        // assign dummy owner to user documents
+        Doc.collection.update({
+          ownerId: {
+            $in: [id]
+          }
+        }, {
+          $set: {
+            ownerId: [101]
+          }
+        }, {
+          multi: true
+        }, function(err) {
+          if (err) {
+            cb(err, null);
+          } else {
+            cb(null, {
+              success: true
+            });
+          }
+        });
+      }
+    });
+  };
 
   var userFunctions = {
     create: function(req, res) {
@@ -56,10 +168,19 @@
     },
 
     get: function(req, res) {
-      var query = User.findOne({
-          _id: req.params.id,
-          groupId: req.headers.groupid || req.query.groupid
-        })
+      var groupid = req.headers.groupid || req.query.groupid;
+      var params = {
+          _id: req.params.id
+        },
+        groupId, query;
+
+      var _query = User.findOne(params);
+
+      if (!isNaN(parseInt(groupid))) {
+        groupId = [parseInt(groupid)];
+        _query = _query.where('groupId').in(groupId);
+      }
+      query = _query
         .select('username email roles name groupId')
         .populate({
           path: 'roles',
@@ -73,7 +194,6 @@
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
-          console.log(err);
           res.status(err.status).json(err.error);
         });
     },
@@ -111,9 +231,15 @@
     },
 
     all: function(req, res) {
-      var query = User.find({
-          groupId: req.headers.groupid
-        })
+
+      var groupid = req.headers.groupid || req.query.groupid;
+      var params = {};
+
+      if (!isNaN(parseInt(groupid))) {
+        params.groupId = [parseInt(groupid)];
+      }
+
+      var query = User.find(params)
         .select('username email roles name')
         .populate({
           path: 'roles',
@@ -133,8 +259,14 @@
     delete: function(req, res) {
       var query = User.findByIdAndRemove(req.params.id);
       cm.gDelete('Users', query, req.params.id)
-        .then(function(result) {
-          res.status(result.status).json(result.data);
+        .then(function() {
+          cascadeDelete(parseInt(req.params.id), function(err, result) {
+            if (err) {
+              res.status(err.status).json(err);
+            } else {
+              res.status(200).json(result);
+            }
+          });
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
