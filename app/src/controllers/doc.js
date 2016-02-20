@@ -9,8 +9,14 @@
         $scope.init = function() {
           $scope.newDoc = {};
           $scope.newDoc.roles = [];
-          $scope.roles = Roles.query({
+          Roles.query({
             groupid: $stateParams.groupid
+          }, function(roles) {
+            $scope.roles = roles;
+          }, function() {
+            Utils.showAlert(null, 'Error',
+              'Document data could not be retrieved' +
+              '\n Please reload page');
           });
         };
 
@@ -18,10 +24,9 @@
           Docs.get({
             id: $stateParams.docId
           }, function(res) {
-            // res.content = $sce.trustAsHtml(res.content);
             $scope.doc = res;
           }, function() {
-            Utils.showAlert(null, 'View Document',
+            Utils.showAlert(null, 'Error',
               'Document could not be retrieved');
           });
         };
@@ -42,6 +47,7 @@
           font_formats: 'Arial=arial,helvetica,sans-serif;' +
             ' Courier New=courier new,courier,monospace;' +
             'Robot, Verdana',
+          elements: 'elm1',
           theme: 'modern'
         };
 

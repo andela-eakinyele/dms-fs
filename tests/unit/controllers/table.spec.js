@@ -157,6 +157,12 @@ describe('TableCtrl tests', function() {
     state = $injector.get('$state');
     Utils = $injector.get('Utils');
     stateParams = $injector.get('$stateParams');
+
+    Utils.showConfirm = function(evt, title, action, msg, cb) {
+      if (title === 'Delete') {
+        return cb();
+      }
+    };
   }));
 
 
@@ -299,6 +305,7 @@ describe('TableCtrl tests', function() {
     scope.menuAction('delete', 1);
     expect(Docs.delete).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
+    expect(Utils.showConfirm).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
   });
 

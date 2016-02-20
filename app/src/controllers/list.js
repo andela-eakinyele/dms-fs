@@ -200,7 +200,6 @@
                   id: id
                 }, function() {
                   $scope.roles.splice(index, 1);
-                  console.log($scope.roles);
                   Utils.showAlert(evt, 'Delete Action', 'Role ' +
                     'successfully deleted');
                 }, function() {

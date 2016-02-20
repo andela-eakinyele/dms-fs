@@ -71,6 +71,11 @@ describe('ViewDocCtrl tests', function() {
     stateParams = $injector.get('$stateParams');
     Utils = $injector.get('Utils');
     timeout = $injector.get('$timeout');
+    Utils.showConfirm = function(evt, title, action, msg, cb) {
+      if (title === 'Delete') {
+        return cb();
+      }
+    };
     httpBackend = $injector.get('$httpBackend');
     httpBackend
       .whenGET('views/dashboard.html')
@@ -91,39 +96,61 @@ describe('ViewDocCtrl tests', function() {
       }]);
 
     httpBackend
-      .whenGET('/api/session')
+      .whenGET('views/update.html')
       .respond(200, [{
         res: 'res'
       }]);
+
+    httpBackend
+      .whenGET('/api/session')
+      .respond(400, {
+        data: {
+          message: 'User does not exist'
+        }
+      });
+
+    httpBackend
+      .whenGET('views/home.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
+
   }));
 
-  it('should initialize the controller and return a doc', function() {
-    spyOn(Docs, 'get').and.callThrough();
-    stateParams.docId = 1;
-    scope.init();
-    expect(Docs.get).toHaveBeenCalled();
-    expect(scope.doc).toBeDefined();
-  });
 
-  it('should initialize the controller and return an error', function() {
-    spyOn(Docs, 'get').and.callThrough();
-    spyOn(state, 'go');
-    spyOn(Utils, 'showAlert').and.callThrough();
-    scope.init();
-    expect(Docs.get).toHaveBeenCalled();
-    expect(scope.doc).not.toBeDefined();
-    expect(Utils.showAlert).toHaveBeenCalled();
-    expect(state.go).toHaveBeenCalled();
-  });
+  describe('Initializing the controller', function() {
+    beforeEach(function() {
+      scope.$digest();
+    });
+    it('should initialize the controller and return a doc', function() {
+      spyOn(Docs, 'get').and.callThrough();
+      stateParams.docId = 1;
+      scope.init();
+      expect(Docs.get).toHaveBeenCalled();
+      expect(scope.doc).toBeDefined();
+    });
 
-  // it('should watch fabisOpen scope variable', function() {
-  //   stateParams.docId = 1;
-  //   scope.init();
-  //   scope.$digest();
-  //   scope.fabisOpen = true;
-  //   scope.$digest();
-  //   expect(scope.tooltipVisible).toBeTruthy();
-  // });
+    it('should initialize the controller and return an error', function() {
+      spyOn(Docs, 'get').and.callThrough();
+      spyOn(state, 'go');
+      spyOn(Utils, 'showAlert').and.callThrough();
+      scope.init();
+      expect(Docs.get).toHaveBeenCalled();
+      expect(scope.doc).not.toBeDefined();
+      expect(Utils.showAlert).toHaveBeenCalled();
+      expect(state.go).toHaveBeenCalled();
+    });
+
+    it('should watch fabisOpen scope variable', function() {
+      scope.fabisOpen = false
+      scope.$digest();
+      scope.fabisOpen = true;
+      scope.$digest();
+      expect(scope.tooltipVisible).toBeTruthy();
+    });
+
+  });
 
   it('should return parse time', function() {
     spyOn(Utils, 'parseDate').and.callThrough();
@@ -162,12 +189,14 @@ describe('ViewDocCtrl tests', function() {
   });
 
   it('should activate menu action and delete a file', function() {
+    spyOn(Utils, 'showConfirm').and.callThrough();
     spyOn(Docs, 'delete').and.callThrough();
     spyOn(Utils, 'showAlert').and.callThrough();
     spyOn(state, 'go');
     stateParams.docId = 1;
     scope.menuAction('delete');
     expect(Docs.delete).toHaveBeenCalled();
+    expect(Utils.showConfirm).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
   });

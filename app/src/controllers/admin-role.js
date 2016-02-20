@@ -8,7 +8,6 @@
         $scope.num = 0;
         $scope.newRoles = [];
 
-
         $scope.range = function(num) {
           return new Array(num);
         };
@@ -29,17 +28,21 @@
 
         $scope.create = function(ev) {
           var gId = parseInt($stateParams.groupid);
+
           $scope.newRoles = window._.map($scope.newRoles,
             function(role) {
               return role.trim();
             });
+
           $scope.saveRoles = $scope.newRoles.map(function(a) {
             return {
               title: a,
               groupId: [gId]
             };
           });
+
           $scope.newRoles = [];
+
           Roles.save($scope.saveRoles, function() {
             $scope.cancelAdd();
             $state.go('dashboard.admin.role', {

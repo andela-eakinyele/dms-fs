@@ -15,7 +15,6 @@
         });
 
         // $scope.features = Utils.fetch('data/features.json');
-        // console.log($scope.features);
         $scope.features = [{
           'title': 'Sign Up, It\'s Free',
           'content': 'Sign up for a free account, \n' +

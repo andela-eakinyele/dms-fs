@@ -135,11 +135,8 @@
         };
 
         $scope.viewSelection = function() {
-          console.log($scope.selectedDocs);
-
           Docs.bulkview($scope.selectedDocs, function(err, res) {
             $scope.selectedDocs = [];
-            console.log(res, err);
           });
         };
 

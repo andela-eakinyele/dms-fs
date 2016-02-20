@@ -18,7 +18,6 @@
               password: $scope.signform.password
             }, function(err, res) {
               if (err) {
-                console.log(err);
                 $scope.signupErr = 'Error Logging you In';
               } else {
                 Utils.showAlert(null, 'Logged In', 'You are Logged in, ' +
@@ -26,7 +25,7 @@
                 Auth.setToken(JSON.stringify(res.data), '');
                 $rootScope.activeUser = res.data.user;
 
-                $state.go('home.group', {
+                $state.go('dashboard.group', {
                   id: res.data.user._id
                 });
               }

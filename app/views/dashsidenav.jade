@@ -1,10 +1,11 @@
-md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-md\")")
+md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left" md-is-locked-open="$mdMedia(\"gt-md\")")
   md-toolbar.username
-    div(layout="row" layout-align="center center")
-      h3 {{activeUser.username}}
+    div(layout="column" layout-align="center center")
+      h3.md-headline {{activeUser.username}}
+      h3.md-title ({{userRole[0].title || activeUser.email}})
   md-content(layout="column")
-    div(layout="column" layout-padding ng-if="superAdmin.length > 0")
-      md-button.btn-style.sidehead.md-raised Administrator Menu
+    div(layout-padding ng-if="superAdmin.length > 0")
+      md-button.btn-style.sidehead Administrator Menu
       md-button.btn-style(md-ink-ripple aria-label="superAdmin menu item" ui-sref="dashboard.admin.group") 
         md-icon(md-font-set="fa fa-group")
         span Groups
@@ -14,7 +15,7 @@ md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked
       md-divider
 
     div(layout="column" ng-if="userRole[0].title === \"Admin\"" layout-padding)
-      md-button.btn-style.sidehead.md-raised Group Admin
+      md-button.btn-style.sidehead Group Admin
       md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.doc({groupid: activeGroup})") 
         md-icon(md-font-set="fa fa-long-arrow-right")
         span Documents
@@ -26,11 +27,11 @@ md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked
         span Roles
       md-divider
     div(layout="column" layout-padding)
-      md-button.btn-style.sidehead.md-raised Groups
+      md-button.btn-style.sidehead Groups
       md-checkbox(ng-repeat="group in groups" aria-label="user groups" ng-checked= "isSelected(group._id)" ng-click="toggle(group._id)" ) {{group.title}}
       md-divider
     div(layout="column" layout-padding)
-      md-button.btn-style.sidehead.md-raised(ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list") Documents -All
+      md-button.btn-style.sidehead(ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list") Documents -All
       md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.mydocs") 
         md-icon(md-font-set="fa fa-file-text")
         span My Documents

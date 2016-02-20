@@ -77,15 +77,6 @@
             },
           }
         })
-        .state('home.group', {
-          url: 'users/:id/group',
-          views: {
-            'nextView@home': {
-              templateUrl: 'views/group.html',
-              controller: 'GroupCtrl'
-            }
-          }
-        })
         .state('home.adduser', {
           url: 'signup',
           views: {
@@ -110,14 +101,6 @@
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
-              resolve: {
-                'activeUser': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeUser;
-                }],
-                'activeGroup': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeGroup;
-                }]
-              },
               controller: 'DashBoardCtrl'
             },
             'header@dashboard': {
@@ -125,6 +108,19 @@
             },
             'sidenav@dashboard': {
               templateUrl: 'views/dashsidenav.html'
+            },
+            'profile@dashboard': {
+              templateUrl: 'views/update.html',
+              controller: 'UserCtrl'
+            }
+          }
+        })
+        .state('dashboard.group', {
+          url: '^/users/:id/group',
+          views: {
+            'group@dashboard': {
+              templateUrl: 'views/group.html',
+              controller: 'GroupCtrl'
             }
           }
         })
@@ -196,7 +192,7 @@
           abstract: true,
           url: '^/users/:id/dashboard/admin',
           views: {
-            'add@dashboard': {
+            'admin@dashboard': {
               templateUrl: 'views/admin.html'
             },
           }
@@ -266,8 +262,18 @@
 
   ])
 
-  .run(['$rootScope', '$location', '$state', 'Auth', 'Users',
-    function($rootScope, $location, $state, Auth, Users) {
+  .run(['$rootScope', '$location', '$mdSidenav', '$state', 'Auth', 'Users',
+    function($rootScope, $location, $mdSidenav, $state, Auth, Users) {
+
+
+      // side navigation bar control
+      $rootScope.openSideNav = function(dir) {
+        $mdSidenav(dir).toggle();
+      };
+
+      $rootScope.close = function(dir) {
+        $mdSidenav(dir).close();
+      };
 
       // previous state handling
       $rootScope.previousState = {};
@@ -317,7 +323,7 @@
           } else {
             // check if user belongs to a group
             if (!res.group && res.data.user.groupId.length === 0) {
-              $state.go('home.group', {
+              $state.go('dashboard.group', {
                 id: res.data.user._id
               });
 
@@ -332,7 +338,7 @@
         } else {
           if (/Token/.test(err.data.message)) {
             Auth.logout();
-            $state.go('home.features');
+            $state.go('home.login');
           } else if (/User/.test(err.data.message)) {
             Auth.logout();
             $state.go('home.adduser');

@@ -196,18 +196,6 @@ describe('UserCtrl tests', function() {
     expect(Utils.showAlert).toHaveBeenCalled();
   });
 
-  it('should hide dialog forms', function() {
-    spyOn(mdDialog, 'hide').and.callThrough();;
-    scope.hide();
-    expect(mdDialog.hide).toHaveBeenCalled();
-  });
-
-  it('should cancel dialog forms', function() {
-    spyOn(mdDialog, 'cancel').and.callThrough();;
-    scope.cancel();
-    expect(mdDialog.cancel).toHaveBeenCalled();
-  });
-
   it('should update user data', function() {
     spyOn(Users, 'update').and.callThrough();
     spyOn(Utils, 'showAlert').and.callThrough();

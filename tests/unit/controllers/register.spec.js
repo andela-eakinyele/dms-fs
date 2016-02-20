@@ -97,7 +97,7 @@ describe('SignupCtrl tests', function() {
     expect(Auth.setToken).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
 
-    expect(state.go).toHaveBeenCalledWith('home.group', {
+    expect(state.go).toHaveBeenCalledWith('dashboard.group', {
       id: 1
     });
     expect(scope.activeUser).toBeDefined();

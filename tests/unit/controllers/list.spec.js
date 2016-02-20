@@ -192,6 +192,12 @@ describe('AdminListCtrl tests', function() {
     state = $injector.get('$state');
     Utils = $injector.get('Utils');
     stateParams = $injector.get('$stateParams');
+
+    Utils.showConfirm = function(evt, title, action, msg, cb) {
+      if (title === 'Delete') {
+        return cb();
+      }
+    };
   }));
 
   describe('when selecting checkboxes', function() {
@@ -286,10 +292,12 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'docs';
       scope.docs = [1, 2];
       spyOn(Docs, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
-      scope.deleteOne(1, 0);
+      scope.deleteOne(1, 0, 'ev');
       expect(Docs.delete).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(scope.docs.length).toBe(1);
     });
 
@@ -297,10 +305,12 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'docs';
       scope.docs = [1, 2];
       spyOn(Docs, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(false, 0);
       expect(Docs.delete).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(scope.docs.length).toBe(2);
     });
   });
@@ -312,9 +322,11 @@ describe('AdminListCtrl tests', function() {
       scope.roles = [1, 2];
       spyOn(Roles, 'delete').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       scope.deleteOne(1, 0);
       expect(Roles.delete).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(scope.roles.length).toBe(1);
     });
 
@@ -322,9 +334,11 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'roles';
       scope.roles = [1, 2];
       spyOn(Roles, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(false, 0);
       expect(Roles.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(scope.roles.length).toBe(2);
     });
@@ -336,9 +350,11 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'groups';
       scope.groups = [1, 2];
       spyOn(Groups, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(1, 0);
       expect(Groups.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(scope.groups.length).toBe(1);
     });
@@ -347,9 +363,11 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'groups';
       scope.groups = [1, 2];
       spyOn(Groups, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(false, 0);
       expect(Groups.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(scope.groups.length).toBe(2);
     });
@@ -361,9 +379,11 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'adminUsers';
       scope.allUsers = [1, 2];
       spyOn(Users, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(1, 0);
       expect(Users.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(scope.allUsers.length).toBe(1);
     });
@@ -372,9 +392,12 @@ describe('AdminListCtrl tests', function() {
       scope.listName = 'adminUsers';
       scope.allUsers = [1, 2];
       spyOn(Users, 'delete').and.callThrough();
+      spyOn(Utils, 'showConfirm').and.callThrough();
+
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.deleteOne(false, 0);
       expect(Users.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(scope.allUsers.length).toBe(2);
     });

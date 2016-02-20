@@ -110,7 +110,6 @@
               });
             },
             function(err) {
-              console.log(err);
               if (err.status === 403) {
                 $scope.groupErr = 'Invalid Passphrase';
               } else {

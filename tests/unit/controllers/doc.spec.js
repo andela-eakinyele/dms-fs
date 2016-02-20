@@ -5,22 +5,23 @@ describe('DocCtrl tests', function() {
       save: function(data, cb, cbb) {
         (data[0].title !== '') ? cb(data): cbb(false);
       },
-      update: function(id, data, cb, cbb) {
-        (id && data) ? cb(data): cbb(false);
+      update: function(params, data, cb, cbb) {
+        (params.id && data) ? cb(data): cbb(false);
       },
-      get: function(id, cb, cbb) {
-        id ? cb({
+      get: function(params, cb, cbb) {
+        params.id ? cb({
           message: 'I am groot',
           data: [1, 3, 4]
         }) : cbb({
           message: 'error'
         });
       },
-      query: function(id) {
-        return [{
-          message: 'I am groot',
-          data: [1, 3, 4]
-        }];
+      query: function(params, cb, cbb) {
+        return params.groupid ?
+          cb([{
+            message: 'I am groot',
+            data: [1, 3, 4]
+          }]) : cbb('error');
       }
     },
     Docs = {
@@ -35,15 +36,17 @@ describe('DocCtrl tests', function() {
           cbb('error');
         }
       },
-      update: function(id, data, cb, cbb) {
-        if (id && data === 'new') {
+      update: function(params, data, cb, cbb) {
+        if (params.id && data === 'new') {
           cb(data);
-        } else if (id && data === 'old') {
+        } else if (params.id && data === 'old') {
           cbb({
             status: 409
           });
         } else {
-          cbb('error');
+          cbb({
+            status: 409
+          });
         }
       },
       get: function(params, cb, cbb) {
@@ -59,10 +62,17 @@ describe('DocCtrl tests', function() {
         cb(null): cb('error');
       },
       query: function(cb, cbb) {
-        cb([{
-          message: 'I am groot',
-          data: [1, 3, 4]
-        }]);
+        if (cb) {
+          cb([{
+            message: 'I am groot',
+            data: [1, 3, 4]
+          }]);
+        } else {
+          return [{
+            message: 'I am groot',
+            data: [1, 3, 4]
+          }];
+        }
       }
     },
     state,

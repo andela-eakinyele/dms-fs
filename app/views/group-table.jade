@@ -4,14 +4,10 @@ div(layout="column" layout-margin)
     md-toolbar.table
       .md-toolbar-tools.sectionTitle(layout="row")
         span(flex) Group Documents - Access
-        div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
-          md-button(ui-sref="dashboard.new")
-            md-icon(md-font-set="fa fa-file-text-o fa-2x") 
-            span New Doc
-            md-tooltip New Doc
-          md-button.md-accent.md-raised(aria-label="Refresh Table")
-            md-icon(md-font-set="fa fa-refresh fa-2x") 
-            span Refresh
+        
+        md-button.md-accent.md-raised(aria-label="Refresh Table")
+          md-icon(md-font-set="fa fa-refresh fa-2x") 
+          span Refresh
 
 
 

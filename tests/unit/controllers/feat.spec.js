@@ -2,6 +2,8 @@ describe('FeatCtrl tests', function() {
   'use strict';
   var scope,
     state,
+    mdMedia,
+    httpBackend,
     controller;
 
   beforeEach(function() {
@@ -16,6 +18,20 @@ describe('FeatCtrl tests', function() {
       $scope: scope
     });
     state = $injector.get('$state');
+    mdMedia = $injector.get('$mdMedia');
+
+    httpBackend = $injector.get('$httpBackend');
+    httpBackend
+      .whenGET('/api/session')
+      .respond(200, [{
+        res: 'res'
+      }]);
+    httpBackend
+      .whenGET('views/home.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+    scope.$digest();
   }));
 
   it('should call initialize the controller', function() {
@@ -24,5 +40,13 @@ describe('FeatCtrl tests', function() {
     expect(scope.bigScreen).toBeDefined();
   });
 
+  it('should watch the screen size', function() {
+    scope.$digest();
+    expect(scope.bigScreen).toBeDefined();
+  });
+
+  it('should have defined features', function() {
+    expect(scope.features).toBeDefined();
+  });
 
 });

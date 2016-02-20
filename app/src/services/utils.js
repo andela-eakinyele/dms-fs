@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('prodocs.services')
-    .service('Utils', function($mdToast, $mdDialog, $http, $filter, $mdMedia) {
+    .service('Utils', function($mdToast, $mdDialog, $http, $filter) {
 
       // format date data
       this.parseDate = function(date) {
@@ -9,10 +9,6 @@
           day: $filter('date')(date, 'EEEE dd MMM yyyy'),
           time: $filter('date')(date, 'hh:mma')
         };
-      };
-
-      this.toast = function(msg) {
-        $mdToast.show($mdToast.simple().content(msg));
       };
 
       this.showAlert = function(ev, title, msg) {
@@ -40,27 +36,6 @@
           cb();
         }, function() {});
       };
-
-
-      this.custom = function(ev, tmpl, ctrl) {
-
-        $mdDialog.show({
-          controller: ctrl,
-          templateUrl: tmpl,
-          parent: angular.element(document.querySelector('body')),
-          targetEvent: ev,
-          clickOutsideToClose: true,
-          fullscreen: true
-        });
-
-      };
-
-      this.fetch = function(path) {
-        return $http.get(path).then(function(resp) {
-          return resp;
-        });
-      };
-
     });
 
 })();

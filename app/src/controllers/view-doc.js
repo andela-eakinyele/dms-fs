@@ -12,8 +12,8 @@
           }, function(res) {
             $scope.doc = res;
           }, function() {
-            Utils.showAlert('ev', 'Error', 'Error retrieving document');
-            $state.go('dashboard.list');
+            Utils.showAlert(null, 'Error', 'Error retrieving document');
+            $state.go('dashboard.list.mydocs');
           });
 
           $scope.fabisOpen = false;
@@ -22,9 +22,7 @@
           // check if FAB button is open and show tooltip
           $scope.$watch('fabisOpen', function(isOpen) {
             if (isOpen) {
-              $timeout(function() {
-                $scope.tooltipVisible = $scope.fabisOpen;
-              }, 600);
+              $scope.tooltipVisible = $scope.fabisOpen;
             } else {
               $scope.tooltipVisible = $scope.fabisOpen;
             }

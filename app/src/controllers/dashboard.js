@@ -2,40 +2,39 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('DashBoardCtrl', ['$rootScope', '$scope', '$mdMedia',
-      '$state', '$stateParams', '$mdSidenav', '$timeout', 'Utils', 'Docs',
-      'Auth', 'Roles', 'Token',
+      '$state', '$stateParams', '$mdSidenav',
+      'Auth', 'Roles', 'Token', 'Utils',
       function($rootScope, $scope, $mdMedia, $state, $stateParams,
-        $mdSidenav, $timeout, Utils, Docs, Auth, Roles, Token) {
+        $mdSidenav, Auth, Roles, Token, Utils) {
 
         $scope.init = function() {
 
-
+          $scope.newButton = $stateParams.groupid ? true : false;
           // check if user is logged in or redirect to login
           if (!$rootScope.activeUser) {
             $state.go('home.login');
           } else {
             // check for state name and stateParams
             $scope.groups = $rootScope.activeUser.groupId;
-            console.log($scope.groups);
-
             // if user is a not member of a group and not superadmin
             //  redirect to group
             // check if current state is superadmin
             $scope.$watch(function() {
               return $state.current.name;
+
             }, function(name) {
               if (name === 'dashboard.admin.group' ||
                 name === 'dashboard.admin.user') {
-                $timeout(function() {
-                  $scope.groupName = 'Admin';
-                }, 600);
+                $scope.groupName = 'Admin';
               } else {
+
                 if ($scope.groups.length > 0 &&
-                  (name === 'dashboard.admin.group' ||
-                    name === 'dashboard.admin.user')) {
+                  (name !== 'dashboard.admin.group' ||
+                    name !== 'dashboard.admin.user')) {
                   // get group name
-                  $scope.groupName = window._.filter($scope.groups, {
-                    '_id': parseInt($stateParams.groupid)
+                  $scope.groupName = window.
+                  _.filter($rootScope.activeUser.groupId, {
+                    _id: parseInt($stateParams.groupid)
                   })[0].title;
                 }
               }
@@ -79,18 +78,14 @@
           return checked;
         };
 
-        // Load Dialog with form template
-        $scope.updateUserModal = function() {
-          Utils.custom(null,
-            'views/update.html', 'UserCtrl');
-        };
-
         // Load roles in a group
         $scope.loadRoles = function() {
           Roles.query({
             groupid: $stateParams.groupid
           }, function(role) {
             $scope.roles = role;
+          }, function() {
+            Utils.showAlert('ev', 'Error', 'Error retrieving group data');
           });
         };
 
@@ -108,22 +103,13 @@
             $scope.logout();
           }
           if (ev === 'Set') {
-            $scope.updateUserModal();
+            $rootScope.openSideNav('right');
           }
           if (ev === 'Join') {
-            $state.go('home.group', {
+            $state.go('dashboard.group', {
               id: $rootScope.activeUser._id
             });
           }
-        };
-
-        // side navigation bar control
-        $scope.openLeft = function() {
-          $mdSidenav('lefty').toggle();
-        };
-
-        $scope.close = function() {
-          $mdSidenav('lefty').close();
         };
 
         // menu control

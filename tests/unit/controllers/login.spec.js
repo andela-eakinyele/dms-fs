@@ -128,7 +128,7 @@ describe('LoginCtrl tests', function() {
     expect(Users.login).toHaveBeenCalled();
     expect(Auth.setToken).toHaveBeenCalled();
     expect(Utils.showAlert).toHaveBeenCalled();
-    expect(state.go).toHaveBeenCalledWith('home.group', {
+    expect(state.go).toHaveBeenCalledWith('dashboard.group', {
       id: 1
     });
     expect(scope.activeGroup).not.toBeDefined();

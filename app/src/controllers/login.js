@@ -46,7 +46,7 @@
                 } else {
                   Utils.showAlert(null, 'Logged In', 'You are Logged in, ' +
                     'Please create or Select a group');
-                  $state.go('home.group', {
+                  $state.go('dashboard.group', {
                     id: res.data.user._id
                   });
                 }

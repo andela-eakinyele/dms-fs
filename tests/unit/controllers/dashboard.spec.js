@@ -4,53 +4,28 @@ describe('DashBoardCtrl tests', function() {
     open,
     Roles = {
       save: function(data, cb, cbb) {
-        (data[0].title !== '') ? cb(data): cbb(false);
+        return (data[0].title !== '') ? cb(data) : cbb(false);
       },
-      update: function(id, data, cb, cbb) {
-        (id && data) ? cb(data): cbb(false);
+      update: function(params, data, cb, cbb) {
+        return (params.id && data) ? cb(data) : cbb(false);
       },
-      get: function(id, cb, cbb) {
-        id ? cb({
+      get: function(params, cb, cbb) {
+        return params.id ? cb({
           message: 'I am groot',
           data: [1, 3, 4]
         }) : cbb({
           message: 'error'
         });
       },
-      query: function(id, cb) {
-        if (id) {
+      query: function(params, cb, cbb) {
+        return (params.groupid) ?
           cb([{
             message: 'I am groot',
             data: [1, 3, 4]
-          }]);
-        } else {
-          cb('error');
-        }
+          }]) : cbb('error');
       }
     },
-    Docs = {
-      save: function(data, cb, cbb) {
-        data ? cb(data) : cbb(false);
-      },
-      update: function(id, data, cb, cbb) {
-        (id && data) ? cb(data): cbb(false);
-      },
-      get: function(id, cb, cbb) {
-        id ? cb({
-          message: 'I am groot',
-          data: [1, 3, 4]
-        }) : cbb({
-          message: 'error'
-        });
-      },
-      query: function(cb, cbb) {
-        cb([{
-          message: 'I am groot',
-          data: [1, 3, 4]
-        }]);
-        cbb('error');
-      }
-    },
+
     user = {
       _id: 1,
       groupId: [{
@@ -65,27 +40,15 @@ describe('DashBoardCtrl tests', function() {
         }]
       }]
     },
+
     Token = {
       get: function() {
         return [{
-          token: 'asdfgh'
+          token: 'token'
         }, 1];
       }
     },
-    mdSidenav = function(dir) {
-      if (dir) {
-        return {
-          toggle: function() {
-            open = dir;
-          },
-          close: function() {
-            open = dir;
-          }
-        };
-      } else {
-        return false;
-      }
-    },
+
     mdOpenMenu = function(ev) {
       if (ev) {
         open = true;
@@ -95,6 +58,7 @@ describe('DashBoardCtrl tests', function() {
     stateParams,
     Utils,
     Auth,
+    httpBackend,
     controller;
 
   beforeEach(function() {
@@ -107,39 +71,82 @@ describe('DashBoardCtrl tests', function() {
     scope = $injector.get('$rootScope');
     controller = $controller('DashBoardCtrl', {
       $scope: scope,
-      Docs: Docs,
       Roles: Roles,
       Token: Token,
-      $mdSidenav: mdSidenav
     });
     state = $injector.get('$state');
     stateParams = $injector.get('$stateParams');
     Utils = $injector.get('Utils');
     Auth = $injector.get('Auth');
 
+    httpBackend = $injector.get('$httpBackend');
+
+    httpBackend
+      .whenGET('/api/session')
+      .respond(200, {
+        data: {
+          user: {
+            _id: 1,
+            groupId: []
+          },
+          token: 'token'
+        },
+        group: ''
+      });
+
+    httpBackend
+      .whenGET('views/home.html')
+      .respond(200, [{
+        res: 'res'
+      }]);
+
   }));
 
-  it('should initialize the controller', function() {
-    scope.activeUser = user;
-    stateParams.groupid = 1;
-    scope.init();
-    expect(scope.updateForm).toBeDefined();
-    expect(scope.activeGroup).toBeDefined();
-    expect(scope.userRole).toBeDefined();
-  });
+  describe('Initialization of the controler', function() {
+    beforeEach(function() {
+      scope.$digest();
+    });
 
-  it('should set scope attribute for admin dashboard', function() {
-    scope.activeUser = user;
-    state.current.name = 'dashboard.admin.group';
-    scope.init();
-    expect(scope.groupName).toBe('Admin');
-  });
+    it('should initialize the controller', function() {
+      scope.activeUser = user;
+      stateParams.groupid = 1;
+      scope.init();
+      expect(scope.updateForm).toBeDefined();
+      expect(scope.activeGroup).toBeDefined();
+      expect(scope.userRole).toBeDefined();
+    });
 
-  it('should redirect to login if no active user', function() {
-    spyOn(state, 'go');
-    scope.activeUser = null;
-    scope.init();
-    expect(state.go).toHaveBeenCalledWith('home.login');
+    it('should set scope attribute for admin dashboard', function() {
+      scope.activeUser = user;
+      scope.init();
+      state.current.name = 'dashboard.admin.group';
+      scope.$digest();
+      expect(scope.groupName).toBe('Admin');
+    });
+
+    it('should set scope attribute for admin dashboard', function() {
+      scope.activeUser = user;
+      scope.init();
+      state.current.name = 'dashboard.admin.user';
+      scope.$digest();
+      expect(scope.groupName).toBe('Admin');
+    });
+
+    it('should set scope attribute for admin dashboard', function() {
+      scope.activeUser = user;
+      stateParams.groupid = 1;
+      scope.init();
+      state.current.name = 'dashboard.admin';
+      scope.$digest();
+      expect(scope.groupName).toBe('Test Group 1');
+    });
+
+    it('should redirect to login if no active user', function() {
+      spyOn(state, 'go');
+      scope.activeUser = null;
+      scope.init();
+      expect(state.go).toHaveBeenCalledWith('home.login');
+    });
   });
 
 
@@ -151,7 +158,6 @@ describe('DashBoardCtrl tests', function() {
     scope.toggle(2);
     expect(scope.activeGroup).toBe(2);
     expect(Auth.setToken).toHaveBeenCalled();
-
     expect(Token.get).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalled();
   });
@@ -162,18 +168,21 @@ describe('DashBoardCtrl tests', function() {
     expect(checked).toBeTruthy();
   });
 
-  it('should load modal for user profile update', function() {
-    spyOn(Utils, 'custom').and.callThrough();
-    scope.updateUserModal('ev');
-    expect(Utils.custom).toHaveBeenCalled();
-  });
-
-  it('should load group roles', function() {
+  it('should load group data', function() {
     spyOn(Roles, 'query').and.callThrough();
-    stateParams.id = 2;
+    stateParams.groupid = 2
     scope.loadRoles();
     expect(Roles.query).toHaveBeenCalled();
     expect(scope.roles).toBeDefined();
+  });
+
+  it('should return error loading group data', function() {
+    spyOn(Roles, 'query').and.callThrough();
+    spyOn(Utils, 'showAlert').and.callThrough();
+    scope.loadRoles();
+    expect(Utils.showAlert).toHaveBeenCalled();
+    expect(Roles.query).toHaveBeenCalled();
+    expect(scope.roles).not.toBeDefined();
   });
 
   it('should log a user out', function() {
@@ -189,15 +198,15 @@ describe('DashBoardCtrl tests', function() {
 
   it('should call scope functions', function() {
     spyOn(scope, 'logout').and.callThrough();
-    spyOn(scope, 'updateUserModal').and.callThrough();
+    spyOn(scope, 'openSideNav').and.callThrough();
     spyOn(state, 'go');
     scope.menuAction('logout');
     expect(scope.logout).toHaveBeenCalled();
     scope.menuAction('Set');
-    expect(scope.updateUserModal).toHaveBeenCalled();
+    expect(scope.openSideNav).toHaveBeenCalledWith('right');
     scope.activeUser = user;
     scope.menuAction('Join');
-    expect(state.go).toHaveBeenCalledWith('home.group', {
+    expect(state.go).toHaveBeenCalledWith('dashboard.group', {
       id: 1
     });
   });
@@ -205,20 +214,6 @@ describe('DashBoardCtrl tests', function() {
   it('should open a menu', function() {
     scope.openMenu(mdOpenMenu, 'ev');
     expect(open).toBeTruthy();
-  });
-
-  describe('Side Navigation menu', function() {
-
-    it('should open the side navigation bar', function() {
-      scope.openLeft();
-      expect(open).toBe('lefty');
-    });
-
-    it('should open the side navigation bar', function() {
-      scope.close();
-      expect(open).toBe('lefty');
-    });
-
   });
 
 });
