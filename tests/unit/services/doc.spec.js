@@ -1,5 +1,7 @@
 (function() {
   'use strict';
+  var a = /\/api\/users\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/;
+  var b = /\/api\/roles\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/;
 
   describe('Document Service Test', function() {
 
@@ -169,9 +171,8 @@
 
           it('should get user documents', function() {
             spyOn(Documents, 'getUserDocs').and.callThrough();
-
             httpBackend
-              .whenGET(/\/api\/users\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .whenGET(a)
               .respond(200, {
                 data: [{
                   _id: 1,
@@ -191,7 +192,7 @@
             spyOn(Documents, 'getUserDocs').and.callThrough();
 
             httpBackend
-              .whenGET(/\/api\/users\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .whenGET(a)
               .respond(400, {
                 err: 'err'
               });
@@ -247,7 +248,7 @@
             spyOn(Documents, 'getRoleDocs').and.callThrough();
 
             httpBackend
-              .whenGET(/\/api\/roles\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .whenGET(b)
               .respond(200, {
                 data: [{
                   _id: 1,
@@ -267,7 +268,7 @@
             spyOn(Documents, 'getRoleDocs').and.callThrough();
 
             httpBackend
-              .whenGET(/\/api\/roles\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .whenGET(b)
               .respond(400, {
                 err: 'err'
               });
@@ -297,22 +298,24 @@
             expect(response).toBeDefined();
           });
 
-          it('should return  error getting documents by role count', function() {
-            spyOn(Documents, 'getRoleDocsCount').and.callThrough();
+          it('should return  error getting ' +
+            'documents by role count',
+            function() {
+              spyOn(Documents, 'getRoleDocsCount').and.callThrough();
 
-            httpBackend
-              .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
-              .respond(400, {
-                err: 'err'
-              });
+              httpBackend
+                .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
+                .respond(400, {
+                  err: 'err'
+                });
 
-            Documents.getRoleDocsCount(1, cb);
+              Documents.getRoleDocsCount(1, cb);
 
-            httpBackend.flush();
+              httpBackend.flush();
 
-            expect(response).toBe(null);
-            expect(error.data.err).toBe('err');
-          });
+              expect(response).toBe(null);
+              expect(error.data.err).toBe('err');
+            });
         });
 
         it('should delete selected documents', function() {

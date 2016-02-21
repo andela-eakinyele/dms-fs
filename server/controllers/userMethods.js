@@ -235,22 +235,22 @@
     all: function(req, res) {
 
       var groupid = req.headers.groupid || req.query.groupid;
-      var params = {};
 
       var page = req.query.page || null;
       var limit = parseInt(req.query.limit) || null;
 
-
-      if (!isNaN(parseInt(groupid))) {
-        params.groupId = [parseInt(groupid)];
-      }
-
-      var query = User.find(params)
+      var query = User.find({})
         .select('username email roles groupId name')
         .populate({
           path: 'roles',
           select: 'title'
         });
+
+      if (!isNaN(parseInt(groupid))) {
+        query = query
+          .where('groupId')
+          .in([parseInt(groupid)]);
+      }
 
       if (limit && page) {
         page = parseInt(page) - 1;
@@ -269,12 +269,14 @@
 
     count: function(req, res) {
       var groupid = req.headers.groupid || req.query.groupid;
-      var params = {};
+
+      var query = User.count({});
 
       if (!isNaN(parseInt(groupid))) {
-        params.groupId = [parseInt(groupid)];
-
-        User.count(params, function(err, count) {
+        query = query
+          .where('groupId')
+          .in([parseInt(groupid)]);
+        query.exec(function(err, count) {
           if (err) {
             cm.resdberrors(res, 'querying database', err);
           } else {
@@ -285,9 +287,6 @@
         res.status(200).json(0);
       }
     },
-
-
-
 
     delete: function(req, res) {
       var query = User.findByIdAndRemove(req.params.id);

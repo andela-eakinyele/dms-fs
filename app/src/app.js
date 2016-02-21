@@ -143,7 +143,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/group-table.html',
-              controller: 'DocDocTableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -153,7 +153,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'DocDocTableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -162,7 +162,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'DocDocTableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })

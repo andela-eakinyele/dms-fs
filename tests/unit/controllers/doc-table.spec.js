@@ -10,10 +10,11 @@
           return data ? cb(data) : cbb(false);
         },
         getUserDocs: function(id, params, cb) {
-          return (id !== null && params !== null) ? cb(null, 'success') : cb('error', null);
+          return (id !== null && params !== null) ?
+            cb(null, 'success') : cb('error', null);
         },
         getUserDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cbb(true, null);
+          return id ? cb(null, 3) : cb(true, null);
         },
         delete: function(params, cb, cbb) {
           return params.id ? cb('success') : cbb('error');
@@ -22,7 +23,7 @@
           return (id && params) ? cb(null, 'success') : cb('error', null);
         },
         getRoleDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cbb(true, null);
+          return id ? cb(null, 3) : cb(true, null);
         },
         update: function(params, data, cb, cbb) {
           return (params.id && data) ? cb(data) : cbb(false);
@@ -214,7 +215,7 @@
       it('should return error getting documents' +
         ' based on state - list',
         function() {
-          scope.query = null
+          scope.query = null;
           stateParams.id = 1;
           stateParams.groupid = 2;
           state.current.name = 'dashboard.list';
@@ -418,7 +419,7 @@
             _id: 3
           }, {
             _id: 4
-          }]
+          }];
           spyOn(state, 'go').and.callThrough();
           spyOn(Utils, 'showConfirm').and.callThrough();
           spyOn(Docs, 'bulkdelete').and.callThrough();
@@ -436,7 +437,7 @@
 
         it('shoulld throw error deleting a selection', function() {
           scope.selectedDocs = [];
-          scope.docs = [1, 2, 3, 4]
+          scope.docs = [1, 2, 3, 4];
           spyOn(Utils, 'showConfirm').and.callThrough();
           spyOn(Utils, 'showAlert').and.callThrough();
           spyOn(Docs, 'bulkdelete').and.callThrough();

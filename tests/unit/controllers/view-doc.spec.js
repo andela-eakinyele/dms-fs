@@ -153,14 +153,16 @@
       });
 
 
-      it('should initialize the controller and return an array of doc', function() {
-        spyOn(Docs, 'bulkview').and.callThrough();
-        stateParams.docIds = [1, 2, 3];
-        scope.init();
-        expect(Docs.bulkview).toHaveBeenCalled();
-        expect(scope.docs).toBeDefined();
-        expect(scope.docs.length).toBe(3);
-      });
+      it('should initialize the controller and' +
+        ' return an array of doc',
+        function() {
+          spyOn(Docs, 'bulkview').and.callThrough();
+          stateParams.docIds = [1, 2, 3];
+          scope.init();
+          expect(Docs.bulkview).toHaveBeenCalled();
+          expect(scope.docs).toBeDefined();
+          expect(scope.docs.length).toBe(3);
+        });
 
       it('should initialize the controller and return an error', function() {
         spyOn(Docs, 'bulkview').and.callFake(function(id, cb) {

@@ -43,6 +43,8 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
                         span Delete
     md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateRole" md-page-select)
 
+md-content(layout ="column" flex="100" layout-margin ui-view="inner")
+
 
 
       

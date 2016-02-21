@@ -445,9 +445,8 @@
             .type('json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function(err, res) {
+            .end(function(err) {
               assert.equal(null, err, 'Error encountered');
-              var response = res.body;
               done();
             });
         });
@@ -469,9 +468,8 @@
             .type('json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function(err, res) {
+            .end(function(err) {
               assert.equal(null, err, 'Error encountered');
-              var response = res.body;
               done();
             });
         });

@@ -327,53 +327,57 @@
       describe('Implementing session', function() {
 
         // token validation and renewal
-        it('- Should return a new token if token is still active', function(done) {
-          request
-            .get('/api/session')
-            .type('json')
-            .send({
-              username: data.seedUsers.user1[2],
-              password: data.seedUsers.user1[3]
-            }).set({
-              access_token: token,
-              groupid: userData[0].groupId,
-              userid: usersId[0]
-            })
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              newtoken = response.data.token;
-              assert(token, 'Token not generated');
-              assert.equal(typeof response.data.expires, 'number');
-              assert.equal(response.data.user.username, 'DAdams');
-              assert.notEqual(token, newtoken, 'Same token returned');
-              done();
-            });
-        });
+        it('- Should return a new token if ' +
+          'token is still active',
+          function(done) {
+            request
+              .get('/api/session')
+              .type('json')
+              .send({
+                username: data.seedUsers.user1[2],
+                password: data.seedUsers.user1[3]
+              }).set({
+                access_token: token,
+                groupid: userData[0].groupId,
+                userid: usersId[0]
+              })
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                newtoken = response.data.token;
+                assert(token, 'Token not generated');
+                assert.equal(typeof response.data.expires, 'number');
+                assert.equal(response.data.user.username, 'DAdams');
+                assert.notEqual(token, newtoken, 'Same token returned');
+                done();
+              });
+          });
 
         // invalid token response
-        it('- Should return a new token if token is still active', function(done) {
-          var invalidToken = token.substring(2);
-          request
-            .get('/api/session')
-            .type('json')
-            .set({
-              access_token: invalidToken,
-              groupid: userData[0].groupId,
-              userid: usersId[0]
-            })
-            .expect('Content-Type', /json/)
-            .expect(500)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.message, 'Token not validated');
-              assert(response.error, 'No error message');
-              done();
-            });
-        });
+        it('- Should return a new token if token' +
+          ' is still active',
+          function(done) {
+            var invalidToken = token.substring(2);
+            request
+              .get('/api/session')
+              .type('json')
+              .set({
+                access_token: invalidToken,
+                groupid: userData[0].groupId,
+                userid: usersId[0]
+              })
+              .expect('Content-Type', /json/)
+              .expect(500)
+              .end(function(err, res) {
+                assert.equal(null, err, 'Error encountered');
+                var response = res.body;
+                assert.equal(response.message, 'Token not validated');
+                assert(response.error, 'No error message');
+                done();
+              });
+          });
 
       });
 

@@ -197,7 +197,6 @@
       },
       state,
       Utils,
-      query,
       stateParams,
       controller;
     beforeEach(function() {
