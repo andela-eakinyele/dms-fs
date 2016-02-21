@@ -7,7 +7,7 @@
     var env = process.env.NODE_ENV || 'development';
     var connectUrl;
 
-    if (env === 'development') {
+    if (env === 'development' || env === 'test') {
       connectUrl = process.env.DATABASE_URL;
     } else {
       connectUrl = process.env.MONGOLAB_URI;
