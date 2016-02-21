@@ -25,7 +25,7 @@
 
   app.use('/api', apiRoutes);
 
-  app.use(express.static(path.join(__dirname, './../public')));
+  app.use(express.static(path.join(__dirname, './public')));
 
   app.get('/*', function(req, res) {
     res.sendFile('index.html', {
