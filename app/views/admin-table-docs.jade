@@ -3,14 +3,12 @@ md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
   md-toolbar.table
     .md-toolbar-tools.sectionTitle(layout="row")
       span(flex)  List of Documents {{docErr}}
-      div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
-        md-button(ui-sref="dashboard.new")
-          md-icon(md-font-set="fa fa-file-text-o fa-2x") 
-          span New Doc
-          md-tooltip New Doc
-        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
-          md-icon(md-font-set="fa fa-refresh fa-2x") 
-          span Refresh
+      md-input-container.md-block(md-no-float)
+          label(for="search")
+          input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
+      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+        md-icon(md-font-set="fa fa-refresh fa-2x") 
+        span Refresh
 
 
   md-toolbar.table.alternate(ng-if="selected.length > 0")
@@ -28,11 +26,11 @@ md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
             th.md-column No
             th.md-column(md-order-by="nameToLower" ng-repeat="header in docHeaders") {{header}}
         tbody.md-body
-          tr.md-row(md-auto-select ng-repeat="doc in docs track by $index")
+          tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search track by $index")
             td.md-cell {{$index + 1}}
             td.md-cell {{doc.label}}
             td.md-cell {{doc.title}}
-            td.md-cell {{doc.Owner}}
+            td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
             td.md-cell {{getDate(doc.dateCreated).day}}
             td.md-cell
               md-menu
@@ -51,7 +49,7 @@ md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
                       md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $index, $event)")
                         md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
                         span Delete
-    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{docs.length}}" md-on-paginate="onPaginate" md-page-select)
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateDoc" md-page-select)
 
 
       

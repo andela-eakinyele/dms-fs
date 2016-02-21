@@ -7,13 +7,13 @@
     h3 Dashboard ({{groupName}})
 
   div.right-border(layout layout-align="center center" ng-if="userRole[0].title === \"superAdmin\"")
-    md-button(ui-sref="dashboard.admin.user")
+    md-button(ui-sref="dashboard.admin.user" ui-sref-active="colorful")
       md-icon(md-font-set="fa fa-user-plus fa-2x" md-menu-origin)
       span Add User
       md-tooltip Add User
 
   div.right-border(layout layout-align="center center" hide-xs hide-sm ng-show="newButton")
-    md-button(ui-sref="dashboard.new")
+    md-button(ui-sref="dashboard.new" ui-sref-active="colorful")
       md-icon(md-font-set="fa fa-file-text-o fa-2x") 
       span New Doc
       md-tooltip New Doc
@@ -31,7 +31,7 @@
         md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
       md-menu-content(width="4")
         md-menu-item(ng-show="newButton")
-          md-button(ui-sref="dashboard.new")
+          md-button(ui-sref="dashboard.new" ui-sref-active="colorful")
             md-icon(md-font-set="fa fa-file-text-o fa-2x") 
             span New Doc
             md-tooltip New Doc

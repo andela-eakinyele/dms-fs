@@ -141,12 +141,10 @@
 
     it('should save a new document', function() {
       spyOn(Docs, 'save').and.callThrough();
-      spyOn(Utils, 'showAlert').and.callThrough();
       spyOn(state, 'go');
       scope.newDoc = 'new';
       scope.saveDoc('ev');
       expect(Docs.save).toHaveBeenCalled();
-      expect(Utils.showAlert).toHaveBeenCalled();
       expect(state.go).toHaveBeenCalled();
     });
 
@@ -175,13 +173,11 @@
 
     it('should update a new document', function() {
       spyOn(Docs, 'update').and.callThrough();
-      spyOn(Utils, 'showAlert').and.callThrough();
       spyOn(state, 'go');
       scope.doc = 'new';
       stateParams.docId = 1;
       scope.updateDoc('ev');
       expect(Docs.update).toHaveBeenCalled();
-      expect(Utils.showAlert).toHaveBeenCalled();
       expect(state.go).toHaveBeenCalled();
     });
 

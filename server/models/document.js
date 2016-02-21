@@ -58,7 +58,7 @@
     });
   };
 
-  documentSchema.statics.getDocsByOwnerId = function(ownerId, groupid) {
+  documentSchema.statics.getDocsByOwnerId = function(ownerId, groupid, args) {
     var query = this.find({
         ownerId: ownerId
       })
@@ -68,7 +68,16 @@
       .populate({
         path: 'ownerId',
         select: 'username name'
-      }).sort('dateCreated');
+      });
+
+
+
+    if (args) {
+      query = query.limit(args[0])
+        .skip(args[0] * args[1])
+        .sort('dateCreated');
+    }
+
     return new Promise(function(resolve, reject) {
       query.then(function(docs) {
           resolve(docs);
@@ -79,7 +88,24 @@
     });
   };
 
-  documentSchema.statics.getDocsByRole = function(roleId, groupId) {
+  documentSchema.statics.getDocsByOwnerIdCount = function(ownerId, groupid) {
+    var countQuery = this.find({
+        ownerId: ownerId
+      })
+      .where('groupId').in([groupid])
+      .count();
+
+    return new Promise(function(resolve, reject) {
+      countQuery.then(function(count) {
+        resolve(count);
+      }, function(err) {
+        reject(Error(err));
+      });
+    });
+  };
+
+  documentSchema.statics.getDocsByRole = function(roleId, groupId, args) {
+
     var query = this.find({
         groupId: groupId
       }).where('roles').in([roleId])
@@ -88,16 +114,36 @@
       .populate({
         path: 'ownerId',
         select: 'username name'
-      }).sort('dateCreated');
+      });
+
+    if (args) {
+      query = query.limit(args[0])
+        .skip(args[0] * args[1])
+        .sort('dateCreated');
+    }
 
     return new Promise(function(resolve, reject) {
-
       query.then(function(docs) {
           resolve(docs);
         },
         function(err) {
           reject(Error(err));
         });
+    });
+  };
+
+  documentSchema.statics.getDocsByRoleCount = function(roleId, groupId) {
+    var countQuery = this.find({
+        groupId: groupId
+      }).where('roles').in([roleId])
+      .count();
+
+    return new Promise(function(resolve, reject) {
+      countQuery.then(function(count) {
+        resolve(count);
+      }, function(err) {
+        reject(Error(err));
+      });
     });
   };
 

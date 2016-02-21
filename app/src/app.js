@@ -21,12 +21,12 @@
   require('./controllers/login');
   require('./controllers/register');
   require('./controllers/dashboard');
-  require('./controllers/table');
+  require('./controllers/doc-table');
   require('./controllers/group');
   require('./controllers/admin-role');
   require('./controllers/user');
   require('./controllers/doc');
-  require('./controllers/list');
+  require('./controllers/admin-table');
   require('./controllers/view-doc');
 
   window.app = angular.module('prodocs', [
@@ -98,6 +98,11 @@
         .state('dashboard', {
           abstract: true,
           url: '/users/:id/dashboard/:groupid/documents',
+          resolve: {
+            activeUser: function($rootScope) {
+              return $rootScope.activeUser;
+            }
+          },
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
@@ -138,7 +143,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/group-table.html',
-              controller: 'TableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -148,7 +153,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'TableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -157,7 +162,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'TableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -171,12 +176,15 @@
           }
         })
         .state('dashboard.doc.view', {
-          url: '/:docId',
+          url: '/{docId}',
           views: {
             'docdata@dashboard.doc': {
               templateUrl: 'views/view-doc.html',
               controller: 'ViewDocCtrl'
             },
+          },
+          params: {
+            docIds: []
           }
         })
         .state('dashboard.doc.edit', {
@@ -194,7 +202,13 @@
           views: {
             'admin@dashboard': {
               templateUrl: 'views/admin.html'
-            },
+            }
+          },
+          params: {
+            query: {
+              limit: 10,
+              page: 1
+            }
           }
         })
         .state('dashboard.admin.doc', {
@@ -202,7 +216,7 @@
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-table-docs.html',
-              controller: 'AdminListCtrl'
+              controller: 'AdminTableCtrl'
             },
           }
         })
@@ -211,7 +225,7 @@
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-table-roles.html',
-              controller: 'AdminListCtrl'
+              controller: 'AdminTableCtrl'
             },
           }
         })
@@ -220,7 +234,7 @@
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-table-users.html',
-              controller: 'AdminListCtrl'
+              controller: 'AdminTableCtrl'
             },
           }
         })
@@ -238,7 +252,7 @@
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-users.html',
-              controller: 'AdminListCtrl'
+              controller: 'AdminTableCtrl'
             },
           }
         })
@@ -247,7 +261,7 @@
           views: {
             'inner@dashboard.admin': {
               templateUrl: 'views/admin-table-groups.html',
-              controller: 'AdminListCtrl'
+              controller: 'AdminTableCtrl'
             }
           }
         })
@@ -295,59 +309,67 @@
         }
       };
 
-      // Check if the user's session is still being persisted in the servers
-      Users.session(function(err, res) {
-        if (!err) {
-          $rootScope.activeUser = res.data.user;
 
-          // check for group 
-          if (res.group === '' && res.data.user.groupId.length === 0) {
-            Auth.setToken(JSON.stringify(res.data), '');
-          } else {
-            $rootScope.activeGroup = (res.group === '') ?
-              res.data.user.groupId[0]._id : res.group;
-            Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
-          }
+      if (!Auth.isLoggedIn()) {
 
-          //check for superAdmin user
-          var superAdmin = window._
-            .filter(res.data.user.roles, {
-              'title': 'superAdmin'
-            });
+        $state.go('home.features');
 
-          if (superAdmin.length > 0) {
-            $state.go('dashboard.admin.group', {
-              id: res.data.user._id
-            });
+      } else {
 
-          } else {
-            // check if user belongs to a group
-            if (!res.group && res.data.user.groupId.length === 0) {
-              $state.go('dashboard.group', {
+        // Check if the user's session is still being persisted in the servers
+        Users.session(function(err, res) {
+          if (!err) {
+            $rootScope.activeUser = res.data.user;
+
+            // check for group 
+            if (res.group === '' && res.data.user.groupId.length === 0) {
+              Auth.setToken(JSON.stringify(res.data), '');
+            } else {
+              $rootScope.activeGroup = (res.group === '') ?
+                res.data.user.groupId[0]._id : res.group;
+              Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
+            }
+
+            //check for superAdmin user
+            var superAdmin = window._
+              .filter(res.data.user.roles, {
+                'title': 'superAdmin'
+              });
+
+            if (superAdmin.length > 0) {
+              $state.go('dashboard.admin.group', {
                 id: res.data.user._id
               });
-
-              // use user group or last set header group
             } else {
-              $state.go('dashboard.list', {
-                id: res.data.user._id,
-                groupid: $rootScope.activeGroup
-              });
+              // check if user belongs to a group
+              if (!res.group && res.data.user.groupId.length === 0) {
+                $state.go('dashboard.group', {
+                  id: res.data.user._id
+                });
+
+                // use user group or last set header group
+              } else {
+                $state.go('dashboard.list', {
+                  id: res.data.user._id,
+                  groupid: $rootScope.activeGroup
+                });
+              }
+            }
+          } else {
+            if (/Token/.test(err.data.message)) {
+              Auth.logout();
+              $state.go('home.login');
+            } else if (/User/.test(err.data.message)) {
+              Auth.logout();
+              $state.go('home.adduser');
+            } else {
+              Auth.logout();
+              $state.go('home.features');
             }
           }
-        } else {
-          if (/Token/.test(err.data.message)) {
-            Auth.logout();
-            $state.go('home.login');
-          } else if (/User/.test(err.data.message)) {
-            Auth.logout();
-            $state.go('home.adduser');
-          } else {
-            Auth.logout();
-            $state.go('home.features');
-          }
-        }
-      });
+        });
+
+      }
 
     }
   ]);

@@ -19,7 +19,7 @@
         last: 'Dummy'
       },
       email: 'dummy@dummy.com',
-      password: bcrypt.hashSync('ImpossibleYouAreMyFriend'),
+      password: bcrypt.hashSync(process.env.DUMMY_PASSWORD),
       roles: [],
       _id: 101,
       username: 'Dummy'

@@ -139,9 +139,21 @@
       var groupid = req.headers.groupid || req.query.groupid;
       var params = {};
 
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
+
       if (!isNaN(parseInt(groupid))) {
         params.groupId = [parseInt(groupid)];
+
         var query = Role.find(params);
+
+        if (limit && page) {
+          page = parseInt(page) - 1;
+          query = query
+            .limit(limit)
+            .skip(limit * page)
+            .sort('dateCreated');
+        }
         cm.gGetAll('Roles', query)
           .then(function(result) {
             res.status(result.status).json(result.data);
@@ -153,7 +165,27 @@
       }
     },
 
+    count: function(req, res) {
+
+      var groupid = req.headers.groupid || req.query.groupid;
+      var params = {};
+      if (!isNaN(parseInt(groupid))) {
+        params.groupId = [parseInt(groupid)];
+
+        Role.count(params, function(err, count) {
+          if (err) {
+            cm.resdberrors(res, 'querying database', err);
+          } else {
+            res.status(200).json(count);
+          }
+        });
+      } else {
+        res.status(200).json(0);
+      }
+    },
+
     get: function(req, res) {
+
       var query = Role.findOne({
         _id: req.params.id
       }).populate({
@@ -199,7 +231,26 @@
 
 
     getDocsByRole: function(req, res) {
+      var args;
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
+
+      if (limit && page) {
+        page = parseInt(page) - 1;
+        args = [limit, page];
+      }
+
       Doc.getDocsByRole(req.params.id,
+          req.headers.groupid, args)
+        .then(function(data) {
+          res.status(200).json(data);
+        }).catch(function(err) {
+          cm.resdberrors(res, 'querying database', err);
+        });
+    },
+
+    getDocsByRoleCount: function(req, res) {
+      Doc.getDocsByRoleCount(req.params.id,
           req.headers.groupid)
         .then(function(data) {
           res.status(200).json(data);

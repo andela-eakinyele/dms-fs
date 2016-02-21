@@ -2,10 +2,12 @@ div(layout="column" layout-margin)
   md-content(layout ="column" flex="100" layout-margin)
 
     md-toolbar.table
-      .md-toolbar-tools.sectionTitle(layout="row")
+      .md-toolbar-tools.sectionTitle(layout="row" layout-margin)
         span(flex) Group Documents - Access
-        
-        md-button.md-accent.md-raised(aria-label="Refresh Table")
+        md-input-container.md-block(md-no-float)
+          label(for="search")
+          input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
           md-icon(md-font-set="fa fa-refresh fa-2x") 
           span Refresh
 
@@ -20,12 +22,12 @@ div(layout="column" layout-margin)
 
     md-content.listDocs(layout="column" layout-margin)
       md-table-container
-        table.md-table(md-row-select="true" md-progress="promise")
+        table.md-table(md-row-select md-progress="promise")
           thead.md-head(md-order="query.order")
             tr.headerSection.md-row
-              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header}}
+              th.md-column(md-order-by="doc.title" ng-repeat="header in headers") {{header.name}}
           tbody.md-body
-            tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="accessDoc(doc)")
+            tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search")
               td.md-cell {{doc.label}}
               td.md-cell {{doc.title}}
               td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
@@ -50,35 +52,6 @@ div(layout="column" layout-margin)
                       md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $event)")
                         md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
                         span Delete
-                md-button.md-primary(ng-if="!editDoc(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
+                md-button.md-primary(ng-if="!editDoc(doc) && access(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
                   md-icon(md-font-set="fa fa-external-link fa-2x" md-menu-align-target) 
-
-
-  md-content(layout ="column" flex="100" layout-margin)
-
-    md-toolbar.table
-      .md-toolbar-tools.sectionTitle(layout="row")
-        span(flex) Group Documents - No Access
-        div.right-border(layout layout-align="center center" ng-if="activeUser.groupId.length > 0")
-          md-button.md-accent.md-raised(aria-label="Refresh Table")
-            md-icon(md-font-set="fa fa-refresh fa-2x") 
-            span Refresh
-       
-    md-content.listDocs(layout="column" layout-margin)
-      md-table-container
-        table.md-table(md-row-select="true" md-progress="promise")
-          thead.md-head(md-order="query.order")
-            tr.headerSection.md-row
-              th.md-column(md-order-by="nameToLower" ng-repeat="header in headers") {{header}}
-          tbody.md-body
-            tr.md-row(md-auto-select ng-repeat="doc in docs" ng-if="!accessDoc(doc)")
-              td.md-cell {{doc.label}}
-              td.md-cell {{doc.title}}
-              td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
-              td.md-cell {{getDate(doc.dateCreated).day}}
-              td.md-cell {{getDate(doc.lastModified).day}}
-              td.md-cell 
-                md-icon(ng-if="doc.roles.length > 0" md-font-set="fa fa-group")
-              td.md-cell -
-
-        
+      md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginate" md-page-select)

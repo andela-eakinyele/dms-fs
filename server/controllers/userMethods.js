@@ -180,6 +180,7 @@
         groupId = [parseInt(groupid)];
         _query = _query.where('groupId').in(groupId);
       }
+
       query = _query
         .select('username email roles name groupId')
         .populate({
@@ -190,6 +191,7 @@
           path: 'groupId',
           select: 'title description'
         });
+
       cm.gGetOne('Users', query, req.params.id)
         .then(function(result) {
           res.status(result.status).json(result.data);
@@ -233,20 +235,29 @@
     all: function(req, res) {
 
       var groupid = req.headers.groupid || req.query.groupid;
-      var params = {};
 
-      if (!isNaN(parseInt(groupid))) {
-        params.groupId = [parseInt(groupid)];
-      }
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
 
-      var query = User.find(params)
-        .select('username email roles name')
+      var query = User.find({})
+        .select('username email roles groupId name')
         .populate({
           path: 'roles',
           select: 'title'
         });
-      if (req.params.limit) {
-        query = query.limit(req.params.limit);
+
+      if (!isNaN(parseInt(groupid))) {
+        query = query
+          .where('groupId')
+          .in([parseInt(groupid)]);
+      }
+
+      if (limit && page) {
+        page = parseInt(page) - 1;
+        query = query
+          .limit(limit)
+          .skip(limit * page)
+          .sort('dateCreated');
       }
       cm.gGetAll('Users', query)
         .then(function(result) {
@@ -254,6 +265,27 @@
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
+    },
+
+    count: function(req, res) {
+      var groupid = req.headers.groupid || req.query.groupid;
+
+      var query = User.count({});
+
+      if (!isNaN(parseInt(groupid))) {
+        query = query
+          .where('groupId')
+          .in([parseInt(groupid)]);
+        query.exec(function(err, count) {
+          if (err) {
+            cm.resdberrors(res, 'querying database', err);
+          } else {
+            res.status(200).json(count);
+          }
+        });
+      } else {
+        res.status(200).json(0);
+      }
     },
 
     delete: function(req, res) {

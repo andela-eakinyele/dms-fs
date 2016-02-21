@@ -54,7 +54,6 @@
         // save a new document
         $scope.saveDoc = function(ev) {
           Docs.save($scope.newDoc, function(res) {
-            Utils.showAlert(ev, 'Successfully saved', res.title);
             $state.go('dashboard.doc.view', {
               docId: res._id
             });
@@ -72,7 +71,6 @@
           Docs.update({
             id: $stateParams.docId
           }, $scope.doc, function(res) {
-            Utils.showAlert(ev, 'Successfully updated', res.title);
             $state.go('dashboard.doc.view', {
               docId: res._id
             });

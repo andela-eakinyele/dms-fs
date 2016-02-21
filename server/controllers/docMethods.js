@@ -68,6 +68,9 @@
     },
 
     all: function(req, res) {
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
+
       var groupid = parseInt(req.headers.groupid);
       var query = Doc.find({})
         .where('groupId').in([groupid])
@@ -76,16 +79,32 @@
         .populate({
           path: 'ownerId',
           select: 'username name'
-        }).sort('dateCreated');
-      if (req.params.limt) {
-        query = query.limit(req.params.limit);
+        });
+
+      if (limit && page) {
+        page = parseInt(page) - 1;
+        query = query
+          .limit(limit)
+          .skip(limit * page)
+          .sort('dateCreated');
       }
+
       cm.gGetAll('Documents', query)
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
+    },
+
+    count: function(req, res) {
+      Doc.count({}, function(err, count) {
+        if (err) {
+          cm.resdberrors(res, 'querying database', err);
+        } else {
+          res.status(200).json(count);
+        }
+      });
     },
 
     get: function(req, res) {
@@ -150,7 +169,28 @@
     getDocsById: function(req, res) {
       var ownerId = req.params.id;
       var groupid = req.headers.groupid;
-      Doc.getDocsByOwnerId(ownerId, groupid)
+      var args;
+      var page = req.query.page || null;
+      var limit = parseInt(req.query.limit) || null;
+
+      if (limit && page) {
+        page = parseInt(page) - 1;
+        args = [limit, page];
+      }
+
+      Doc.getDocsByOwnerId(ownerId, groupid, args)
+        .then(function(data) {
+          res.status(200).json(data);
+        }).catch(function(err) {
+          cm.resdberrors(res, 'querying database', err);
+        });
+    },
+
+    getDocsByIdCount: function(req, res) {
+      var ownerId = req.params.id;
+      var groupid = req.headers.groupid;
+
+      Doc.getDocsByOwnerIdCount(ownerId, groupid)
         .then(function(data) {
           res.status(200).json(data);
         }).catch(function(err) {
