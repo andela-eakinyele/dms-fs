@@ -23,7 +23,7 @@ md-content(layout ="column" flex="100" layout-margin ng-init="userList()")
             td.md-cell {{user.name.first}}
             td.md-cell {{user.name.last}}
             td.md-cell {{user.Role}}
-    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateUsers" md-page-select)
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateUser" md-page-select)
 
 
       

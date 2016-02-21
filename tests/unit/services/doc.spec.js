@@ -7,7 +7,7 @@
       module('prodocs');
     });
 
-    var Documents, cb,
+    var Documents, cb, params,
       $resource, response, error,
       $http, httpBackend;
 
@@ -25,6 +25,11 @@
           error = null;
           response = res;
         }
+      };
+
+      params = {
+        page: 1,
+        limit: 10
       };
 
       httpBackend
@@ -119,83 +124,195 @@
         expect(Documents.update).toBeDefined();
         expect(Documents.update).toHaveBeenCalled();
         expect(typeof Documents.update).toBe('function');
+
+        it('should get documents count', function() {
+
+          spyOn(Documents, 'count').and.callThrough();
+
+          httpBackend
+            .whenGET('/api/documentcount')
+            .respond(200, {
+              data: 2
+            });
+
+          Documents.count(cb);
+
+          httpBackend.flush();
+
+          expect(error).toBe(null);
+          expect(response).toBeDefined();
+        });
+
+        it('should return error getting documents count', function() {
+
+          spyOn(Documents, 'count').and.callThrough();
+
+          httpBackend
+            .whenGET('/api/documentcount')
+            .respond(400, {
+              err: 'err'
+            });
+
+          Documents.count(cb);
+
+          httpBackend.flush();
+
+          expect(response).toBe(null);
+          expect(error.data.err).toBe('err');
+        });
       });
 
 
       describe('custom request routes', function() {
 
-        it('should get user documents only', function() {
-          spyOn(Documents, 'getUserDocs').and.callThrough();
+        describe('get user document and count only', function() {
 
-          httpBackend
-            .whenGET('/api/users/1/documents')
-            .respond(200, {
-              data: [{
-                _id: 1,
-                content: 'I am a doc'
-              }]
-            });
+          it('should get user documents', function() {
+            spyOn(Documents, 'getUserDocs').and.callThrough();
 
-          Documents.getUserDocs(1, cb);
+            httpBackend
+              .whenGET(/\/api\/users\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .respond(200, {
+                data: [{
+                  _id: 1,
+                  content: 'I am a doc'
+                }]
+              });
 
-          httpBackend.flush();
+            Documents.getUserDocs(1, params, cb);
 
-          expect(error).toBe(null);
-          expect(response).toBeDefined();
+            httpBackend.flush();
+
+            expect(error).toBe(null);
+            expect(response).toBeDefined();
+          });
+
+          it('should return error getting user documents only', function() {
+            spyOn(Documents, 'getUserDocs').and.callThrough();
+
+            httpBackend
+              .whenGET(/\/api\/users\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .respond(400, {
+                err: 'err'
+              });
+
+            Documents.getUserDocs(1, params, cb);
+
+            httpBackend.flush();
+
+            expect(response).toBe(null);
+            expect(error.data.err).toBe('err');
+          });
+
+          it('should get user documents count', function() {
+            spyOn(Documents, 'getUserDocsCount').and.callThrough();
+
+            httpBackend
+              .whenGET(/\/api\/users\/[0-9]*\/documents\/count/)
+              .respond(200, {
+                data: 2
+              });
+
+            Documents.getUserDocsCount(1, cb);
+
+            httpBackend.flush();
+
+            expect(error).toBe(null);
+            expect(response).toBeDefined();
+          });
+
+          it('should return error getting user documents count', function() {
+            spyOn(Documents, 'getUserDocsCount').and.callThrough();
+
+            httpBackend
+              .whenGET(/\/api\/users\/[0-9]*\/documents\/count/)
+              .respond(400, {
+                err: 'err'
+              });
+
+            Documents.getUserDocsCount(1, cb);
+
+            httpBackend.flush();
+
+            expect(response).toBe(null);
+            expect(error.data.err).toBe('err');
+          });
         });
 
-        it('should return error getting user documents only', function() {
-          spyOn(Documents, 'getUserDocs').and.callThrough();
 
-          httpBackend
-            .whenGET('/api/users/1/documents')
-            .respond(400, {
-              err: 'err'
-            });
+        describe('getting document by role', function() {
 
-          Documents.getUserDocs(1, cb);
 
-          httpBackend.flush();
+          it('should get documents by role only', function() {
+            spyOn(Documents, 'getRoleDocs').and.callThrough();
 
-          expect(response).toBe(null);
-          expect(error.data.err).toBe('err');
-        });
+            httpBackend
+              .whenGET(/\/api\/roles\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .respond(200, {
+                data: [{
+                  _id: 1,
+                  content: 'I am a doc'
+                }]
+              });
 
-        it('should get documents by role only', function() {
-          spyOn(Documents, 'getRoleDocs').and.callThrough();
+            Documents.getRoleDocs(1, params, cb);
 
-          httpBackend
-            .whenGET('/api/roles/1/documents')
-            .respond(200, {
-              data: [{
-                _id: 1,
-                content: 'I am a doc'
-              }]
-            });
+            httpBackend.flush();
 
-          Documents.getRoleDocs(1, cb);
+            expect(error).toBe(null);
+            expect(response).toBeDefined();
+          });
 
-          httpBackend.flush();
+          it('should return error getting documents by role', function() {
+            spyOn(Documents, 'getRoleDocs').and.callThrough();
 
-          expect(error).toBe(null);
-          expect(response).toBeDefined();
-        });
+            httpBackend
+              .whenGET(/\/api\/roles\/[0-9]*\/documents\?limit\=[0-9]*\&page\=[0-9]*/)
+              .respond(400, {
+                err: 'err'
+              });
 
-        it('should return error getting documents by role only', function() {
-          spyOn(Documents, 'getRoleDocs').and.callThrough();
+            Documents.getRoleDocs(1, params, cb);
 
-          httpBackend
-            .whenGET('/api/roles/1/documents')
-            .respond(400, {
-              err: 'err'
-            });
+            httpBackend.flush();
 
-          Documents.getRoleDocs(1, cb);
+            expect(response).toBe(null);
+            expect(error.data.err).toBe('err');
+          });
 
-          httpBackend.flush();
+          it('should return documents by role count', function() {
+            spyOn(Documents, 'getRoleDocsCount').and.callThrough();
 
-          expect(response).toBe(null);
-          expect(error.data.err).toBe('err');
+            httpBackend
+              .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
+              .respond(200, {
+                data: 2
+              });
+
+            Documents.getRoleDocsCount(1, cb);
+
+            httpBackend.flush();
+
+            expect(error).toBe(null);
+            expect(response).toBeDefined();
+          });
+
+          it('should return  error getting documents by role count', function() {
+            spyOn(Documents, 'getRoleDocsCount').and.callThrough();
+
+            httpBackend
+              .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
+              .respond(400, {
+                err: 'err'
+              });
+
+            Documents.getRoleDocsCount(1, cb);
+
+            httpBackend.flush();
+
+            expect(response).toBe(null);
+            expect(error.data.err).toBe('err');
+          });
         });
 
         it('should delete selected documents', function() {

@@ -58,29 +58,31 @@
       });
 
       // group admin user create roles
-      it('- Should be able to create roles for valid group', function(done) {
-        request
-          .post('/api/roles')
-          .type('json')
-          .set({
-            userid: adminUser._id,
-            access_token: token,
-            groupid: 113
-          })
-          .send([{
-            title: roleSeed.testRole,
-            groupId: 113
-          }])
-          .expect(201)
-          .end(function(err, res) {
-            assert.equal(null, err, 'Error encountered');
-            var response = res.body;
-            testRole = response.ops[0];
-            assert.equal(testRole.title, 'Manager');
-            assert.deepEqual(testRole.groupId, 113);
-            done();
-          });
-      });
+      it('- Should be able to create roles' +
+        ' for valid group',
+        function(done) {
+          request
+            .post('/api/roles')
+            .type('json')
+            .set({
+              userid: adminUser._id,
+              access_token: token,
+              groupid: 113
+            })
+            .send([{
+              title: roleSeed.testRole,
+              groupId: 113
+            }])
+            .expect(201)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              testRole = response.ops[0];
+              assert.equal(testRole.title, 'Manager');
+              assert.deepEqual(testRole.groupId, 113);
+              done();
+            });
+        });
 
       it('- Should be able to update roles for group', function(done) {
         request
@@ -121,6 +123,46 @@
             assert.deepEqual(_.pluck(response, 'title'), ['Admin',
               'Librarian'
             ]);
+            done();
+          });
+      });
+
+
+      it('- Should be able to get all roles by pages', function(done) {
+        request
+          .get('/api/roles')
+          .type('json')
+          .set({
+            userid: adminUser._id,
+            access_token: token,
+            groupid: 113
+          }).query({
+            limit: 1,
+            page: 1
+          })
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            assert.deepEqual(_.pluck(response, 'title'), ['Admin']);
+            done();
+          });
+      });
+
+      it('- Should be able to get count of roles', function(done) {
+        request
+          .get('/api/rolecount')
+          .type('json')
+          .set({
+            userid: adminUser._id,
+            access_token: token,
+            groupid: 113
+          })
+          .expect(200)
+          .end(function(err, res) {
+            assert.equal(null, err, 'Error encountered');
+            var response = res.body;
+            assert.equal(response, 2);
             done();
           });
       });

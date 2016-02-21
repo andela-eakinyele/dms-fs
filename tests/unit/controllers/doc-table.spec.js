@@ -9,17 +9,26 @@
         save: function(data, cb, cbb) {
           return data ? cb(data) : cbb(false);
         },
-        getUserDocs: function(id, cb) {
-          return id ? cb(null, 'success') : cb('error', null);
+        getUserDocs: function(id, params, cb) {
+          return (id !== null && params !== null) ? cb(null, 'success') : cb('error', null);
+        },
+        getUserDocsCount: function(id, cb) {
+          return id ? cb(null, 3) : cbb(true, null);
         },
         delete: function(params, cb, cbb) {
           return params.id ? cb('success') : cbb('error');
         },
-        getRoleDocs: function(id, cb) {
-          return id ? cb(null, 'success') : cb('error', null);
+        getRoleDocs: function(id, params, cb) {
+          return (id && params) ? cb(null, 'success') : cb('error', null);
+        },
+        getRoleDocsCount: function(id, cb) {
+          return id ? cb(null, 3) : cbb(true, null);
         },
         update: function(params, data, cb, cbb) {
           return (params.id && data) ? cb(data) : cbb(false);
+        },
+        count: function(cb) {
+          return cb(null, 3);
         },
         get: function(params, cb, cbb) {
           return params.id ? cb({
@@ -29,8 +38,15 @@
             message: 'error'
           });
         },
-        query: function(cb) {
-          if (cb) {
+        bulkdelete: function(data, cb, cbb) {
+          if (data.length > 0) {
+            return cb(data);
+          } else {
+            return cbb(data);
+          }
+        },
+        query: function(query, cb, cbb) {
+          if (query) {
             return cb([{
               ownerId: [{
                 name: {
@@ -39,6 +55,8 @@
                 }
               }]
             }]);
+          } else {
+            return cbb('error');
           }
         }
       },
@@ -87,69 +105,134 @@
     }));
 
 
+    describe('Initilization of the controller', function() {
+      beforeEach(function() {
+        scope.query = {
+          page: 1,
+          limit: 10
+        };
+      });
 
-    it('should initialize the controller', function() {
-      spyOn(scope, 'getDocs');
-      scope.init();
-      expect(scope.selectedDocs).toBeDefined();
-      expect(scope.getDocs).toHaveBeenCalled();
-    });
+      it('should initialize the controller', function() {
+        spyOn(scope, 'getDocs');
+        scope.init();
+        expect(scope.selectedDocs).toBeDefined();
+        expect(scope.getDocs).toHaveBeenCalled();
+      });
 
-    it('should get documents based on state' +
-      ' and valid stateParams - mydocs',
-      function() {
+      it('should get documents based on state' +
+        ' and valid stateParams - mydocs',
+        function() {
+          stateParams.id = 1;
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list.mydocs';
+          spyOn(Docs, 'getUserDocs').and.callThrough();
+          spyOn(Docs, 'getUserDocsCount').and.callThrough();
+          scope.getDocs(scope.query);
+          expect(Docs.getUserDocs).toHaveBeenCalled();
+          expect(Docs.getUserDocsCount).toHaveBeenCalled();
+          expect(scope.docs).toBeDefined();
+          expect(scope.count).toBeDefined();
+        });
+
+
+      it('should not get documents based on state and ' +
+        'invalid stateParams - mydocs',
+        function() {
+          spyOn(Docs, 'getUserDocs').and.callThrough();
+          spyOn(Docs, 'getUserDocsCount').and.callThrough();
+          spyOn(Utils, 'showAlert').and.callThrough();
+          stateParams.id = null;
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list.mydocs';
+          scope.getDocs(scope.query);
+          expect(Docs.getUserDocs).toHaveBeenCalled();
+          expect(Docs.getUserDocsCount).not.toHaveBeenCalled();
+          expect(Utils.showAlert).toHaveBeenCalled();
+          expect(scope.docs).not.toBeDefined();
+          expect(scope.count).toBe(0);
+        });
+
+      it('should get documents count error - mydocs',
+        function() {
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list.mydocs';
+          spyOn(Docs, 'getUserDocs').and.callThrough();
+          spyOn(Docs, 'getUserDocsCount').and.callFake(function(id, cb) {
+            return cb('error', null);
+          });
+          spyOn(Utils, 'showAlert').and.callThrough();
+          scope.getDocs(scope.query);
+          expect(Docs.getUserDocs).toHaveBeenCalled();
+          expect(Utils.showAlert).toHaveBeenCalled();
+          expect(scope.docs).toBeDefined();
+          expect(scope.count).toBe(0);
+
+        });
+
+      it('should get documents based on state and ' +
+        'valid stateParams - shared',
+        function() {
+
+          stateParams.roleid = 1;
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list.shared';
+          spyOn(Docs, 'getRoleDocs').and.callThrough();
+          spyOn(Docs, 'getRoleDocsCount').and.callThrough();
+          scope.getDocs(scope.query);
+          expect(Docs.getRoleDocs).toHaveBeenCalled();
+          expect(Docs.getRoleDocsCount).toHaveBeenCalled();
+          expect(scope.docs).toBeDefined();
+          expect(scope.count).toBeDefined();
+        });
+
+      it('should not get documents based on state and' +
+        ' invalid stateParams - shared',
+        function() {
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list.shared';
+          spyOn(Docs, 'getRoleDocs').and.callThrough();
+          spyOn(Docs, 'getRoleDocsCount').and.callThrough();
+          scope.getDocs(scope.query);
+          expect(Docs.getRoleDocs).toHaveBeenCalled();
+          expect(Docs.getRoleDocsCount).not.toHaveBeenCalled();
+          expect(scope.docs).not.toBeDefined();
+          expect(scope.count).toBe(0);
+        });
+
+      it('should get documents based on state - list', function() {
         stateParams.id = 1;
         stateParams.groupid = 2;
-        state.current.name = 'dashboard.list.mydocs';
-        spyOn(Docs, 'getUserDocs').and.callThrough();
-        scope.getDocs();
-        expect(Docs.getUserDocs).toHaveBeenCalled();
+        state.current.name = 'dashboard.list';
+        spyOn(Docs, 'query').and.callThrough();
+        scope.getDocs(scope.query);
+        expect(Docs.query).toHaveBeenCalled();
         expect(scope.docs).toBeDefined();
+        expect(scope.count).toBe(3);
       });
 
-    it('should get documents based on state and ' +
-      'invalid stateParams - mydocs',
-      function() {
-        stateParams.groupid = 2;
-        state.current.name = 'dashboard.list.mydocs';
-        spyOn(Docs, 'getUserDocs').and.callThrough();
-        scope.getDocs();
-        expect(Docs.getUserDocs).toHaveBeenCalled();
-        expect(scope.docs).not.toBeDefined();
-      });
+      it('should return error getting documents' +
+        ' based on state - list',
+        function() {
+          scope.query = null
+          stateParams.id = 1;
+          stateParams.groupid = 2;
+          state.current.name = 'dashboard.list';
+          spyOn(Docs, 'query').and.callThrough();
+          spyOn(Utils, 'showAlert').and.callThrough();
+          scope.getDocs(scope.query);
+          expect(Docs.query).toHaveBeenCalled();
+          expect(Utils.showAlert).toHaveBeenCalled();
+          expect(scope.docs).not.toBeDefined();
+          expect(scope.count).toBe(0);
+        });
+    });
 
-    it('should get documents based on state and ' +
-      'valid stateParams - shared',
-      function() {
-
-        stateParams.roleid = 1;
-        stateParams.groupid = 2;
-        state.current.name = 'dashboard.list.shared';
-        spyOn(Docs, 'getRoleDocs').and.callThrough();
-        scope.getDocs();
-        expect(Docs.getRoleDocs).toHaveBeenCalled();
-        expect(scope.docs).toBeDefined();
-      });
-
-    it('should get documents based on state and' +
-      ' invalid stateParams - shared',
-      function() {
-        stateParams.groupid = 2;
-        state.current.name = 'dashboard.list.shared';
-        spyOn(Docs, 'getRoleDocs').and.callThrough();
-        scope.getDocs();
-        expect(Docs.getRoleDocs).toHaveBeenCalled();
-        expect(scope.docs).not.toBeDefined();
-      });
-
-    it('should get documents based on state - list', function() {
-      stateParams.id = 1;
-      stateParams.groupid = 2;
-      state.current.name = 'dashboard.list';
-      spyOn(Docs, 'query').and.callThrough();
-      scope.getDocs();
-      expect(Docs.query).toHaveBeenCalled();
-      expect(scope.docs).not.toBeDefined();
+    it('should load documents by pages', function() {
+      spyOn(scope, 'getDocs').and.callThrough();
+      scope.onPaginate(2, 1);
+      expect(scope.selectedDocs.length).toBe(0);
+      expect(scope.getDocs).toHaveBeenCalled();
     });
 
     it('should return access to doc', function() {
@@ -164,7 +247,7 @@
         }]
       };
       scope.activeUser = user;
-      expect(scope.accessDoc(doc)).toBeTruthy();
+      expect(scope.access(doc)).toBeTruthy();
     });
 
     it('should return no acces', function() {
@@ -179,7 +262,7 @@
         }]
       };
       scope.activeUser = user;
-      expect(scope.accessDoc(doc)).toBeFalsy();
+      expect(scope.access(doc)).toBeFalsy();
     });
 
     it('should be return edit access', function() {
@@ -223,20 +306,34 @@
       expect(list.length).toBe(2);
     });
 
-    it('should call scope functions', function() {
+    it('should call scope edit functions', function() {
       spyOn(state, 'go');
-      scope.menuAction('edit', 1);
+      scope.menuAction('edit', 1, 'evt');
       expect(state.go).toHaveBeenCalledWith('dashboard.doc.edit', {
         docId: 1
       });
+    });
+
+    it('should call scope delete function', function() {
       spyOn(Utils, 'showConfirm').and.callThrough();
+      spyOn(state, 'go');
+      spyOn(Docs, 'delete').and.callThrough();
+      scope.menuAction('delete', 1);
+      expect(Docs.delete).toHaveBeenCalled();
+      expect(Utils.showConfirm).toHaveBeenCalled();
+      expect(state.go).toHaveBeenCalled();
+    });
+
+    it('should alert delete error', function() {
+      spyOn(Utils, 'showConfirm').and.callThrough();
+      spyOn(state, 'go');
       spyOn(Docs, 'delete').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
-      scope.menuAction('delete', 1);
+      scope.menuAction('delete', null, 'evt');
       expect(Docs.delete).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
       expect(Utils.showConfirm).toHaveBeenCalled();
-      expect(state.go).toHaveBeenCalled();
+      expect(state.go).not.toHaveBeenCalled();
     });
 
     it('should refresh the table', function() {
@@ -300,7 +397,59 @@
         expect(scope.all(list)).toBeFalsy();
       });
 
+      describe('multiple selection for view and deletion', function() {
+        it('show get multiple document id for view', function() {
+          scope.selectedDocs = [1, 2, 3];
+          spyOn(state, 'go').and.callThrough();
+          scope.viewSelection();
+          expect(state.go).toHaveBeenCalledWith('dashboard.doc.view', {
+            docIds: [1, 2, 3],
+            docId: 'id=1&id=2&id=3'
+          });
+        });
+
+        it('shoulld delete a selection', function() {
+          scope.selectedDocs = [1, 2];
+          scope.docs = [{
+            _id: 1
+          }, {
+            _id: 2
+          }, {
+            _id: 3
+          }, {
+            _id: 4
+          }]
+          spyOn(state, 'go').and.callThrough();
+          spyOn(Utils, 'showConfirm').and.callThrough();
+          spyOn(Docs, 'bulkdelete').and.callThrough();
+          scope.deleteSelection();
+          expect(Docs.bulkdelete).toHaveBeenCalled();
+          expect(scope.selectedDocs.length).toBe(0);
+          expect(state.go).toHaveBeenCalled();
+          expect(scope.docs).toEqual([{
+            _id: 3
+          }, {
+            _id: 4
+          }]);
+        });
+
+
+        it('shoulld throw error deleting a selection', function() {
+          scope.selectedDocs = [];
+          scope.docs = [1, 2, 3, 4]
+          spyOn(Utils, 'showConfirm').and.callThrough();
+          spyOn(Utils, 'showAlert').and.callThrough();
+          spyOn(Docs, 'bulkdelete').and.callThrough();
+          spyOn(state, 'go').and.callThrough();
+          scope.deleteSelection();
+          expect(Docs.bulkdelete).toHaveBeenCalled();
+          expect(scope.selectedDocs.length).toBe(0);
+          expect(Utils.showAlert).toHaveBeenCalled();
+          expect(state.go).not.toHaveBeenCalled();
+        });
+      });
     });
+
 
   });
 

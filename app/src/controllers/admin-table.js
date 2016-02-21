@@ -13,7 +13,6 @@
           $scope.query = $stateParams.query;
         };
 
-
         // Toggling Selection
         // Update selection  array
         $scope.toggle = function(item, list) {
@@ -71,83 +70,82 @@
           return Utils.parseDate(date);
         };
 
+        /**
+         * Deleting users, documents or roles
+         **/
+        $scope.deleteOne = function(id, index, evt) {
 
-        // populate user table
-        $scope.getGroupUsers = function(query) {
-
-          $scope.roles = Roles.query({
-            groupid: $stateParams.groupid
-          });
-
-          function roledata(role) {
-            return window._.filter($scope.roles, {
-              '_id': role
-            });
-          }
-
-          var userParams = query;
-          userParams.groupid = $stateParams.groupid;
-
-          Users.query(userParams,
-            function(res) {
-              if (res) {
-                var data = res;
-                data = window._.map(data, function(a) {
-                  window._.forEach(a.roles, function(b) {
-                    var role = roledata(b._id);
-                    if (role.length) {
-                      a.Role = role[0].title;
-                    }
-                  });
-                  return a;
-                });
-
-                $scope.users = data;
-                Users.count(function(err, count) {
-                  if (err) {
-                    Utils.showAlert(null, 'Error retrieving ' +
-                      'users');
-                  } else {
-                    $scope.count = count;
-                  }
-                });
-              } else {
-                $scope.userErr = 'There are no users in this group';
-              }
-            },
+          // show confirm dialog for every delete operation
+          Utils.showConfirm(evt, 'Delete', 'Selection will be deleted',
+            'Delete',
             function() {
-              $scope.userErr = 'Error retrieving group users';
+
+              // delete request for documents
+              if ($scope.listName === 'docs') {
+                Docs.delete({
+                    id: id
+                  }, function() {
+                    $scope.docs.splice(index, 1);
+                    Utils.showAlert(evt, 'Delete Action', 'Document ' +
+                      'successfully deleted');
+                  },
+                  function() {
+                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                      'document');
+                  });
+
+                // delete request for roles
+              } else if ($scope.listName === 'roles') {
+                Roles.delete({
+                  id: id
+                }, function() {
+                  $scope.roles.splice(index, 1);
+                  Utils.showAlert(evt, 'Delete Action', 'Role ' +
+                    'successfully deleted');
+                }, function() {
+                  Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                    'document');
+                });
+
+                // delete requests for groups
+              } else if ($scope.listName === 'groups') {
+                Groups.delete({
+                    id: id
+                  }, function() {
+                    $scope.groups.splice(index, 1);
+
+                    Utils.showAlert(evt, 'Delete Action', 'Groups ' +
+                      'successfully deleted');
+                  },
+                  function() {
+                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
+                      'document');
+                  });
+
+                // delete request for users
+              } else if ($scope.listName === 'appUsers') {
+                Users.delete({
+                  id: id
+                }, function() {
+                  $scope.allUsers.splice(index, 1);
+                  Utils.showAlert(null, 'Delete Action', 'Users ' +
+                    'successfully deleted');
+                }, function() {
+                  Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
+                    'document');
+                });
+              }
             });
         };
 
-        $scope.userList = function() {
-
-          $scope.listName = 'users';
-          $scope.userHeaders = [
-            'Username',
-            'Email',
-            'Firstname',
-            'LastName',
-            'Role'
-          ];
-          $scope.init();
-          $scope.query.order = 'username';
-          $scope.getGroupUsers($scope.query);
-        };
-
-        $scope.onPaginateUsers = function(page, limit) {
-          $scope.selected = [];
-          $scope.getGroupUsers(angular.extend({}, $scope.query, {
-            page: page,
-            limit: limit
-          }));
-        };
+        /**
+         *Populating tables, pagination, and reloading
+         **/
 
         // populate role table
         $scope.getRoles = function(query) {
           var roleParams = query;
           roleParams.groupid = $stateParams.groupid;
-
 
           Roles.query(roleParams, function(res) {
             if (res.length > 0) {
@@ -180,7 +178,6 @@
             'Title',
             'No of Users'
           ];
-
           $scope.getRoles($scope.query);
         };
 
@@ -191,6 +188,7 @@
             limit: limit
           }));
         };
+
 
         // populate document table
         $scope.getDocs = function(query) {
@@ -234,60 +232,77 @@
           }));
         };
 
-        $scope.deleteOne = function(id, index, evt) {
-          Utils.showConfirm(evt, 'Delete', 'Selection will be deleted',
-            'Delete',
-            function() {
-              if ($scope.listName === 'docs') {
-                Docs.delete({
-                    id: id
-                  }, function() {
-                    $scope.docs.splice(index, 1);
-                    Utils.showAlert(evt, 'Delete Action', 'Document ' +
-                      'successfully deleted');
-                  },
-                  function() {
-                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
-                      'document');
-                  });
-              } else if ($scope.listName === 'roles') {
-                Roles.delete({
-                  id: id
-                }, function() {
-                  $scope.roles.splice(index, 1);
-                  Utils.showAlert(evt, 'Delete Action', 'Role ' +
-                    'successfully deleted');
-                }, function() {
-                  Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
-                    'document');
-                });
-              } else if ($scope.listName === 'groups') {
-                Groups.delete({
-                    id: id
-                  }, function() {
-                    $scope.groups.splice(index, 1);
+        // populate user table
+        $scope.getGroupUsers = function(query) {
 
-                    Utils.showAlert(evt, 'Delete Action', 'Groups ' +
-                      'successfully deleted');
-                  },
-                  function() {
-                    Utils.showAlert(evt, 'Delete Action', 'Error Deleting ' +
-                      'document');
+          $scope.roles = Roles.query({
+            groupid: $stateParams.groupid
+          });
+
+          function roledata(role) {
+            return window._.filter($scope.roles, {
+              '_id': role
+            });
+          }
+
+          var userParams = query;
+          userParams.groupid = $stateParams.groupid;
+
+          Users.query(userParams,
+            function(res) {
+              if (res.length > 0) {
+                var data = res;
+                data = window._.map(data, function(a) {
+                  window._.forEach(a.roles, function(b) {
+                    var role = roledata(b._id);
+                    if (role.length) {
+                      a.Role = role[0].title;
+                    }
                   });
-              } else if ($scope.listName === 'appUsers') {
-                Users.delete({
-                  id: id
-                }, function() {
-                  $scope.allUsers.splice(index, 1);
-                  Utils.showAlert(null, 'Delete Action', 'Users ' +
-                    'successfully deleted');
-                }, function() {
-                  Utils.showAlert(null, 'Delete Action', 'Error Deleting ' +
-                    'document');
+                  return a;
                 });
+                $scope.users = data;
+
+                Users.count(function(err, count) {
+                  if (err) {
+                    Utils.showAlert(null, 'Error retrieving ' +
+                      'users');
+                  } else {
+                    $scope.count = count;
+                  }
+                });
+              } else {
+                $scope.userErr = 'There are no users in this group';
               }
+            },
+            function() {
+              $scope.userErr = 'Error retrieving group users';
             });
         };
+        $scope.userList = function() {
+
+          $scope.listName = 'users';
+          $scope.userHeaders = [
+            'Username',
+            'Email',
+            'Firstname',
+            'LastName',
+            'Role'
+          ];
+          $scope.init();
+          $scope.query.order = 'username';
+          $scope.getGroupUsers($scope.query);
+        };
+
+        $scope.onPaginateUser = function(page, limit) {
+          $scope.selected = [];
+          $scope.getGroupUsers(angular.extend({}, $scope.query, {
+            page: page,
+            limit: limit
+          }));
+        };
+
+
 
         // populate group table
         $scope.getGroups = function(query) {
@@ -329,6 +344,7 @@
         };
 
         $scope.onPaginateGroup = function(page, limit) {
+          $scope.selected = [];
           $scope.getGroups(angular.extend({}, $scope.query, {
             page: page,
             limit: limit
@@ -337,7 +353,6 @@
 
         // populate user table
         $scope.getAppUsers = function(query) {
-
           Users.query(query, function(res) {
             if (res.length > 0) {
               $scope.allUsers = res;
@@ -375,9 +390,9 @@
         };
 
 
-        $scope.onPaginateappUsers = function(page, limit) {
+        $scope.onPaginateAppUser = function(page, limit) {
           $scope.selected = [];
-          $scope.getGroups(angular.extend({}, $scope.query, {
+          $scope.getAppUsers(angular.extend({}, $scope.query, {
             page: page,
             limit: limit
           }));

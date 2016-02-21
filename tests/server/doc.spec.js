@@ -255,6 +255,80 @@
           });
       });
 
+      // should return all docs owned by user by pages
+      it('-Should be able to get document by userid ' +
+        'paginated',
+        function(done) {
+          request
+            .get('/api/users/' + userIds[0] + '/documents')
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              groupid: 113,
+              userid: userIds[0],
+              access_token: token[0].token
+            }).query({
+              page: 1,
+              limit: 2
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.length, 2);
+              assert.deepEqual(_.pluck(response,
+                'title'), ['Staple Foods', 'Life of a developer']);
+              done();
+            });
+        });
+
+      // should return count of all documents owned by user 
+      it('-Should be able to get document by' +
+        ' userid paginated',
+        function(done) {
+          request
+            .get('/api/users/' + userIds[0] + '/documents/count')
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              groupid: 113,
+              userid: userIds[0],
+              access_token: token[0].token
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response, 3);
+              done();
+            });
+        });
+
+
+      // should return all docs owned by user
+      it('-Should be able to get count of documents',
+        function(done) {
+          request
+            .get('/api/documentcount')
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              groupid: 113,
+              userid: userIds[0],
+              access_token: token[0].token
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response, 4);
+              done();
+            });
+        });
+
       // should be able to update document 
       it('-Should be able to update own document', function(done) {
         request

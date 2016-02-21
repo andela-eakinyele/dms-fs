@@ -23,7 +23,6 @@
             .then(function(res) {
               cb(null, res.data);
             }, function(err) {
-              console.log(err);
               cb(err, null);
             });
         };

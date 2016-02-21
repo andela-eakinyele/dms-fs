@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('DocDocTableCtrl', ['$rootScope', '$scope', '$state',
+    .controller('DocTableCtrl', ['$rootScope', '$scope', '$state',
       '$stateParams', 'Docs', 'Utils',
       function($rootScope, $scope, $state, $stateParams, Docs, Utils) {
 
@@ -42,8 +42,6 @@
                 }
               });
 
-
-
             // get shared documents
           } else if (/shared/.test($state.current.name)) {
             Docs.getRoleDocs($stateParams.roleid,
@@ -67,7 +65,7 @@
               });
 
             // get all douments in group
-          } else {
+          } else if (/list/.test($state.current.name)) {
             Docs.query(query, function(res) {
                 $scope.docs = res;
 

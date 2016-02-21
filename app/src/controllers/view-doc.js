@@ -55,8 +55,6 @@
               Docs.delete({
                   id: id
                 }, function() {
-                  Utils.showAlert(evt, 'Delete Action', 'Document ' +
-                    'successfully deleted');
                   $state.go('dashboard.list.mydocs', {
                     id: id,
                     groupid: $stateParams.groupid
@@ -88,7 +86,6 @@
           }
         };
 
-        $scope.init();
       }
     ]);
 })();
