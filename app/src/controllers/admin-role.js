@@ -29,10 +29,11 @@
         $scope.create = function(ev) {
           var gId = parseInt($stateParams.groupid);
 
-          $scope.newRoles = window._.map($scope.newRoles,
-            function(role) {
-              return role.trim();
-            });
+          $scope.newRoles = window._.sortedUniq(
+            window._.map($scope.newRoles,
+              function(role) {
+                return role.trim();
+              }));
 
           $scope.saveRoles = $scope.newRoles.map(function(a) {
             return {
