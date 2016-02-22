@@ -1,5 +1,11 @@
 (function() {
   'use strict';
+
+  var env = process.env.NODE_ENV || 'development';
+  if (env === 'development') {
+    require('dotenv').load();
+  }
+
   var gulp = require('gulp');
   var gutil = require('gulp-util');
   var less = require('gulp-less');
@@ -12,12 +18,13 @@
   var jshint = require('gulp-jshint');
   var imagemin = require('gulp-imagemin');
   var reporter = require('gulp-codeclimate-reporter');
-
+  var Server = require('karma').Server;
   var watchify = require('watchify');
   var browserify = require('browserify');
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');
   var babelify = require('babelify');
+  var coveralls = require('gulp-coveralls');
 
 
   var paths = {
@@ -31,12 +38,7 @@
       'app/**/*.*',
       'app/styles/*.css'
     ],
-    unitTests: [
-      'public/lib/angular/angular.min.js',
-      'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-      'public/js/application.js',
-      'tests/unit/**/*.spec.js'
-    ],
+    unitTests: [],
     serverTests: ['./tests/server/**/*.spec.js'],
     libTests: ['lib/tests/**/*.js'],
     styles: 'app/styles/*.+(less|css)'
@@ -72,9 +74,6 @@
   // render jade to html files
   gulp.task('jade', function() {
     gulp.src(paths.jade)
-      // .pipe(changed('./public', {
-      //   extension: '.html'
-      // }))
       .pipe(jade())
       .pipe(gulp.dest('./public/'));
   });
@@ -123,14 +122,22 @@
 
   gulp.task('buildjs', bundle.bind(null, bundler()));
 
+
+  gulp.task('test:fend', ['buildjs', 'bower'], function(done) {
+    new Server({
+      configFile: __dirname + '/karma.conf.js',
+      singleRun: true
+    }, done).start();
+  });
+
   // test runners
   // server api tests
-  gulp.task('test:bend', function() {
+  gulp.task('test:bend', ['test:fend'], function() {
     return gulp.src(['tests/server/index.js'], {
         read: false
       })
       .pipe(cover.instrument({
-        pattern: ['server/**/*.js'],
+        pattern: ['server/**/*.js', '!server/config/initApi.js'],
         debugDirectory: 'debug'
       }))
       .pipe(mocha({
@@ -146,9 +153,9 @@
       .pipe(cover.gather())
       .pipe(cover.format(
         ['lcov', 'html', 'json']))
-      .pipe(gulp.dest('./reports'))
+      .pipe(gulp.dest('./coverage/bend/'))
       .once('end', function() {
-        process.exit();
+        process.exit(0);
       });
   });
 
@@ -172,35 +179,31 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-  gulp.task('codeclimate', ['test:bend'], function() {
-    return gulp
-      .src(['./reports/coverage.lcov'], {
+  gulp.task('codeclimate-reporter', function() {
+    return gulp.src(['coverage/fend/report-lcov/lcov.info'], {
         read: false
       })
       .pipe(reporter({
         token: process.env.CODECLIMATE_REPO_TOKEN,
-        executable: './node_modules/codeclimate-test-reporter/bin/codeclimate',
         verbose: true
       }));
   });
 
-  gulp.task('test', ['codeclimate']);
-  // // var envOptions = {
-  //  //   string: 'env',
-  //  //   default: {
-  //  //     env: process.env.NODE_ENV || 'test'
-  //  //   }
-  //  // };
+  gulp.task('coveralls', function() {
+    gulp.src('coverage/bend/coverage.lcov')
+      .pipe(coveralls());
+  });
 
-  //  gulp.task('heroku:production', ['build']);
-  //  gulp.task('heroku:staging', ['build']);
-  //  gulp.task('production', ['nodemon', 'build']);
-  //  gulp.task('test', ['test:fend', 'test:bend']);
+  gulp.task('test', ['test:fend', 'test:bend']);
+  gulp.task('report', ['coveralls', 'codeclimate-reporter']);
 
   gulp.task('build', ['jade', 'less', 'static-files',
     'buildjs', 'images', 'bower',
   ]);
 
+  gulp.task('heroku:production', ['build']);
+  gulp.task('heroku:staging', ['build']);
+  gulp.task('production', ['nodemon', 'build']);
 
   gulp.task('default', ['nodemon', 'watch', 'build']);
 })();

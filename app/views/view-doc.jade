@@ -1,23 +1,23 @@
-md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="column" layout-margin)
-  div.head(layout="row" layout-padding layout-align="start center")
-    div.right-border
-      md-button(aria-label="back to list" ui-sref="dashboard.list")
-        md-icon(md-font-set="fa fa-long-arrow-left fa-2x")
-        span Back to List
-    div(layout="row" layout-align="center center" flex)
-      h2 {{doc.title}}
-      md-fab-speed-dial(md-direction="left" md-open="fabisOpen"  class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false" ng-if="editDoc()")
-        md-fab-trigger
-          md-button(aria-label="menu" class="md-fab md-warn")
-            md-tooltip(md-direction="top" md-visible="tooltipVisible") Options
-            md-icon(md-font-set="fa fa-ellipsis-v fa-2x")
-        md-fab-actions
-          md-button.md-primary(aria-label="edit doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"edit\")")
-            md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
-          md-button.md-primary(aria-label="delete doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"delete\")")
-            md-icon(md-font-set="fa fa-trash fa-2x")
-  div.contentView
-    | {{doc.content}}
-  md-divider
-  div
-    span {{doc.label}} - {{getDate(doc.dateCreated).day}} by {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
+div(layout="column" layout-margin ng-init="init()")
+  md-whiteframe(class="md-whiteframe-4dp" layout-align="start center" layout="column" layout-margin ng-repeat="doc in docs")
+    div.head(layout="row" layout-padding layout-align="start center")
+      div.right-border
+        md-button(aria-label="back to list" ui-sref="dashboard.list.mydocs")
+          md-icon(md-font-set="fa fa-long-arrow-left fa-2x")
+          span Back to List
+      div(layout="row" layout-align="center center" flex)
+        h2 {{doc.title}}
+        md-fab-speed-dial(md-direction="left" md-open="fabisOpen"  class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false" ng-if="editDoc(doc)")
+          md-fab-trigger
+            md-button(aria-label="menu" class="md-fab md-warn")
+              md-tooltip(md-direction="top" md-visible="tooltipVisible") Options
+              md-icon(md-font-set="fa fa-ellipsis-v fa-2x")
+          md-fab-actions
+            md-button.md-primary(aria-label="edit doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"edit\", doc._id, $event)")
+              md-icon(md-font-set="fa fa-pencil-square-o fa-2x")
+            md-button.md-primary(aria-label="delete doc" class="md-fab md-raised md-mini" ng-click="menuAction(\"delete\", doc._id, $event)")
+              md-icon(md-font-set="fa fa-trash fa-2x")
+    div(ng-bind-html="doc.content")
+    md-divider
+    div
+      span {{doc.label}} - {{getDate(doc.dateCreated).day}} by {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}

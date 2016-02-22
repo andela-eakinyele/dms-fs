@@ -1,18 +1,17 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('UserCtrl', ['$rootScope', '$scope', '$mdDialog',
+    .controller('UserCtrl', ['$rootScope', '$scope',
       '$state', '$stateParams', 'Utils', 'Users', 'Roles',
-      function($rootScope, $scope, $mdDialog, $state, $stateParams,
+      function($rootScope, $scope, $state, $stateParams,
         Utils, Users, Roles) {
 
-        $scope.init = function(ev) {
+        $scope.init = function() {
           $scope.data = {};
-          $scope.currentGroup = $stateParams.groupid;
           // check user admin privilege
           $scope.userRole = window._.filter($rootScope.activeUser.roles, {
             title: 'Admin',
-            groupId: [$scope.currentGroup._id]
+            groupId: [$stateParams.groupid]
           });
 
           $scope.roles = Roles.query({
@@ -25,43 +24,37 @@
             }, function(user) {
               $scope.data = user;
             },
-            function(err) {
-              console.log(err);
-              Utils.showAlert(ev, 'Error Retrieving User',
+            function() {
+              Utils.showAlert(null, 'Error Retrieving User',
                 $rootScope.activeUser.username);
             });
         };
 
-        $scope.hide = function() {
-          $mdDialog.hide();
-        };
-
-        // close dialog form
+        // close sidenav 
         $scope.cancel = function() {
-          $mdDialog.cancel();
-        };
-
-        $scope.roleTitle = function(a, b) {
-          return window._.find($scope.roles, {
-            '_id': a,
-            groupId: [b]
-          });
+          $rootScope.close('right');
         };
 
         // update user modal
-        $scope.update = function(ev) {
+        $scope.update = function() {
           if ($scope.data.password === 'undefined') {
             delete $scope.data.password;
           }
 
+          $rootScope.activeUser.username = $scope.data.username;
+          $rootScope.activeUser.name = $scope.data.name;
+          $rootScope.activeUser.email = $scope.data.email;
+
           Users.update({
             id: $stateParams.id
           }, $scope.data, function() {
-            Utils.showAlert(ev, 'Updated User Profile',
+            Utils.showAlert(null, 'Updated User Profile',
               $rootScope.activeUser.username +
               ' \nsuccessfully updated');
+            $rootScope.close('right');
+
           }, function() {
-            Utils.showAlert(ev, 'Error Updating User',
+            Utils.showAlert(null, 'Error Updating User',
               $rootScope.activeUser.username);
           });
         };

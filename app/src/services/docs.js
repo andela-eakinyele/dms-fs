@@ -5,7 +5,9 @@
     .factory('Docs', ['$resource', '$http',
       function docFactory($resource, $http) {
         var obj = $resource('/api/documents/:id', {
-          id: '@id'
+          id: '@id',
+          page: '@page',
+          limit: '@limit'
         }, {
           update: {
             // this method issues a PUT request
@@ -15,8 +17,8 @@
           stripTrailingSlashes: false
         });
 
-        obj.getUserDocs = function(id, cb) {
-          return $http.get('/api/users/' + id + '/documents')
+        obj.count = function(cb) {
+          return $http.get('/api/documentcount')
             .then(function(res) {
               cb(null, res.data);
             }, function(err) {
@@ -24,8 +26,55 @@
             });
         };
 
-        obj.getRoleDocs = function(id, cb) {
-          return $http.get('/api/roles/' + id + '/documents')
+        obj.getUserDocs = function(id, params, cb) {
+          return $http.get('/api/users/' + id + '/documents?limit=' +
+              params.limit + '&page=' + params.page)
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.getUserDocsCount = function(id, cb) {
+          return $http.get('/api/users/' + id + '/documents/count')
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.getRoleDocs = function(id, params, cb) {
+          return $http.get('/api/roles/' + id + '/documents?limit=' +
+              params.limit + '&page=' + params.page)
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.getRoleDocsCount = function(id, cb) {
+          return $http.get('/api/roles/' + id + '/documents/count')
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.bulkdelete = function(data, cb) {
+          return $http.post('/api/documents/bulkdelete', data)
+            .then(function(res) {
+              cb(null, res.data);
+            }, function(err) {
+              cb(err, null);
+            });
+        };
+
+        obj.bulkview = function(data, cb) {
+          return $http.post('/api/documents/bulkview', data)
             .then(function(res) {
               cb(null, res.data);
             }, function(err) {

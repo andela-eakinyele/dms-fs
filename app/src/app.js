@@ -1,8 +1,9 @@
 (function() {
   'use strict';
 
-  angular.module('prodocs.controllers', []);
   angular.module('prodocs.services', []);
+  angular.module('prodocs.controllers', []);
+
 
   //Require Services
   require('./services/roles');
@@ -20,25 +21,25 @@
   require('./controllers/login');
   require('./controllers/register');
   require('./controllers/dashboard');
-  require('./controllers/table');
+  require('./controllers/doc-table');
   require('./controllers/group');
   require('./controllers/admin-role');
   require('./controllers/user');
   require('./controllers/doc');
-  require('./controllers/list');
+  require('./controllers/admin-table');
   require('./controllers/view-doc');
 
   window.app = angular.module('prodocs', [
-    'prodocs.controllers',
     'prodocs.services',
+    'prodocs.controllers',
     'ngRoute',
     'ngMessages',
     'ngResource',
     'ui.router',
     'ngMaterial',
     'md.data.table',
-    'ui.grid',
-    'ui.grid.pagination',
+    'ui.tinymce',
+    'ngSanitize',
     'ngAria',
     'ngAnimate'
   ])
@@ -62,7 +63,7 @@
       $stateProvider
         .state('home', { // route for home page
           abstract: true,
-          url: '/prodocs',
+          url: '/',
           templateUrl: 'views/home.html',
           controller: 'StartPageCtrl'
         })
@@ -72,21 +73,12 @@
           views: {
             'feature@home': {
               templateUrl: 'views/feature.html',
-              controller: 'featCtrl'
+              controller: 'FeatCtrl'
             },
           }
         })
-        .state('home.group', {
-          url: '/users/:id/group',
-          views: {
-            'nextView@home': {
-              templateUrl: 'views/group.html',
-              controller: 'GroupCtrl'
-            }
-          }
-        })
         .state('home.adduser', {
-          url: '/newuser',
+          url: 'signup',
           views: {
             'nextView@home': {
               controller: 'SignupCtrl',
@@ -95,7 +87,7 @@
           }
         })
         .state('home.login', {
-          url: '/login',
+          url: 'login',
           views: {
             'nextView@home': {
               controller: 'LoginCtrl',
@@ -105,18 +97,15 @@
         })
         .state('dashboard', {
           abstract: true,
-          url: '/prodocs/users/:id/dashboard/:groupid/documents',
+          url: '/users/:id/dashboard/:groupid/documents',
+          resolve: {
+            activeUser: function($rootScope) {
+              return $rootScope.activeUser;
+            }
+          },
           views: {
             '': {
               templateUrl: 'views/dashboard.html',
-              resolve: {
-                'activeUser': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeUser;
-                }],
-                'activeGroup': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeGroup;
-                }]
-              },
               controller: 'DashBoardCtrl'
             },
             'header@dashboard': {
@@ -124,6 +113,19 @@
             },
             'sidenav@dashboard': {
               templateUrl: 'views/dashsidenav.html'
+            },
+            'profile@dashboard': {
+              templateUrl: 'views/update.html',
+              controller: 'UserCtrl'
+            }
+          }
+        })
+        .state('dashboard.group', {
+          url: '^/users/:id/group',
+          views: {
+            'group@dashboard': {
+              templateUrl: 'views/group.html',
+              controller: 'GroupCtrl'
             }
           }
         })
@@ -141,7 +143,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/group-table.html',
-              controller: 'tableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -151,7 +153,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'tableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -160,7 +162,7 @@
           views: {
             'inner@dashboard': {
               templateUrl: 'views/table.html',
-              controller: 'tableCtrl'
+              controller: 'DocTableCtrl'
             }
           }
         })
@@ -174,12 +176,15 @@
           }
         })
         .state('dashboard.doc.view', {
-          url: '/:docId',
+          url: '/{docId}',
           views: {
             'docdata@dashboard.doc': {
               templateUrl: 'views/view-doc.html',
               controller: 'ViewDocCtrl'
             },
+          },
+          params: {
+            docIds: []
           }
         })
         .state('dashboard.doc.edit', {
@@ -193,37 +198,25 @@
         })
         .state('dashboard.admin', {
           abstract: true,
-          url: '^/prodocs/users/:id/dashboard/admin',
+          url: '^/users/:id/dashboard/admin',
           views: {
-            'add@dashboard': {
+            'admin@dashboard': {
               templateUrl: 'views/admin.html'
-            },
+            }
+          },
+          params: {
+            query: {
+              limit: 10,
+              page: 1
+            }
           }
         })
-        .state('dashboard.admin.viewdoc', {
-          url: '/:groupid/documents/list',
+        .state('dashboard.admin.doc', {
+          url: '/:groupid/documents',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-docs.html',
-              controller: 'AdminListCtrl'
-            },
-          }
-        })
-        .state('dashboard.admin.viewrole', {
-          url: '/:groupid/roles/list',
-          views: {
-            'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-roles.html',
-              controller: 'AdminListCtrl'
-            },
-          }
-        })
-        .state('dashboard.admin.viewuser', {
-          url: '/:groupid/users',
-          views: {
-            'inner@dashboard.admin': {
-              templateUrl: 'views/admin-list-users.html',
-              controller: 'AdminListCtrl'
+              templateUrl: 'views/admin-table-docs.html',
+              controller: 'AdminTableCtrl'
             },
           }
         })
@@ -231,7 +224,25 @@
           url: '/:groupid/roles',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/admin-role.html',
+              templateUrl: 'views/admin-table-roles.html',
+              controller: 'AdminTableCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.viewuser', {
+          url: '/:groupid/users',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-table-users.html',
+              controller: 'AdminTableCtrl'
+            },
+          }
+        })
+        .state('dashboard.admin.role.add', {
+          url: '/add',
+          views: {
+            'inner@dashboard.admin.role': {
+              templateUrl: 'views/add-role.html',
               controller: 'AdminRoleCtrl'
             },
           }
@@ -240,21 +251,22 @@
           url: '/users',
           views: {
             'inner@dashboard.admin': {
-              templateUrl: 'views/add-user.html',
-              resolve: {
-                'activeUser': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeUser;
-                }],
-                'activeGroup': ['$rootScope', function($rootScope) {
-                  return $rootScope.activeGroup;
-                }]
-              }
-              // controller: 'AdminCtrl'
+              templateUrl: 'views/admin-users.html',
+              controller: 'AdminTableCtrl'
             },
           }
         })
+        .state('dashboard.admin.group', {
+          url: '/groups',
+          views: {
+            'inner@dashboard.admin': {
+              templateUrl: 'views/admin-table-groups.html',
+              controller: 'AdminTableCtrl'
+            }
+          }
+        })
         .state('loginerror', {
-          url: '/prodocs/error',
+          url: '/error',
           templateUrl: '',
           controller: ''
         });
@@ -264,8 +276,18 @@
 
   ])
 
-  .run(['$rootScope', '$location', '$state', 'Auth', 'Users',
-    function($rootScope, $location, $state, Auth, Users) {
+  .run(['$rootScope', '$location', '$mdSidenav', '$state', 'Auth', 'Users',
+    function($rootScope, $location, $mdSidenav, $state, Auth, Users) {
+
+
+      // side navigation bar control
+      $rootScope.openSideNav = function(dir) {
+        $mdSidenav(dir).toggle();
+      };
+
+      $rootScope.close = function(dir) {
+        $mdSidenav(dir).close();
+      };
 
       // previous state handling
       $rootScope.previousState = {};
@@ -279,7 +301,7 @@
 
       //back button function called from back button's ng-click="back()"
       $rootScope.back = function() {
-        if ($rootScope.previousState.name === 'dashboard') {
+        if (/dashboard/.test($rootScope.previousState.name)) {
           $state.go($rootScope.previousState.name,
             $rootScope.previousState.params);
         } else {
@@ -287,14 +309,16 @@
         }
       };
 
-      // Check if the user's session is still being persisted in the servers
-      Users.session(function(err, res) {
-        if (!err) {
-          // response with expired or invalid token
-          if (!res || res.error) {
-            $state.go('home.login');
-            // response with valid renewed token
-          } else {
+
+      if (!Auth.isLoggedIn()) {
+
+        $state.go('home.features');
+
+      } else {
+
+        // Check if the user's session is still being persisted in the servers
+        Users.session(function(err, res) {
+          if (!err) {
             $rootScope.activeUser = res.data.user;
 
             // check for group 
@@ -306,36 +330,23 @@
               Auth.setToken(JSON.stringify(res.data), $rootScope.activeGroup);
             }
 
-            //check for Admin user
-            var Admin = window._
+            //check for superAdmin user
+            var superAdmin = window._
               .filter(res.data.user.roles, {
-                'title': 'Admin'
+                'title': 'superAdmin'
               });
 
-            if (Admin.length > 0) {
-              $state.go('dashboard.admin.viewdoc', {
-                id: res.data.user._id,
-                groupid: $rootScope.activeGroup
+            if (superAdmin.length > 0) {
+              $state.go('dashboard.admin.group', {
+                id: res.data.user._id
               });
-
-              // not admin user
             } else {
-
-              //check for superAdmin user
-              var superAdmin = window._
-                .filter(res.data.user.roles, {
-                  'title': 'superAdmin'
-                });
-
-              console.log(superAdmin);
-              if (superAdmin.length > 0) {
-                $state.go('dashboard.admin.user', {
+              // check if user belongs to a group
+              if (!res.group && res.data.user.groupId.length === 0) {
+                $state.go('dashboard.group', {
                   id: res.data.user._id
                 });
-              } else if (!res.group && res.data.user.groupId.length === 0) {
-                $state.go('home.group', {
-                  id: res.data.user._id
-                });
+
                 // use user group or last set header group
               } else {
                 $state.go('dashboard.list', {
@@ -344,9 +355,21 @@
                 });
               }
             }
+          } else {
+            if (/Token/.test(err.data.message)) {
+              Auth.logout();
+              $state.go('home.login');
+            } else if (/User/.test(err.data.message)) {
+              Auth.logout();
+              $state.go('home.adduser');
+            } else {
+              Auth.logout();
+              $state.go('home.features');
+            }
           }
-        }
-      });
+        });
+
+      }
 
     }
   ]);

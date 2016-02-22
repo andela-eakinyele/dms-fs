@@ -11,10 +11,6 @@
         };
       };
 
-      this.toast = function(msg) {
-        $mdToast.show($mdToast.simple().content(msg));
-      };
-
       this.showAlert = function(ev, title, msg) {
         $mdDialog.show(
           $mdDialog.alert()
@@ -40,25 +36,6 @@
           cb();
         }, function() {});
       };
-
-
-      this.custom = function(ev, tmpl, ctrl) {
-        $mdDialog.show({
-          controller: ctrl,
-          templateUrl: tmpl,
-          parent: angular.element(document.querySelector('#dashContent')),
-          targetEvent: ev,
-          clickOutsideToClose: true,
-          fullscreen: true
-        });
-      };
-
-      this.fetch = function(path) {
-        return $http.get(path).then(function(resp) {
-          return resp;
-        });
-      };
-
     });
 
 })();
