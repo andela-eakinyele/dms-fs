@@ -191,6 +191,9 @@
     'buildjs', 'images', 'bower',
   ]);
 
+  gulp.task('heroku:production', ['build']);
+  gulp.task('heroku:staging', ['build']);
+  gulp.task('production', ['nodemon', 'build']);
 
   gulp.task('default', ['nodemon', 'watch', 'build']);
 })();
