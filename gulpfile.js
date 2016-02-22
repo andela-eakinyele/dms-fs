@@ -1,5 +1,11 @@
 (function() {
   'use strict';
+
+  var env = process.env.NODE_ENV || 'development';
+  if (env === 'development') {
+    require('dotenv').load();
+  }
+
   var gulp = require('gulp');
   var gutil = require('gulp-util');
   var less = require('gulp-less');
@@ -18,6 +24,7 @@
   var source = require('vinyl-source-stream');
   var nodemon = require('gulp-nodemon');
   var babelify = require('babelify');
+  var coveralls = require('gulp-coveralls');
 
 
   var paths = {
@@ -67,9 +74,6 @@
   // render jade to html files
   gulp.task('jade', function() {
     gulp.src(paths.jade)
-      // .pipe(changed('./public', {
-      //   extension: '.html'
-      // }))
       .pipe(jade())
       .pipe(gulp.dest('./public/'));
   });
@@ -175,7 +179,7 @@
       .pipe(gulp.dest('./public/images/'));
   });
 
-  gulp.task('codeclimate-reporter', ['test:fend', 'test:bend'], function() {
+  gulp.task('codeclimate-reporter', function() {
     return gulp.src(['coverage/fend/report-lcov/lcov.info'], {
         read: false
       })
@@ -185,7 +189,13 @@
       }));
   });
 
-  gulp.task('test', ['test:fend', 'test:bend', 'codeclimate-reporter']);
+  gulp.task('coveralls', function() {
+    gulp.src('coverage/bend/coverage.lcov')
+      .pipe(coveralls());
+  });
+
+  gulp.task('test', ['test:fend', 'test:bend']);
+  gulp.task('report', ['coveralls', 'codeclimate-reporter']);
 
   gulp.task('build', ['jade', 'less', 'static-files',
     'buildjs', 'images', 'bower',
