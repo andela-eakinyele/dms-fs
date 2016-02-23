@@ -4,10 +4,10 @@ div(layout="column" layout-margin ng-init="init()")
       div.right-border
         md-button(aria-label="back to list" ui-sref="dashboard.list.mydocs")
           md-icon(md-font-set="fa fa-long-arrow-left fa-2x")
-          span Back to List
+          span(style="float:left;") Back to List
       div(layout="row" layout-align="center center" flex)
         h2 {{doc.title}}
-        md-fab-speed-dial(md-direction="left" md-open="fabisOpen"  class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false" ng-if="editDoc(doc)")
+        md-fab-speed-dial(md-direction="left" md-open="fabisOpen" style="float:right;" class="md-fling" ng-mouseenter="fabisOpen=true" ng-mouseleave="fabisOpen=false" ng-if="editDoc(doc)")
           md-fab-trigger
             md-button(aria-label="menu" class="md-fab md-warn")
               md-tooltip(md-direction="top" md-visible="tooltipVisible") Options

@@ -322,7 +322,7 @@
           spyOn(Documents, 'bulkdelete').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkdelete', [1, 2, 3])
+            .whenDELETE(/\/api\/documents\/bulkdelete\?ids\=([0-9]*,[0-9]*)*/)
             .respond(200, {
               data: true
             });
@@ -339,7 +339,7 @@
           spyOn(Documents, 'bulkdelete').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkdelete', [1, 2])
+            .whenDELETE(/\/api\/documents\/bulkdelete\?ids\=([0-9]*,[0-9]*)*/)
             .respond(400, true);
           Documents.bulkdelete([1, 2], cb);
 
@@ -353,7 +353,7 @@
           spyOn(Documents, 'bulkview').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkview', [1, 2, 3])
+            .whenGET(/\/api\/documents\/bulkview\?ids\=([0-9]*,[0-9]*)*/)
             .respond(200, {
               data: [1, 2, 3]
             });
@@ -370,7 +370,7 @@
           spyOn(Documents, 'bulkview').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkview', [1, 2, 3])
+            .whenGET(/\/api\/documents\/bulkview\?ids\=([0-9]*,[0-9]*)*/)
             .respond(400, true);
 
           Documents.bulkview([1, 2, 3], cb);

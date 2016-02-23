@@ -168,6 +168,7 @@
                 Docs.delete({
                   id: id
                 }, function() {
+                  $scope.count -= 1;
                   $state.go('dashboard.list.mydocs', {
                     id: $stateParams.id,
                     groupid: $stateParams.groupid
@@ -204,6 +205,7 @@
                 $scope.docs = window._.filter($scope.docs, function(doc) {
                   return $scope.selectedDocs.indexOf(doc._id) < 0;
                 });
+                $scope.count = $scope.count - $scope.selectedDocs.length;
                 $scope.selectedDocs = [];
 
                 $state.go('dashboard.list.mydocs', {

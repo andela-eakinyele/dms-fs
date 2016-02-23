@@ -47,8 +47,8 @@
     .put(validate.joinGroup, groupRoute.update)
     .get(groupRoute.get);
 
-  router.post('/documents/bulkdelete', docRoute.bulkDelete);
-  router.post('/documents/bulkview', docRoute.bulkView);
+  router.delete('/documents/bulkdelete', docRoute.bulkDelete);
+  router.get('/documents/bulkview', docRoute.bulkView);
 
   router.get('/documentcount', docRoute.count);
 

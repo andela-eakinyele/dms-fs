@@ -1,8 +1,9 @@
-md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left" md-is-locked-open="$mdMedia(\"gt-md\")")
+md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left" md-is-locked-open="$mdMedia(\"gt-sm\")")
   md-toolbar.username
     div(layout="column" layout-align="center center")
-      h3.md-headline {{activeUser.username}}
-      h3.md-title ({{userRole[0].title || activeUser.email}})
+      span {{activeUser.username}}
+    div(layout="column" layout-align="center center")
+      span ({{userRole[0].title || activeUser.email}})
   md-content(layout="column")
     div(layout-padding ng-if="superAdmin.length > 0")
       md-button.btn-style.sidehead Administrator Menu

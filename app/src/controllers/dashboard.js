@@ -119,15 +119,15 @@
         // Header menu
         $scope.menu = [{
           name: 'Join Group',
-          icon: 'fa fa-group fa-2x',
+          icon: 'fa fa-group',
           click: 'Join'
         }, {
           name: 'User Profile',
-          icon: 'fa fa-cog fa-2x',
+          icon: 'fa fa-cog',
           click: 'Set'
         }, {
           name: 'Log Out',
-          icon: 'fa fa-sign-out fa-2x',
+          icon: 'fa fa-sign-out',
           click: 'logout'
         }];
 

@@ -2,9 +2,10 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('AdminTableCtrl', ['$rootScope', '$scope', '$state',
-      '$stateParams', 'Groups', 'Users', 'Roles', 'Docs', 'Utils',
+      '$stateParams', 'Groups', 'Users', 'Roles', 'Docs', 'Utils', 'Auth',
+      'Token',
       function($rootScope, $scope, $state, $stateParams, Groups,
-        Users, Roles, Docs, Utils) {
+        Users, Roles, Docs, Utils, Auth, Token) {
 
         $scope.init = function() {
           $scope.selected = [];
@@ -137,6 +138,30 @@
               }
             });
         };
+
+
+        $scope.deleteSelection = function(evt) {
+          Utils.showConfirm(evt, 'Delete', 'Documents will be deleted',
+            'Delete',
+            function() {
+              Docs.bulkdelete($scope.selected, function() {
+                $scope.docs = window._.filter($scope.docs, function(doc) {
+                  return $scope.selected.indexOf(doc._id) < 0;
+                });
+                $scope.count = $scope.count - $scope.selected.length;
+                $scope.selected = [];
+
+                $state.go('dashboard.admin.doc', {
+                  id: $stateParams.id,
+                  groupid: $stateParams.groupid
+                });
+              }, function() {
+                Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                  'deleting document');
+              });
+            });
+        };
+
 
         /**
          *Populating tables, pagination, and reloading
@@ -373,7 +398,10 @@
         };
 
         $scope.appUsers = function() {
+
           $scope.init();
+
+          Auth.setToken(Token.get()[0], '');
 
           $scope.listName = 'appUsers';
           $scope.userHeaders = [
@@ -397,7 +425,6 @@
             limit: limit
           }));
         };
-
 
         $scope.refreshTable = function() {
           $scope.selected = [];

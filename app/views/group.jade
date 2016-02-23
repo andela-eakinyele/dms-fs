@@ -36,14 +36,16 @@ md-content.dashgroup(layout ="column" flex="100" layout-margin)
       form(name="groupForm" method="post" autocomplete="off")
         md-input-container.md-block
           label(for="group") Group Name
-          md-icon(md-font-set="fa fa-users")
-          md-select(name="group" ng-change= "getRoles()" ng-model="signform.group" class="select" aria-label="group Name" ng-disabled="newgroup")
-            md-option(ng-value="group" ng-repeat="group in groups") {{group.title}}
+          div(layout)
+            md-icon(md-font-set="fa fa-users")
+            md-select(name="group" ng-change= "getRoles()" ng-model="signform.group" class="select" aria-label="group Name" ng-disabled="newgroup")
+              md-option(ng-value="group" ng-repeat="group in groups") {{group.title}}
         md-input-container.md-block
           label(for="role") Role
+          div(layout)
             md-icon(md-font-set="fa fa-briefcase")
-          md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
-            md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
+            md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
+              md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
         md-input-container.md-block
           label(for="passphrase") Enter group passphrase
           md-icon(md-font-set="fa fa-key")
