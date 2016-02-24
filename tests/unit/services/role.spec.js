@@ -51,8 +51,6 @@
 
       it('should get roles count', function() {
 
-        spyOn(Roles, 'count').and.callThrough();
-
         httpBackend
           .whenGET('/api/rolecount')
           .respond(200, {
@@ -68,8 +66,6 @@
       });
 
       it('should return error getting roles count', function() {
-
-        spyOn(Roles, 'count').and.callThrough();
 
         httpBackend
           .whenGET('/api/rolecount')

@@ -38,6 +38,7 @@
     .put(userRoute.update);
 
   router.get('/groupcount', groupRoute.count);
+  router.post('/groups/join', validate.joinGroup, groupRoute.joinGroup);
 
   router.route('/groups')
     .get(groupRoute.all)

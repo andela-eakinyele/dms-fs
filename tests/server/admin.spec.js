@@ -63,7 +63,7 @@
               users = response;
               var name = _.pluck(response, 'username').slice(0, 4);
               ids = _.pluck(response, '_id');
-              assert.deepEqual(name, ['EAbbott', 'PNishi',
+              assert.deepEqual(name, ['EAbbott', 'DAdams_Love', 'PNishi',
                 'SPolls'
               ]);
               done();
@@ -376,7 +376,7 @@
               var response = res.body;
               users = response;
               var name = _.pluck(response, 'username').slice(0, 4);
-              assert.deepEqual(name, ['SPolls']);
+              assert.deepEqual(name, ['PNishi', 'SPolls']);
               done();
             });
         });
@@ -401,7 +401,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response, 3);
+              assert.equal(response, 4);
               done();
             });
         });

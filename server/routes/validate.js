@@ -181,24 +181,25 @@
 
   exports.joinGroup = function(req, res, next) {
     var query = {
-      _id: req.params.id
+      _id: req.body[0].group._id
     };
 
     groupFunc.retrieveData(query).then(function(group) {
-      if (req.body.users) {
-        var validPass = bcrypt.compareSync(req.body.pass, group.passphrase);
-        if (validPass) {
-          next();
-        } else {
-          res.status(403).json({
-            'status': 403,
-            'message': 'Invalid passphrase or non-admin user',
-            'error': 'Unauthorized user action'
-          });
-        }
-      } else {
+      // if (req.body.users) {
+      var validPass = bcrypt.compareSync(req.body[0].passphrase,
+        group.passphrase);
+      if (validPass) {
         next();
+      } else {
+        res.status(403).json({
+          'status': 403,
+          'message': 'Invalid passphrase or non-admin user',
+          'error': 'Unauthorized user action'
+        });
       }
+      // } else {
+      //   next();
+      // }
     }).catch(function(err) {
       res.status(500).json({
         'status': 500,

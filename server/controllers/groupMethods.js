@@ -6,6 +6,7 @@
   var user = require('./userMethods');
   var cm = require('./helpers');
   var _async = require('async');
+  var _ = require('lodash');
   var bcrypt = require('bcrypt-nodejs');
 
 
@@ -181,6 +182,80 @@
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
+    },
+
+    joinGroup: function(req, res) {
+
+      var userId = parseInt(req.headers.userid);
+      var group = req.body[0].group;
+      group.users.push(userId);
+      var role = req.body[0].role;
+      role.users.push(userId);
+
+      var groupUpdate = {
+        users: _.uniq(group.users)
+      };
+      var roleUpdate = {
+        users: _.uniq(role.users)
+      };
+
+      _async.series([
+        function(done) {
+          var query = Group.findByIdAndUpdate(group._id,
+            groupUpdate, {
+              new: true
+            });
+
+          cm.gUpdate('Groups', group._id, query)
+            .then(function(result) {
+              done(null, result);
+            }).catch(function(err) {
+              done(err, null);
+            });
+        },
+
+        function(done) {
+          var query = Role.findByIdAndUpdate(role._id,
+            roleUpdate, {
+              new: true
+            });
+
+          cm.gUpdate('Roles', role._id, query)
+            .then(function(result) {
+              done(null, result);
+            }).catch(function(err) {
+              done(err, null);
+            });
+        },
+
+        function(done) {
+          var query = User.findByIdAndUpdate(userId,
+              req.body[1], {
+                new: true
+              }).select('name roles username groupId')
+            .populate({
+              path: 'groupId',
+              select: 'title roles'
+            })
+            .populate({
+              path: 'roles'
+            });
+          cm.gUpdate('Users', userId, query)
+            .then(function(result) {
+              done(null, result);
+            }).catch(function(err) {
+              done(err, null);
+            });
+        },
+
+      ], function(err, result) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          res.status(200).json(result[2]
+);
+        }
+      });
     },
 
 
