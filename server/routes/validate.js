@@ -8,59 +8,29 @@
   var groupFunc = require('./../controllers').groupFunc;
 
   exports.session = function(req, res) {
-    var token = req.headers.access_token || req.params.token;
-    if (token) {
-      try {
-        var decoded = jwt.decode(token,
-          require('./../config/secret.js')().encode);
-        if (decoded.exp <= Date.now()) {
-          res.status(400).json({ // expired token
-            'status': 400,
-            'message': 'Token/Session Expired, redirect to login',
-            'error': 'Token expired'
-          });
-          return;
-        } else { // token is valid
-          var query = {
-            _id: parseInt(req.headers.userid),
-          };
-          // retrieve user details
-          userFunc.retrieveData(query).then(function(user) {
-            if (user) {
-              var groupid = req.headers.groupid !== 'undefined' ?
-                req.headers.groupid : user.groupId[0]._id;
-              res.json({
-                data: auth.getToken(user),
-                group: groupid
-              });
-            } else {
-              res.status(400).json({
-                'status': 400,
-                'message': 'User not found',
-                'error': 'User does not exist'
-              });
-            }
-          }).catch(function(err) {
-            res.status(err.status).json(err.error);
-          });
-        }
-        //error validating token
-      } catch (err) {
-        res.status(500).json({
-          'status': false,
-          'message': 'Token not validated',
-          'error': err
+    // token is valid
+    var query = {
+      _id: parseInt(req.headers.userid),
+    };
+    // retrieve user details
+    userFunc.retrieveData(query).then(function(user) {
+      if (user) {
+        var groupid = req.headers.groupid !== 'undefined' ?
+          req.headers.groupid : user.groupId[0]._id;
+        res.json({
+          data: auth.getToken(user),
+          group: groupid
+        });
+      } else {
+        res.status(400).json({
+          'status': 400,
+          'message': 'User not found',
+          'error': 'User does not exist'
         });
       }
-    } else { // invalid token
-      res.status(400).json({
-        'status': 400,
-        'message': 'Invalid Token or Key',
-        'error': 'Invalid Token'
-      });
-      return;
-    }
-
+    }).catch(function(err) {
+      res.status(err.status).json(err.error);
+    });
   };
 
 
@@ -96,6 +66,7 @@
       return;
     }
   };
+
   exports.authenticate = authenticate;
 
   exports.authorize = function(req, res, next) {

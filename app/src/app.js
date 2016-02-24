@@ -311,9 +311,7 @@
 
 
       if (!Auth.isLoggedIn()) {
-
         $state.go('home.features');
-
       } else {
 
         // Check if the user's session is still being persisted in the servers

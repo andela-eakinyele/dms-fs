@@ -7,6 +7,7 @@
       function($rootScope, $scope, $state, $stateParams, Groups,
         Users, Roles, Docs, Utils, Auth, Token) {
 
+        // initialize variables 
         $scope.init = function() {
           $scope.selected = [];
 
@@ -139,7 +140,7 @@
             });
         };
 
-
+        // deleting multiple selection in tables
         $scope.deleteSelection = function(evt) {
           Utils.showConfirm(evt, 'Delete', 'Documents will be deleted',
             'Delete',
@@ -151,6 +152,7 @@
                 $scope.count = $scope.count - $scope.selected.length;
                 $scope.selected = [];
 
+                // re-initialize page
                 $state.go('dashboard.admin.doc', {
                   id: $stateParams.id,
                   groupid: $stateParams.groupid
@@ -172,10 +174,12 @@
           var roleParams = query;
           roleParams.groupid = $stateParams.groupid;
 
+          // request for group roles
           Roles.query(roleParams, function(res) {
             if (res.length > 0) {
               $scope.roles = res;
 
+              // obtain count of roles for pagination
               Roles.count(function(err, count) {
                 if (err) {
                   Utils.showAlert(null, 'Error retrieving ' +
@@ -192,6 +196,7 @@
           });
         };
 
+        // init function for role view
         $scope.roleList = function() {
           $scope.init();
 
@@ -206,6 +211,7 @@
           $scope.getRoles($scope.query);
         };
 
+        // invoked for pagination on role table
         $scope.onPaginateRole = function(page, limit) {
           $scope.selected = [];
           $scope.getRoles(angular.extend({}, $scope.query, {
@@ -221,10 +227,12 @@
           var docParams = query;
           docParams.groupid = $stateParams.groupid;
 
+          // request for group documents
           Docs.query(query, function(res) {
             if (res.length > 0) {
               $scope.docs = res;
 
+              // retrieve count for pagination
               Docs.count(function(err, res) {
                 if (err) {
                   Utils.showAlert(null, 'Error retrieving ' +
@@ -241,6 +249,7 @@
           });
         };
 
+        // initialization for document table view
         $scope.docList = function() {
           $scope.init();
           $scope.listName = 'docs';
@@ -249,6 +258,7 @@
           $scope.getDocs($scope.query);
         };
 
+        // invoked on table pagination
         $scope.onPaginateDoc = function(page, limit) {
           $scope.selected = [];
           $scope.getDocs(angular.extend({}, $scope.query, {
@@ -260,10 +270,12 @@
         // populate user table
         $scope.getGroupUsers = function(query) {
 
+          // obtain group role data for parsing user data
           $scope.roles = Roles.query({
             groupid: $stateParams.groupid
           });
 
+          // get role title based on role id
           function roledata(role) {
             return window._.filter($scope.roles, {
               '_id': role
@@ -273,10 +285,13 @@
           var userParams = query;
           userParams.groupid = $stateParams.groupid;
 
+          // request for group users
           Users.query(userParams,
             function(res) {
               if (res.length > 0) {
                 var data = res;
+
+                // parsing data corresponing group role title
                 data = window._.map(data, function(a) {
                   window._.forEach(a.roles, function(b) {
                     var role = roledata(b._id);
@@ -286,8 +301,10 @@
                   });
                   return a;
                 });
+                // assign parsed data to scope variable
                 $scope.users = data;
 
+                // obatin count of users in group for pagination
                 Users.count(function(err, count) {
                   if (err) {
                     Utils.showAlert(null, 'Error retrieving ' +
@@ -304,6 +321,8 @@
               $scope.userErr = 'Error retrieving group users';
             });
         };
+
+        // invoked on user view state
         $scope.userList = function() {
 
           $scope.listName = 'users';
@@ -319,6 +338,7 @@
           $scope.getGroupUsers($scope.query);
         };
 
+        // invoked on pagination
         $scope.onPaginateUser = function(page, limit) {
           $scope.selected = [];
           $scope.getGroupUsers(angular.extend({}, $scope.query, {
@@ -327,15 +347,15 @@
           }));
         };
 
-
-
         // populate group table
         $scope.getGroups = function(query) {
 
+          // request for group data
           Groups.query(query, function(res) {
               if (res.length > 0) {
                 $scope.groups = res;
 
+                // request for group count
                 Groups.count(function(err, res) {
                   if (err) {
                     Utils.showAlert(null, 'Error retrieving ' +
@@ -353,6 +373,7 @@
             });
         };
 
+        // invoked on changed state to group view
         $scope.groupList = function() {
           $scope.init();
 
@@ -368,6 +389,7 @@
           $scope.getGroups($scope.query);
         };
 
+        // invoked on pagination of group table
         $scope.onPaginateGroup = function(page, limit) {
           $scope.selected = [];
           $scope.getGroups(angular.extend({}, $scope.query, {
@@ -376,7 +398,7 @@
           }));
         };
 
-        // populate user table
+        // populate user table - List of all users
         $scope.getAppUsers = function(query) {
           Users.query(query, function(res) {
             if (res.length > 0) {
@@ -397,6 +419,7 @@
           });
         };
 
+        // invoked on loaing superadmin user view
         $scope.appUsers = function() {
 
           $scope.init();
@@ -417,7 +440,7 @@
           $scope.getAppUsers($scope.query);
         };
 
-
+        // invoked on pagination of app users table
         $scope.onPaginateAppUser = function(page, limit) {
           $scope.selected = [];
           $scope.getAppUsers(angular.extend({}, $scope.query, {
@@ -426,6 +449,7 @@
           }));
         };
 
+        // refresh tables by invoking request functions
         $scope.refreshTable = function() {
           $scope.selected = [];
           if ($scope.listName === 'users') {

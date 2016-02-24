@@ -5,36 +5,44 @@
       '$state', '$stateParams', 'Utils', 'Roles',
       function($rootScope, $scope, $state, $stateParams, Utils, Roles) {
 
+        // initialize scope variables
         $scope.num = 0;
         $scope.newRoles = [];
 
+        // returns an array for repeating role inout field
         $scope.range = function(num) {
           return new Array(num);
         };
 
+        // increase number of input field
         $scope.increase = function() {
           $scope.num += 1;
         };
 
+        // decease number of input field
         $scope.decrease = function() {
           $scope.num -= 1;
         };
 
+        // check input fields are not empty
         $scope.enableCreateButton = function(list) {
           return window._.every(list, function(a) {
             return a ? a.trim().length > 0 : false;
           });
         };
 
+        // create roles
         $scope.create = function(ev) {
           var gId = parseInt($stateParams.groupid);
 
+          // generate sorted unique values for roles
           $scope.newRoles = window._.sortedUniq(
             window._.map($scope.newRoles,
               function(role) {
                 return role.trim();
               }));
 
+          // generate array of objects for bulk creation of roles
           $scope.saveRoles = $scope.newRoles.map(function(a) {
             return {
               title: a,
@@ -42,22 +50,22 @@
             };
           });
 
-          $scope.newRoles = [];
-
+          // post request to server for roles creation
           Roles.save($scope.saveRoles, function() {
-            $scope.cancelAdd();
+            $scope.cancelAdd(); // reset input fields
             $state.go('dashboard.admin.role', {
               id: $stateParams.id,
               groupid: $stateParams.groupid
             }, {
               reload: true
             });
-          }, function() {
+          }, function() { // alert error encountered creating roles
             Utils.showAlert(ev, 'Create', 'Error Creating Roles-' +
               ' Check Duplicate Roles');
           });
         };
 
+        // reset input fields and go to role dashboard view 
         $scope.cancelAdd = function() {
           $scope.newRoles = [];
           $scope.num = 0;
