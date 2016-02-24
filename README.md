@@ -1,9 +1,24 @@
 # ProDocs
 Document Management System
 
+[![Test Coverage](https://codeclimate.com/github/andela-eakinyele/dms-fs/badges/coverage.svg)](https://codeclimate.com/github/andela-eakinyele/dms-fs/coverage) 
+
+[![Code Climate](https://codeclimate.com/github/andela-eakinyele/dms-fs/badges/gpa.svg)](https://codeclimate.com/github/andela-eakinyele/dms-fs)
+
+[![Coverage Status](https://coveralls.io/repos/github/andela-eakinyele/dms-fs/badge.svg?branch=master)](https://coveralls.io/github/andela-eakinyele/dms-fs?branch=master)
+
+
 # Description
 Prodocs is a document management application built on the MEAN stack. It is used to manage sharing of files in a group, consisting of various
 roles, and therefore access privileges.
+
+## Tools
+A number of tools were used in the development of this application including continuous integration and deployment services
+
+### Pivotal Tracker
+Pivotal Tracker was used as a toolf for mangaing the development process, by creating stories that ties to the features on the application. It provides a means of estimating and assessing the velocity of development. ProDocs pivotal tracker board link is provided below.
+
+[Prodocs - Pivotal Tracker Board](https://www.pivotaltracker.com/n/projects/1520757)
 
 ## Installation
 Open a Terminal and clone the repo

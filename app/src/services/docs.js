@@ -65,7 +65,7 @@
         };
 
         obj.bulkdelete = function(data, cb) {
-          return $http.post('/api/documents/bulkdelete', data)
+          return $http.delete('/api/documents/bulkdelete?ids=' + data)
             .then(function(res) {
               cb(null, res.data);
             }, function(err) {
@@ -74,7 +74,7 @@
         };
 
         obj.bulkview = function(data, cb) {
-          return $http.post('/api/documents/bulkview', data)
+          return $http.get('/api/documents/bulkview?ids=' + data)
             .then(function(res) {
               cb(null, res.data);
             }, function(err) {

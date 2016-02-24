@@ -6,20 +6,24 @@
       function($rootScope, $scope, $state, $stateParams,
         $timeout, Utils, Docs, Roles) {
 
+
         $scope.init = function() {
           $scope.newDoc = {};
           $scope.newDoc.roles = [];
+
+          //load group roles for sharing
           Roles.query({
             groupid: $stateParams.groupid
           }, function(roles) {
             $scope.roles = roles;
           }, function() {
             Utils.showAlert(null, 'Error',
-              'Document data could not be retrieved' +
+              'Role data could not be retrieved' +
               '\n Please reload page');
           });
         };
 
+        // load document into view for editing
         $scope.loadDoc = function() {
           Docs.get({
             id: $stateParams.docId
@@ -31,7 +35,7 @@
           });
         };
 
-
+        // text editor option
         $scope.tinymceOptions = {
           trusted: true,
           resize: false,
@@ -53,10 +57,8 @@
 
         // save a new document
         $scope.saveDoc = function(ev) {
-          Docs.save($scope.newDoc, function(res) {
-            $state.go('dashboard.doc.view', {
-              docId: res._id
-            });
+          Docs.save($scope.newDoc, function() {
+            $state.go('dashboard.list.mydocs');
           }, function(err) {
             if (err.status === 409) {
               Utils.showAlert(ev, 'Title already Exists - Rename title');
@@ -93,6 +95,7 @@
           }
         };
 
+        // check selected roles
         $scope.isSelected = function(role) {
           var checked = $scope.doc ?
             $scope.doc.roles.indexOf(role._id) > -1 : false;

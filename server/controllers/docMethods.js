@@ -233,27 +233,41 @@
     },
 
     bulkDelete: function(req, res) {
-      if (req.body.length > 0) {
+      var ids = req.query.ids.split(',');
+      if (ids.length > 0) {
         Doc.remove({}).where('_id')
-          .in(req.body)
+          .in(ids)
           .then(function(result) {
             res.status(200).json(result);
           }, function(err) {
             res.status(500).json(err);
           });
+      } else {
+        res.status(400).json({
+          error: 'Invalid request'
+        });
+
       }
     },
 
 
     bulkView: function(req, res) {
-      if (req.body.length > 0) {
+      var ids = req.query.ids.split(',');
+      if (ids.length > 0) {
         Doc.find({}).where('_id')
-          .in(req.body)
+          .in(ids).populate({
+            path: 'ownerId',
+            select: 'username name _id'
+          })
           .then(function(result) {
             res.status(200).json(result);
           }, function(err) {
             res.status(500).json(err);
           });
+      } else {
+        res.status(400).json({
+          error: 'Invalid get request'
+        });
       }
     }
   };

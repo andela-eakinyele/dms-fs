@@ -12,25 +12,16 @@ md-content(layout ="column" flex="100" layout-margin ng-init="appUsers()")
 
 
 
-  md-toolbar.table.alternate(ng-if="selected.length > 0")
-    .md-toolbar-tools.sectionTitle(layout="row")
-      span(flex) {{selectedAllusers.length}} Selected
-      md-button.md-warn.md-raised(aria-label="Delete Selected" ng-disabled="listName===\"users\" && superAdmin.length < 0")
-        md-icon(md-font-set="fa fa-trash fa-2x") 
-        span Delete
-
   md-content.listDocs(layout="column" layout-margin)
     md-table-container
       table.md-table(md-row-select="true" md-progress="promise")
         thead.md-head(md-order="query.order")
           tr.headerSection.md-row
-            th.md-column.md-checkbox-cell
-              md-checkbox(aria-label="Select Column" ng-checked="all(allUsers)" ng-click="selectAll(allUsers)" user="checkbox")
+           
             th.md-column(md-order-by="query.order" ng-repeat="header in userHeaders") {{header}}
         tbody.md-body
           tr.md-row(md-auto-select ng-repeat="user in allUsers | orderBy: query.order | filter : search track by $index")
-            td.md-cell.md-checkbox-cell
-              md-checkbox(aria-label="Select Row" ng-checked="isSelected(user._id, selected)" ng-click="toggle(user._id, selected)" user="checkbox")
+            
             td.md-cell {{user._id}}
             td.md-cell {{user.username}}
             td.md-cell {{user.email}}

@@ -63,7 +63,7 @@
               users = response;
               var name = _.pluck(response, 'username').slice(0, 4);
               ids = _.pluck(response, '_id');
-              assert.deepEqual(name, ['EAbbott', 'PNishi',
+              assert.deepEqual(name, ['EAbbott', 'DAdams_Love', 'PNishi',
                 'SPolls'
               ]);
               done();
@@ -376,12 +376,12 @@
               var response = res.body;
               users = response;
               var name = _.pluck(response, 'username').slice(0, 4);
-              assert.deepEqual(name, ['SPolls']);
+              assert.deepEqual(name, ['PNishi', 'SPolls']);
               done();
             });
         });
 
-      // should be able to retrieve all user data
+      // should be able to retrieve all user data in a group
       it('- Should be able to retrieve count of all user data' +
         ' in a group',
         function(done) {
@@ -401,7 +401,7 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response, 3);
+              assert.equal(response, 4);
               done();
             });
         });
@@ -428,12 +428,12 @@
           });
       });
 
-      // should be able to delete userdata
+      // should be able to delete all document
       it('- Super Admin Should  be able to ' +
         'delete all documents',
         function(done) {
           request
-            .post('/api/documents/bulkdelete')
+            .delete('/api/documents/bulkdelete')
             .set({
               'Accept': 'application/json',
               'username': admin.user,
@@ -441,7 +441,9 @@
               userid: 100,
               access_token: token.token
             })
-            .send([101, 102, 103, 104, 105])
+            .query({
+              ids: '101, 102, 103, 104, 105'
+            })
             .type('json')
             .expect('Content-Type', /json/)
             .expect(200)
@@ -451,12 +453,12 @@
             });
         });
 
-      // should be able to delete userdata
+      // should be able to view all document
       it('- Super Admin Should  be able to ' +
         'view all documents',
         function(done) {
           request
-            .post('/api/documents/bulkview')
+            .get('/api/documents/bulkview')
             .set({
               'Accept': 'application/json',
               'username': admin.user,
@@ -464,39 +466,14 @@
               userid: 100,
               access_token: token.token
             })
-            .send([101, 102, 103, 104, 105])
+            .query({
+              ids: '101, 102, 103, 104, 105'
+            })
             .type('json')
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err) {
               assert.equal(null, err, 'Error encountered');
-              done();
-            });
-        });
-
-
-
-      // should be able to delete userdata
-      it('- Super Admin Should  be able to ' +
-        'get count of all documents',
-        function(done) {
-          request
-            .post('/api/documents/bulkview')
-            .set({
-              'Accept': 'application/json',
-              'username': admin.user,
-              'password': admin.pw,
-              userid: 100,
-              access_token: token.token
-            })
-            .send([101, 102, 103, 104, 105])
-            .type('json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function(err, res) {
-              assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.equal(response.length, 0);
               done();
             });
         });

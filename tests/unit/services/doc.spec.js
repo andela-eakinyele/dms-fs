@@ -121,15 +121,12 @@
     describe('Documents unit tests', function() {
 
       it('update should be a function', function() {
-        spyOn(Documents, 'update').and.returnValue(745);
         Documents.update();
         expect(Documents.update).toBeDefined();
-        expect(Documents.update).toHaveBeenCalled();
         expect(typeof Documents.update).toBe('function');
 
         it('should get documents count', function() {
 
-          spyOn(Documents, 'count').and.callThrough();
 
           httpBackend
             .whenGET('/api/documentcount')
@@ -146,8 +143,6 @@
         });
 
         it('should return error getting documents count', function() {
-
-          spyOn(Documents, 'count').and.callThrough();
 
           httpBackend
             .whenGET('/api/documentcount')
@@ -170,7 +165,6 @@
         describe('get user document and count only', function() {
 
           it('should get user documents', function() {
-            spyOn(Documents, 'getUserDocs').and.callThrough();
             httpBackend
               .whenGET(a)
               .respond(200, {
@@ -189,7 +183,6 @@
           });
 
           it('should return error getting user documents only', function() {
-            spyOn(Documents, 'getUserDocs').and.callThrough();
 
             httpBackend
               .whenGET(a)
@@ -206,7 +199,6 @@
           });
 
           it('should get user documents count', function() {
-            spyOn(Documents, 'getUserDocsCount').and.callThrough();
 
             httpBackend
               .whenGET(/\/api\/users\/[0-9]*\/documents\/count/)
@@ -223,7 +215,6 @@
           });
 
           it('should return error getting user documents count', function() {
-            spyOn(Documents, 'getUserDocsCount').and.callThrough();
 
             httpBackend
               .whenGET(/\/api\/users\/[0-9]*\/documents\/count/)
@@ -245,7 +236,6 @@
 
 
           it('should get documents by role only', function() {
-            spyOn(Documents, 'getRoleDocs').and.callThrough();
 
             httpBackend
               .whenGET(b)
@@ -263,9 +253,7 @@
             expect(error).toBe(null);
             expect(response).toBeDefined();
           });
-
           it('should return error getting documents by role', function() {
-            spyOn(Documents, 'getRoleDocs').and.callThrough();
 
             httpBackend
               .whenGET(b)
@@ -282,7 +270,6 @@
           });
 
           it('should return documents by role count', function() {
-            spyOn(Documents, 'getRoleDocsCount').and.callThrough();
 
             httpBackend
               .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
@@ -301,7 +288,6 @@
           it('should return  error getting ' +
             'documents by role count',
             function() {
-              spyOn(Documents, 'getRoleDocsCount').and.callThrough();
 
               httpBackend
                 .whenGET(/\/api\/roles\/[0-9]*\/documents\/count/)
@@ -319,10 +305,9 @@
         });
 
         it('should delete selected documents', function() {
-          spyOn(Documents, 'bulkdelete').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkdelete', [1, 2, 3])
+            .whenDELETE(/\/api\/documents\/bulkdelete\?ids\=([0-9]*,[0-9]*)*/)
             .respond(200, {
               data: true
             });
@@ -336,10 +321,9 @@
         });
 
         it('should return error deleting documents', function() {
-          spyOn(Documents, 'bulkdelete').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkdelete', [1, 2])
+            .whenDELETE(/\/api\/documents\/bulkdelete\?ids\=([0-9]*,[0-9]*)*/)
             .respond(400, true);
           Documents.bulkdelete([1, 2], cb);
 
@@ -350,10 +334,9 @@
         });
 
         it('should get selected documents', function() {
-          spyOn(Documents, 'bulkview').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkview', [1, 2, 3])
+            .whenGET(/\/api\/documents\/bulkview\?ids\=([0-9]*,[0-9]*)*/)
             .respond(200, {
               data: [1, 2, 3]
             });
@@ -367,10 +350,9 @@
         });
 
         it('should return error deleting documents', function() {
-          spyOn(Documents, 'bulkview').and.callThrough();
 
           httpBackend
-            .whenPOST('/api/documents/bulkview', [1, 2, 3])
+            .whenGET(/\/api\/documents\/bulkview\?ids\=([0-9]*,[0-9]*)*/)
             .respond(400, true);
 
           Documents.bulkview([1, 2, 3], cb);

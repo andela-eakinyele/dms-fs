@@ -4,6 +4,35 @@
   describe('UserCtrl tests', function() {
 
     var scope,
+      sampleRole = [{
+        _id: 1,
+        title: 'a',
+        users: [1, 2]
+      }, {
+        _id: 2,
+        title: 'b',
+        users: [1, 2]
+      }, {
+        _id: 3,
+        title: 'c',
+        users: [1, 2]
+      }],
+      sampleDoc = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
+      sampleUser = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
       Roles = {
         save: function(data, cb, cbb) {
           return (data[0].title !== '') ? cb(data) : cbb(false);
@@ -14,7 +43,11 @@
         get: function(params, cb, cbb) {
           return params.groupid ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: {
+              _id: 1,
+              title: 'a',
+              users: [1, 2]
+            }
           }) : cbb({
             message: 'error'
           });
@@ -22,33 +55,9 @@
         query: function(params, cb, cbb) {
           if (params.groupid) {
             if (!cb && !cbb) {
-              return [{
-                _id: 1,
-                title: 'a',
-                users: [1, 2]
-              }, {
-                _id: 2,
-                title: 'b',
-                users: [1, 2]
-              }, {
-                _id: 3,
-                title: 'c',
-                users: [1, 2]
-              }];
+              return sampleRole;
             } else {
-              return cb([{
-                _id: 1,
-                title: 'a',
-                users: [1, 2]
-              }, {
-                _id: 2,
-                title: 'b',
-                users: [1, 2]
-              }, {
-                _id: 3,
-                title: 'c',
-                users: [1, 2]
-              }]);
+              return cb(sampleRole);
             }
           } else {
             return 'error';
@@ -65,20 +74,13 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: sampleDoc
           }) : cbb({
             message: 'error'
           });
         },
         query: function(cb) {
-          return cb([{
-            ownerId: [{
-              name: {
-                first: 'a',
-                last: 'b'
-              }
-            }]
-          }]);
+          return cb([sampleDoc]);
         }
       },
       Users = {
@@ -91,20 +93,13 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: sampleUser
           }) : cbb({
             message: 'error'
           });
         },
         query: function(cb) {
-          return cb([{
-            ownerId: [{
-              name: {
-                first: 'a',
-                last: 'b'
-              }
-            }]
-          }]);
+          return cb([sampleUser]);
         }
       },
 

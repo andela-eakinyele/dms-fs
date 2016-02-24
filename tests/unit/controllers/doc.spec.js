@@ -2,7 +2,27 @@
   'use strict';
 
   describe('DocCtrl tests', function() {
-    var scope,
+    var scope, sampleRole = [{
+        _id: 1,
+        title: 'a',
+        users: [1, 2]
+      }, {
+        _id: 2,
+        title: 'b',
+        users: [1, 2]
+      }, {
+        _id: 3,
+        title: 'c',
+        users: [1, 2]
+      }],
+      sampleDoc = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
       Roles = {
         save: function(data, cb, cbb) {
           return (data[0].title !== '') ? cb(data) : cbb(false);
@@ -13,7 +33,11 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: {
+              _id: 2,
+              title: 'b',
+              users: [1, 2]
+            }
           }) : cbb({
             message: 'error'
           });
@@ -22,7 +46,7 @@
           return params.groupid ?
             cb([{
               message: 'I am groot',
-              data: [1, 3, 4]
+              data: sampleRole
             }]) : cbb('error');
         }
       },
@@ -30,7 +54,7 @@
       Docs = {
         save: function(data, cb, cbb) {
           if (data === 'new') {
-            return cb(data);
+            return cb(sampleDoc);
           } else if (data === 'old') {
             return cbb({
               status: 409
@@ -55,7 +79,7 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: sampleDoc
           }) : cbb({
             message: 'error'
           });
@@ -68,12 +92,12 @@
           if (cb) {
             return cb([{
               message: 'I am groot',
-              data: [1, 3, 4]
+              data: [sampleDoc]
             }]);
           } else {
             return [{
               message: 'I am groot',
-              data: [1, 3, 4]
+              data: [sampleDoc]
             }];
           }
         }

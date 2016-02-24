@@ -246,6 +246,7 @@
           select: 'title'
         });
 
+
       if (!isNaN(parseInt(groupid))) {
         query = query
           .where('groupId')

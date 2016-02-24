@@ -84,7 +84,7 @@
           }
         };
 
-
+        // invoke for table pagination
         $scope.onPaginate = function(page, limit) {
           $scope.selectedDocs = [];
           $scope.getDocs(angular.extend({}, $scope.query, {
@@ -93,6 +93,7 @@
           }));
         };
 
+        // checks access level of group document by active user
         $scope.access = function(doc) {
           if (doc && $rootScope.activeUser) {
             var roleId = window._.map(doc.roles, '_id');
@@ -103,6 +104,7 @@
           }
         };
 
+        // check edit doc access
         $scope.editDoc = function(doc) {
           if (doc && $rootScope.activeUser) {
             return $rootScope.activeUser._id === doc.ownerId[0]._id;
@@ -161,6 +163,7 @@
               docId: id
             });
           }
+          // delete action
           if (ev === 'delete') {
             Utils.showConfirm(evt, 'Delete', 'Document will be deleted',
               'Delete',
@@ -168,6 +171,7 @@
                 Docs.delete({
                   id: id
                 }, function() {
+                  $scope.count -= 1;
                   $state.go('dashboard.list.mydocs', {
                     id: $stateParams.id,
                     groupid: $stateParams.groupid
@@ -180,11 +184,13 @@
           }
         };
 
+        // inoke server request funciton
         $scope.refreshTable = function() {
           $scope.getDocs($scope.query);
           $scope.selectedDocs = [];
         };
 
+        // transition to view document state 
         $scope.viewSelection = function() {
           var ids = window._.map($scope.selectedDocs, function(num) {
             return 'id=' + num;
@@ -196,6 +202,7 @@
           });
         };
 
+        // delete selection on table
         $scope.deleteSelection = function(evt) {
           Utils.showConfirm(evt, 'Delete', 'Documents will be deleted',
             'Delete',
@@ -204,6 +211,7 @@
                 $scope.docs = window._.filter($scope.docs, function(doc) {
                   return $scope.selectedDocs.indexOf(doc._id) < 0;
                 });
+                $scope.count = $scope.count - $scope.selectedDocs.length;
                 $scope.selectedDocs = [];
 
                 $state.go('dashboard.list.mydocs', {

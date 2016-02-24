@@ -21,13 +21,13 @@
 
 
   router.post('/users/login', auth.login);
-  router.get('/session', validate.session);
 
   router.post('/users', validate.adminUser, userRoute.create);
 
 
   // Routes that can be accessed only by authenticated users
   router.all('/*', validate.authenticate);
+  router.get('/session', validate.session);
 
 
   router.get('/users', userRoute.all);
@@ -38,6 +38,7 @@
     .put(userRoute.update);
 
   router.get('/groupcount', groupRoute.count);
+  router.post('/groups/join', validate.joinGroup, groupRoute.joinGroup);
 
   router.route('/groups')
     .get(groupRoute.all)
@@ -47,8 +48,8 @@
     .put(validate.joinGroup, groupRoute.update)
     .get(groupRoute.get);
 
-  router.post('/documents/bulkdelete', docRoute.bulkDelete);
-  router.post('/documents/bulkview', docRoute.bulkView);
+  router.delete('/documents/bulkdelete', docRoute.bulkDelete);
+  router.get('/documents/bulkview', docRoute.bulkView);
 
   router.get('/documentcount', docRoute.count);
 

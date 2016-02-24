@@ -7,7 +7,6 @@
           request: function(config) {
             var xtoken = Token.get();
             var definedToken;
-
             var group = $rootScope.activeGroup;
 
             if (xtoken[0] !== 'undefined' && xtoken[0] !== null) {

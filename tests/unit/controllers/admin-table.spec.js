@@ -4,6 +4,35 @@
   describe('AdminTableCtrl tests', function() {
 
     var scope,
+      sampleRole = [{
+        _id: 1,
+        title: 'a',
+        users: [1, 2]
+      }, {
+        _id: 2,
+        title: 'b',
+        users: [1, 2]
+      }, {
+        _id: 3,
+        title: 'c',
+        users: [1, 2]
+      }],
+      sampleDoc = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
+      sampleUser = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
       Roles = {
         save: function(data, cb, cbb) {
           return (data[0].title !== '') ? cb(data) : cbb(false);
@@ -14,9 +43,13 @@
         get: function(params, cb, cbb) {
           return params.groupid ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: {
+              _id: 1,
+              title: 'a',
+              users: [1, 2]
+            }
           }) : cbb({
-            message: 'error'
+            error: 'error'
           });
         },
         delete: function(params, cb, cbb) {
@@ -32,33 +65,9 @@
         query: function(params, cb, cbb) {
           if (params.groupid) {
             if (!cb && !cbb) {
-              return [{
-                _id: 1,
-                title: 'a',
-                users: [1, 2]
-              }, {
-                _id: 2,
-                title: 'b',
-                users: [1, 2]
-              }, {
-                _id: 3,
-                title: 'c',
-                users: [1, 2]
-              }];
+              return sampleRole;
             } else {
-              return cb([{
-                _id: 1,
-                title: 'a',
-                users: [1, 2]
-              }, {
-                _id: 2,
-                title: 'b',
-                users: [1, 2]
-              }, {
-                _id: 3,
-                title: 'c',
-                users: [1, 2]
-              }]);
+              return cb(sampleRole);
             }
           } else {
             if (cbb) {
@@ -67,6 +76,7 @@
           }
         }
       },
+
       Docs = {
         save: function(data, cb, cbb) {
           return data ? cb(data) : cbb(false);
@@ -87,25 +97,25 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: [sampleDoc]
           }) : cbb({
-            message: 'error'
+            error: 'error'
           });
         },
         query: function(params, cb, cbb) {
           if (params.groupid) {
-            return cb([{
-              ownerId: [{
-                name: {
-                  first: 'a',
-                  last: 'b'
-                }
-              }]
-            }]);
+            return cb([sampleDoc]);
           } else {
             return cbb(true);
           }
-        }
+        },
+        bulkdelete: function(data, cb, cbb) {
+          if (data.length > 0) {
+            return cb(data);
+          } else {
+            return cbb(data);
+          }
+        },
       },
       Users = {
         save: function(data, cb, cbb) {
@@ -127,21 +137,14 @@
         get: function(params, cb, cbb) {
           return params.id ? cb({
             message: 'I am groot',
-            data: [1, 3, 4]
+            data: sampleUser
           }) : cbb({
             message: 'error'
           });
         },
         query: function(params, cb, cbb) {
           if (params.page) {
-            return cb([{
-              ownerId: [{
-                name: {
-                  first: 'a',
-                  last: 'b'
-                }
-              }]
-            }]);
+            return cb([sampleUser]);
           } else {
             return cbb('error');
           }
@@ -178,13 +181,14 @@
           if (params) {
             return cb([{
               message: 'I am groot',
-              data: [1, 3, 4]
+              data: [sampleUser]
             }]);
           } else {
             return cbb('error');
           }
         }
       },
+      Token,
       user = {
         _id: 1,
         groupId: [{
@@ -197,6 +201,7 @@
       },
       state,
       Utils,
+      Auth,
       stateParams,
       controller;
     beforeEach(function() {
@@ -214,9 +219,13 @@
         Groups: Groups,
         Users: Users
       });
+
       state = $injector.get('$state');
       Utils = $injector.get('Utils');
+      Auth = $injector.get('Auth');
+      Token = $injector.get('Token');
       stateParams = $injector.get('$stateParams');
+
       stateParams.query = {
         page: 1,
         limit: 10
@@ -315,6 +324,7 @@
       expect(date.time).toBeDefined();
     });
 
+    // 
     describe('when deleting a document', function() {
 
       it('should delete a document', function() {
@@ -432,7 +442,8 @@
       });
     });
 
-
+    // Group Admin dashboard
+    // group roles
     describe('when viewing list of roles, ' +
       'documents, users, groups',
       function() {
@@ -515,262 +526,282 @@
           expect(scope.selected.length).toBe(0);
           expect(scope.getRoles).toHaveBeenCalled();
         });
+      });
 
-        it('should load the list of documents in a group', function() {
+    // Group admin document view
+    describe('Group Admin - dcoument', function() {
+
+      it('should load the list of documents in a group', function() {
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Docs, 'query').and.callThrough();
+        spyOn(scope, 'getDocs').and.callThrough();
+        spyOn(Docs, 'count').and.callThrough();
+        stateParams.groupid = 1;
+        scope.docList();
+        expect(scope.listName).toBe('docs');
+        expect(scope.init).toHaveBeenCalled();
+        expect(Docs.count).toHaveBeenCalled();
+        expect(scope.getDocs).toHaveBeenCalled();
+        expect(Docs.query).toHaveBeenCalled();
+        expect(scope.docs).toBeDefined();
+        expect(scope.count).toBeDefined();
+      });
+
+      it('should load empty list of documents in a group', function() {
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(scope, 'getDocs').and.callThrough();
+        spyOn(Docs, 'query').and.callFake(function(params, cb) {
+          return cb([]);
+        });
+        spyOn(Docs, 'count').and.callThrough();
+        stateParams.groupid = 1;
+        scope.docList();
+        expect(scope.listName).toBe('docs');
+        expect(scope.init).toHaveBeenCalled();
+        expect(Docs.count).not.toHaveBeenCalled();
+        expect(scope.getDocs).toHaveBeenCalled();
+        expect(Docs.query).toHaveBeenCalled();
+        expect(scope.docs).not.toBeDefined();
+        expect(scope.docErr).toBeDefined();
+        expect(scope.count).not.toBeDefined();
+      });
+
+      it('should throw error loading documents', function() {
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Docs, 'query').and.callThrough();
+        spyOn(Docs, 'count').and.callThrough();
+        spyOn(scope, 'getDocs').and.callThrough();
+        scope.docList();
+        expect(scope.listName).toBe('docs');
+        expect(scope.init).toHaveBeenCalled();
+        expect(scope.getDocs).toHaveBeenCalled();
+        expect(Docs.count).not.toHaveBeenCalled();
+        expect(Docs.query).toHaveBeenCalled();
+        expect(scope.docs).not.toBeDefined();
+        expect(scope.count).not.toBeDefined();
+        expect(scope.docErr).toBeDefined();
+      });
+
+      it('should throw error loading documents count', function() {
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Docs, 'query').and.callThrough();
+        spyOn(Docs, 'count').and.callFake(function(cb) {
+          return cb(true, null);
+        });
+        spyOn(Utils, 'showAlert').and.callThrough();
+        stateParams.groupid = 1;
+        spyOn(scope, 'getDocs').and.callThrough();
+        scope.docList();
+        expect(scope.listName).toBe('docs');
+        expect(scope.init).toHaveBeenCalled();
+        expect(scope.getDocs).toHaveBeenCalled();
+        expect(Docs.count).toHaveBeenCalled();
+        expect(Utils.showAlert).toHaveBeenCalled();
+        expect(Docs.query).toHaveBeenCalled();
+        expect(scope.docs).toBeDefined();
+        expect(scope.count).not.toBeDefined();
+      });
+
+      it('should load pages of documents', function() {
+        spyOn(scope, 'getDocs').and.callThrough();
+        scope.onPaginateDoc(2, 1);
+        expect(scope.selected.length).toBe(0);
+        expect(scope.getDocs).toHaveBeenCalled();
+      });
+    });
+
+    // Group Users
+    describe('Group Admin dashboard - Users in a group', function() {
+
+      it('should load the list of users in a group', function() {
+        spyOn(Roles, 'query').and.callThrough();
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Users, 'query').and.callThrough();
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        spyOn(Users, 'count').and.callThrough();
+        stateParams.groupid = 1;
+        scope.userList();
+        expect(scope.listName).toBe('users');
+        expect(scope.init).toHaveBeenCalled();
+        expect(Users.query).toHaveBeenCalled();
+        expect(Users.count).toHaveBeenCalled();
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+        expect(Roles.query).toHaveBeenCalled();
+        expect(scope.users).toBeDefined();
+        expect(scope.count).toBeDefined();
+      });
+
+      it('should throw error loading users in a group', function() {
+        spyOn(Roles, 'query').and.callThrough();
+        spyOn(scope, 'init').and.callFake(function() {
+          scope.query = {};
+        });
+        spyOn(Users, 'query').and.callThrough();
+        spyOn(Users, 'count').and.callThrough();
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        scope.userList();
+        expect(scope.listName).toBe('users');
+        expect(scope.init).toHaveBeenCalled();
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+        expect(Users.query).toHaveBeenCalled();
+        expect(Users.count).not.toHaveBeenCalled();
+        expect(Roles.query).toHaveBeenCalled();
+        expect(scope.users).not.toBeDefined();
+        expect(scope.count).not.toBeDefined();
+      });
+
+      it('should throw error loading users count', function() {
+        stateParams.groupid = 1;
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Roles, 'query').and.callThrough();
+        spyOn(Users, 'query').and.callThrough();
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        spyOn(Users, 'count').and.callFake(function(cb) {
+          return cb(true, null);
+        });
+        spyOn(Utils, 'showAlert').and.callThrough();
+
+        scope.userList();
+        expect(scope.listName).toBe('users');
+        expect(scope.init).toHaveBeenCalled();
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+        expect(Utils.showAlert).toHaveBeenCalled();
+        expect(Users.query).toHaveBeenCalled();
+        expect(Users.count).toHaveBeenCalled();
+        expect(Roles.query).toHaveBeenCalled();
+        expect(scope.users).toBeDefined();
+        expect(scope.count).not.toBeDefined();
+      });
+
+      it('should load empty list of users in a group', function() {
+        spyOn(Roles, 'query').and.callThrough();
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Users, 'query').and.callFake(function(params, cb) {
+          return cb([]);
+        });
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        spyOn(Users, 'count').and.callThrough();
+        stateParams.groupid = 1;
+        scope.userList();
+        expect(scope.listName).toBe('users');
+        expect(scope.init).toHaveBeenCalled();
+        expect(Users.query).toHaveBeenCalled();
+        expect(Users.count).not.toHaveBeenCalled();
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+        expect(Roles.query).toHaveBeenCalled();
+        expect(scope.users).not.toBeDefined();
+        expect(scope.count).not.toBeDefined();
+      });
+
+
+      it('should load pages of users', function() {
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        scope.onPaginateUser(2, 1);
+        expect(scope.selected.length).toBe(0);
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+      });
+
+    });
+
+    describe('Admin dashboard - group', function() {
+      it('should load the list of groups in the application', function() {
+        spyOn(Groups, 'query').and.callThrough();
+        spyOn(scope, 'init').and.callThrough();
+        spyOn(Groups, 'count').and.callThrough();
+        spyOn(scope, 'getGroups').and.callThrough();
+        stateParams.groupid = 1;
+        scope.groupList();
+        expect(scope.listName).toBe('groups');
+        expect(Groups.query).toHaveBeenCalled();
+        expect(scope.getGroups).toHaveBeenCalled();
+        expect(Groups.count).toHaveBeenCalled();
+        expect(scope.init).toHaveBeenCalled();
+        expect(scope.groups).toBeDefined();
+        expect(scope.count).toBeDefined();
+      });
+
+      it('should throw error loading groups in the' +
+        ' application',
+        function() {
           spyOn(scope, 'init').and.callThrough();
-          spyOn(Docs, 'query').and.callThrough();
-          spyOn(scope, 'getDocs').and.callThrough();
-          spyOn(Docs, 'count').and.callThrough();
-          stateParams.groupid = 1;
-          scope.docList();
-          expect(scope.listName).toBe('docs');
-          expect(scope.init).toHaveBeenCalled();
-          expect(Docs.count).toHaveBeenCalled();
-          expect(scope.getDocs).toHaveBeenCalled();
-          expect(Docs.query).toHaveBeenCalled();
-          expect(scope.docs).toBeDefined();
-          expect(scope.count).toBeDefined();
-        });
-
-        it('should load empty list of documents in a group', function() {
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(scope, 'getDocs').and.callThrough();
-          spyOn(Docs, 'query').and.callFake(function(params, cb) {
-            return cb([]);
-          });
-          spyOn(Docs, 'count').and.callThrough();
-          stateParams.groupid = 1;
-          scope.docList();
-          expect(scope.listName).toBe('docs');
-          expect(scope.init).toHaveBeenCalled();
-          expect(Docs.count).not.toHaveBeenCalled();
-          expect(scope.getDocs).toHaveBeenCalled();
-          expect(Docs.query).toHaveBeenCalled();
-          expect(scope.docs).not.toBeDefined();
-          expect(scope.docErr).toBeDefined();
-          expect(scope.count).not.toBeDefined();
-        });
-
-        it('should throw error loading documents', function() {
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Docs, 'query').and.callThrough();
-          spyOn(Docs, 'count').and.callThrough();
-          spyOn(scope, 'getDocs').and.callThrough();
-          scope.docList();
-          expect(scope.listName).toBe('docs');
-          expect(scope.init).toHaveBeenCalled();
-          expect(scope.getDocs).toHaveBeenCalled();
-          expect(Docs.count).not.toHaveBeenCalled();
-          expect(Docs.query).toHaveBeenCalled();
-          expect(scope.docs).not.toBeDefined();
-          expect(scope.count).not.toBeDefined();
-          expect(scope.docErr).toBeDefined();
-        });
-
-        it('should throw error loading documents count', function() {
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Docs, 'query').and.callThrough();
-          spyOn(Docs, 'count').and.callFake(function(cb) {
-            return cb(true, null);
-          });
-          spyOn(Utils, 'showAlert').and.callThrough();
-          stateParams.groupid = 1;
-          spyOn(scope, 'getDocs').and.callThrough();
-          scope.docList();
-          expect(scope.listName).toBe('docs');
-          expect(scope.init).toHaveBeenCalled();
-          expect(scope.getDocs).toHaveBeenCalled();
-          expect(Docs.count).toHaveBeenCalled();
-          expect(Utils.showAlert).toHaveBeenCalled();
-          expect(Docs.query).toHaveBeenCalled();
-          expect(scope.docs).toBeDefined();
-          expect(scope.count).not.toBeDefined();
-        });
-
-        it('should load pages of documents', function() {
-          spyOn(scope, 'getDocs').and.callThrough();
-          scope.onPaginateDoc(2, 1);
-          expect(scope.selected.length).toBe(0);
-          expect(scope.getDocs).toHaveBeenCalled();
-        });
-
-        it('should load the list of users in a group', function() {
-          spyOn(Roles, 'query').and.callThrough();
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Users, 'query').and.callThrough();
-          spyOn(scope, 'getGroupUsers').and.callThrough();
-          spyOn(Users, 'count').and.callThrough();
-          stateParams.groupid = 1;
-          scope.userList();
-          expect(scope.listName).toBe('users');
-          expect(scope.init).toHaveBeenCalled();
-          expect(Users.query).toHaveBeenCalled();
-          expect(Users.count).toHaveBeenCalled();
-          expect(scope.getGroupUsers).toHaveBeenCalled();
-          expect(Roles.query).toHaveBeenCalled();
-          expect(scope.users).toBeDefined();
-          expect(scope.count).toBeDefined();
-        });
-
-        it('should throw error loading users in a group', function() {
-          spyOn(Roles, 'query').and.callThrough();
-          spyOn(scope, 'init').and.callFake(function() {
-            scope.query = {};
-          });
-          spyOn(Users, 'query').and.callThrough();
-          spyOn(Users, 'count').and.callThrough();
-          spyOn(scope, 'getGroupUsers').and.callThrough();
-          scope.userList();
-          expect(scope.listName).toBe('users');
-          expect(scope.init).toHaveBeenCalled();
-          expect(scope.getGroupUsers).toHaveBeenCalled();
-          expect(Users.query).toHaveBeenCalled();
-          expect(Users.count).not.toHaveBeenCalled();
-          expect(Roles.query).toHaveBeenCalled();
-          expect(scope.users).not.toBeDefined();
-          expect(scope.count).not.toBeDefined();
-        });
-
-        it('should throw error loading users count', function() {
-          stateParams.groupid = 1;
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Roles, 'query').and.callThrough();
-          spyOn(Users, 'query').and.callThrough();
-          spyOn(scope, 'getGroupUsers').and.callThrough();
-          spyOn(Users, 'count').and.callFake(function(cb) {
-            return cb(true, null);
-          });
-          spyOn(Utils, 'showAlert').and.callThrough();
-
-          scope.userList();
-          expect(scope.listName).toBe('users');
-          expect(scope.init).toHaveBeenCalled();
-          expect(scope.getGroupUsers).toHaveBeenCalled();
-          expect(Utils.showAlert).toHaveBeenCalled();
-          expect(Users.query).toHaveBeenCalled();
-          expect(Users.count).toHaveBeenCalled();
-          expect(Roles.query).toHaveBeenCalled();
-          expect(scope.users).toBeDefined();
-          expect(scope.count).not.toBeDefined();
-        });
-
-        it('should load empty list of users in a group', function() {
-          spyOn(Roles, 'query').and.callThrough();
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Users, 'query').and.callFake(function(params, cb) {
-            return cb([]);
-          });
-          spyOn(scope, 'getGroupUsers').and.callThrough();
-          spyOn(Users, 'count').and.callThrough();
-          stateParams.groupid = 1;
-          scope.userList();
-          expect(scope.listName).toBe('users');
-          expect(scope.init).toHaveBeenCalled();
-          expect(Users.query).toHaveBeenCalled();
-          expect(Users.count).not.toHaveBeenCalled();
-          expect(scope.getGroupUsers).toHaveBeenCalled();
-          expect(Roles.query).toHaveBeenCalled();
-          expect(scope.users).not.toBeDefined();
-          expect(scope.count).not.toBeDefined();
-        });
-
-
-        it('should load pages of users', function() {
-          spyOn(scope, 'getGroupUsers').and.callThrough();
-          scope.onPaginateUser(2, 1);
-          expect(scope.selected.length).toBe(0);
-          expect(scope.getGroupUsers).toHaveBeenCalled();
-        });
-
-        it('should load the list of groups in the application', function() {
-          spyOn(Groups, 'query').and.callThrough();
-          spyOn(scope, 'init').and.callThrough();
-          spyOn(Groups, 'count').and.callThrough();
           spyOn(scope, 'getGroups').and.callThrough();
+          spyOn(Groups, 'query').and.callFake(function(params, cb, cbb) {
+            return cbb();
+          });
+          spyOn(Groups, 'count').and.callThrough();
+          scope.groupList();
+          expect(scope.listName).toBe('groups');
+          expect(scope.init).toHaveBeenCalled();
+          expect(scope.getGroups).toHaveBeenCalled();
+          expect(Groups.query).toHaveBeenCalled();
+          expect(Groups.count).not.toHaveBeenCalled();
+          expect(scope.groups).not.toBeDefined();
+          expect(scope.count).not.toBeDefined();
+        });
+
+      it('should throw error loading count of groups in the' +
+        ' application',
+        function() {
+          spyOn(scope, 'init').and.callThrough();
+          spyOn(scope, 'getGroups').and.callThrough();
+          spyOn(Groups, 'query').and.callThrough();
+          spyOn(Groups, 'count').and.callFake(function(cb) {
+            return cb(true, null);
+          });
+          spyOn(Utils, 'showAlert').and.callThrough();
           stateParams.groupid = 1;
           scope.groupList();
           expect(scope.listName).toBe('groups');
           expect(Groups.query).toHaveBeenCalled();
           expect(scope.getGroups).toHaveBeenCalled();
+          expect(Utils.showAlert).toHaveBeenCalled();
           expect(Groups.count).toHaveBeenCalled();
           expect(scope.init).toHaveBeenCalled();
           expect(scope.groups).toBeDefined();
-          expect(scope.count).toBeDefined();
+          expect(scope.count).not.toBeDefined();
         });
 
-        it('should throw error loading groups in the' +
-          ' application',
-          function() {
-            spyOn(scope, 'init').and.callThrough();
-            spyOn(scope, 'getGroups').and.callThrough();
-            spyOn(Groups, 'query').and.callFake(function(params, cb, cbb) {
-              return cbb();
-            });
-            spyOn(Groups, 'count').and.callThrough();
-            scope.groupList();
-            expect(scope.listName).toBe('groups');
-            expect(scope.init).toHaveBeenCalled();
-            expect(scope.getGroups).toHaveBeenCalled();
-            expect(Groups.query).toHaveBeenCalled();
-            expect(Groups.count).not.toHaveBeenCalled();
-            expect(scope.groups).not.toBeDefined();
-            expect(scope.count).not.toBeDefined();
-          });
-
-        it('should throw error loading count of groups in the' +
-          ' application',
-          function() {
-            spyOn(scope, 'init').and.callThrough();
-            spyOn(scope, 'getGroups').and.callThrough();
-            spyOn(Groups, 'query').and.callThrough();
-            spyOn(Groups, 'count').and.callFake(function(cb) {
-              return cb(true, null);
-            });
-            spyOn(Utils, 'showAlert').and.callThrough();
-            stateParams.groupid = 1;
-            scope.groupList();
-            expect(scope.listName).toBe('groups');
-            expect(Groups.query).toHaveBeenCalled();
-            expect(scope.getGroups).toHaveBeenCalled();
-            expect(Utils.showAlert).toHaveBeenCalled();
-            expect(Groups.count).toHaveBeenCalled();
-            expect(scope.init).toHaveBeenCalled();
-            expect(scope.groups).toBeDefined();
-            expect(scope.count).not.toBeDefined();
-          });
-
-        it('should load empty list of groups in the' +
-          ' application',
-          function() {
-            spyOn(scope, 'init').and.callThrough();
-            spyOn(scope, 'getGroups').and.callThrough();
-            spyOn(Groups, 'count').and.callThrough();
-            spyOn(Groups, 'query').and.callFake(function(params, cb) {
-              return cb([]);
-            });
-            stateParams.groupid = 1;
-            scope.groupList();
-            expect(scope.listName).toBe('groups');
-            expect(Groups.query).toHaveBeenCalled();
-            expect(scope.getGroups).toHaveBeenCalled();
-            expect(Groups.count).not.toHaveBeenCalled();
-            expect(scope.init).toHaveBeenCalled();
-            expect(scope.groups).not.toBeDefined();
-            expect(scope.count).not.toBeDefined();
-          });
-
-
-        it('should load pages of groups', function() {
+      it('should load empty list of groups in the' +
+        ' application',
+        function() {
+          spyOn(scope, 'init').and.callThrough();
           spyOn(scope, 'getGroups').and.callThrough();
-          scope.onPaginateGroup(2, 1);
-          expect(scope.selected.length).toBe(0);
+          spyOn(Groups, 'count').and.callThrough();
+          spyOn(Groups, 'query').and.callFake(function(params, cb) {
+            return cb([]);
+          });
+          stateParams.groupid = 1;
+          scope.groupList();
+          expect(scope.listName).toBe('groups');
+          expect(Groups.query).toHaveBeenCalled();
           expect(scope.getGroups).toHaveBeenCalled();
+          expect(Groups.count).not.toHaveBeenCalled();
+          expect(scope.init).toHaveBeenCalled();
+          expect(scope.groups).not.toBeDefined();
+          expect(scope.count).not.toBeDefined();
         });
+
+
+      it('should load pages of groups', function() {
+        spyOn(scope, 'getGroups').and.callThrough();
+        scope.onPaginateGroup(2, 1);
+        expect(scope.selected.length).toBe(0);
+        expect(scope.getGroups).toHaveBeenCalled();
       });
+    });
 
     describe('when viewing app users', function() {
 
       beforeEach(function() {
+        spyOn(Token, 'get').and.callFake(function() {
+          return [JSON.stringify({
+            user: {
+              _id: 1
+            },
+            token: 'insidious'
+          }), ''];
+        });
+        spyOn(Auth, 'setToken').and.callThrough();
         stateParams.query = {
           page: 1,
           limit: 10
@@ -808,6 +839,8 @@
           expect(Users.query).toHaveBeenCalled();
           expect(scope.getAppUsers).toHaveBeenCalled();
           expect(scope.init).toHaveBeenCalled();
+          expect(Auth.setToken).toHaveBeenCalled();
+          expect(Token.get).toHaveBeenCalled();
           expect(Users.count).not.toHaveBeenCalled();
           expect(scope.count).not.toBeDefined();
         });
@@ -828,6 +861,8 @@
           expect(scope.init).toHaveBeenCalled();
           expect(scope.getAppUsers).toHaveBeenCalled();
           expect(Users.query).toHaveBeenCalled();
+          expect(Auth.setToken).toHaveBeenCalled();
+          expect(Token.get).toHaveBeenCalled();
           expect(Utils.showAlert).toHaveBeenCalled();
           expect(scope.allUsers).toBeDefined();
           expect(scope.count).not.toBeDefined();
@@ -846,6 +881,8 @@
           expect(scope.init).toHaveBeenCalled();
           expect(scope.listName).toBe('appUsers');
           expect(scope.getAppUsers).toHaveBeenCalled();
+          expect(Auth.setToken).toHaveBeenCalled();
+          expect(Token.get).toHaveBeenCalled();
           expect(Users.query).toHaveBeenCalled();
           expect(scope.allUsers).not.toBeDefined();
           expect(Users.count).not.toHaveBeenCalled();
@@ -861,36 +898,76 @@
 
     });
 
-    it('should refresh the tables', function() {
-      scope.query = {
-        page: 1,
-        limit: 10
-      };
-      spyOn(scope, 'getGroupUsers').and.callThrough();
-      scope.listName = 'users';
+    describe('Table Functions', function() {
 
-      scope.refreshTable();
-      expect(scope.getGroupUsers).toHaveBeenCalled();
+      it('should delete a selection list', function() {
+        spyOn(Utils, 'showConfirm').and.callThrough();
+        spyOn(Docs, 'bulkdelete').and.callThrough();
+        spyOn(state, 'go').and.callThrough();
+        scope.count = 6;
+        stateParams = {
+          id: 1,
+          groupid: 2
+        };
+        scope.selected = [1, 2, 3];
+        scope.deleteSelection('evt');
+        expect(Utils.showConfirm).toHaveBeenCalled();
+        expect(Docs.bulkdelete).toHaveBeenCalled();
+        expect(scope.count).toBe(3);
+        expect(state.go).toHaveBeenCalled();
+      });
 
-      spyOn(scope, 'getDocs').and.callThrough();
-      scope.listName = 'docs';
-      scope.refreshTable();
-      expect(scope.getDocs).toHaveBeenCalled();
+      it('should alert error deleting a selection list', function() {
+        spyOn(Utils, 'showConfirm').and.callThrough();
+        spyOn(Utils, 'showAlert').and.callThrough();
+        spyOn(Docs, 'bulkdelete').and.callThrough();
+        spyOn(state, 'go').and.callThrough();
+        scope.count = 6;
+        stateParams = {
+          id: 1,
+          groupid: 2
+        };
+        scope.selected = [];
+        scope.deleteSelection('evt');
+        expect(Utils.showConfirm).toHaveBeenCalled();
+        expect(Docs.bulkdelete).toHaveBeenCalled();
+        expect(Utils.showAlert).toHaveBeenCalled();
+        expect(scope.count).toBe(6);
+        expect(state.go).not.toHaveBeenCalled();
+      });
 
-      spyOn(scope, 'getRoles').and.callThrough();
-      scope.listName = 'roles';
-      scope.refreshTable();
-      expect(scope.getRoles).toHaveBeenCalled();
 
-      spyOn(scope, 'getAppUsers').and.callThrough();
-      scope.listName = 'appUsers';
-      scope.refreshTable();
-      expect(scope.getAppUsers).toHaveBeenCalled();
+      it('should refresh the tables', function() {
+        scope.query = {
+          page: 1,
+          limit: 10
+        };
+        spyOn(scope, 'getGroupUsers').and.callThrough();
+        scope.listName = 'users';
 
-      spyOn(scope, 'getGroups').and.callThrough();
-      scope.listName = 'groups';
-      scope.refreshTable();
-      expect(scope.getGroups).toHaveBeenCalled();
+        scope.refreshTable();
+        expect(scope.getGroupUsers).toHaveBeenCalled();
+
+        spyOn(scope, 'getDocs').and.callThrough();
+        scope.listName = 'docs';
+        scope.refreshTable();
+        expect(scope.getDocs).toHaveBeenCalled();
+
+        spyOn(scope, 'getRoles').and.callThrough();
+        scope.listName = 'roles';
+        scope.refreshTable();
+        expect(scope.getRoles).toHaveBeenCalled();
+
+        spyOn(scope, 'getAppUsers').and.callThrough();
+        scope.listName = 'appUsers';
+        scope.refreshTable();
+        expect(scope.getAppUsers).toHaveBeenCalled();
+
+        spyOn(scope, 'getGroups').and.callThrough();
+        scope.listName = 'groups';
+        scope.refreshTable();
+        expect(scope.getGroups).toHaveBeenCalled();
+      });
     });
 
   });
