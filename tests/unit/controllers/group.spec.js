@@ -48,6 +48,22 @@
             return cb(true, null);
           }
         },
+        joingroup: function(data, cb) {
+          var user = {
+            _id: 1,
+            groupId: [{
+              _id: 3
+            }],
+            roles: [{
+              _id: 2
+            }]
+          };
+          if (data) {
+            return cb(null, user);
+          } else {
+            return cb('error');
+          }
+        },
         get: function(id, cb, cbb) {
           return id ? cb(true) : cbb(false);
         },
@@ -186,10 +202,8 @@
 
 
     it('should add a user to a group', function() {
-      spyOn(Groups, 'update').and.callThrough();
-      spyOn(Roles, 'update').and.callThrough();
-      spyOn(Users, 'update').and.callThrough();
       spyOn(state, 'go');
+      spyOn(Users, 'joingroup').and.callThrough();
       stateParams.id = 1;
       scope.init();
       scope.signform.group = {
@@ -211,10 +225,8 @@
         }]
       };
       scope.joinGroup();
+      expect(Users.joingroup).toHaveBeenCalled();
       expect(scope.groupErr).toBe('Successfully added to group');
-      expect(Groups.update).toHaveBeenCalled();
-      expect(Roles.update).toHaveBeenCalled();
-      expect(Users.update).toHaveBeenCalled();
       expect(scope.activeUser).toBeDefined();
       expect(scope.activeGroup).toBeDefined();
       expect(state.go).toHaveBeenCalled();

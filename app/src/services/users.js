@@ -18,7 +18,7 @@
         });
 
         obj.login = function(user, cb) {
-          $http.post('/api/users/login', user).then(function(res) {
+          return $http.post('/api/users/login', user).then(function(res) {
             cb(null, res.data);
           }, function(err) {
             cb(err);
@@ -26,7 +26,7 @@
         };
 
         obj.session = function(cb) {
-          $http.get('/api/session').then(function(res) {
+          return $http.get('/api/session').then(function(res) {
             cb(null, res.data);
           }, function(err) {
             cb(err);
@@ -40,6 +40,14 @@
             }, function(err) {
               cb(err, null);
             });
+        };
+
+        obj.joingroup = function(data, cb) {
+          return $http.post('/api/groups/join', data).then(function(res) {
+            cb(null, res.data);
+          }, function(err) {
+            cb(err);
+          });
         };
 
         return obj;

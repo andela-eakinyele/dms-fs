@@ -15,7 +15,7 @@
     beforeEach(inject(function($injector) {
       Groups = $injector.get('Groups');
       $resource = $injector.get('$resource');
-      spyOn(Groups, 'update').and.returnValue();
+      spyOn(Groups, 'update').and.returnValue(true);
       Groups.update();
 
       httpBackend = $injector.get('$httpBackend');
@@ -55,8 +55,6 @@
 
       it('should get group count', function() {
 
-        spyOn(Groups, 'count').and.callThrough();
-
         httpBackend
           .whenGET('/api/groupcount')
           .respond(200, {
@@ -72,8 +70,6 @@
       });
 
       it('should return error getting group count', function() {
-
-        spyOn(Groups, 'count').and.callThrough();
 
         httpBackend
           .whenGET('/api/groupcount')

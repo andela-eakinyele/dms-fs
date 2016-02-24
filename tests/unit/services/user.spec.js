@@ -101,8 +101,6 @@
     describe('User count resource', function() {
       it('should get users count', function() {
 
-        spyOn(Users, 'count').and.callThrough();
-
         httpBackend
           .whenGET('/api/usercount')
           .respond(200, {
@@ -119,8 +117,6 @@
 
       it('should return error getting users count', function() {
 
-        spyOn(Users, 'count').and.callThrough();
-
         httpBackend
           .whenGET('/api/usercount')
           .respond(400, {
@@ -128,6 +124,41 @@
           });
 
         Users.count(cb);
+
+        httpBackend.flush();
+
+        expect(response).toBe(null);
+        expect(error.data.err).toBe('err');
+      });
+    });
+
+
+    describe('User joins a group resource', function() {
+      it('should get add user to a group', function() {
+
+        httpBackend
+          .whenPOST('/api/groups/join')
+          .respond(200, {
+            data: 2
+          });
+
+        Users.joingroup([true, true], cb);
+
+        httpBackend.flush();
+
+        expect(error).toBe(null);
+        expect(response).toBeDefined();
+      });
+
+      it('should not add user to a group', function() {
+
+        httpBackend
+          .whenPOST('/api/groups/join')
+          .respond(400, {
+            err: 'err'
+          });
+
+        Users.joingroup([false, false], cb);
 
         httpBackend.flush();
 

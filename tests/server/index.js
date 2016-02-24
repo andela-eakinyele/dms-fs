@@ -12,6 +12,7 @@
 
   describe('Testing API Routes', function() {
 
+    console.log('test');
     after(function(done) {
       apiTest.seed.deleteModels(done);
     });

@@ -62,58 +62,38 @@
           var selectedRole = $scope.signform.role;
 
           //  get user document details to be updated
-          var _userid = parseInt($stateParams.id);
           var userGroup = $rootScope.activeUser.groupId;
           var _userRoles = window._
             .map($rootScope.activeUser.roles, '_id');
 
           // update refs with ids
-          selectedGroup.users.push(_userid);
-          selectedRole.users.push(_userid);
           userGroup.push(selectedGroup._id);
           _userRoles.push(selectedRole._id);
 
-          // update body
-          var groupUpdate = {
-            users: window._.uniq(selectedGroup.users),
-            pass: $scope.signform.passphrase
-          };
-          var roleUpdate = {
-            users: window._.uniq(selectedRole.users)
-          };
           var userUpdate = {
             groupId: window._.uniq(userGroup),
             roles: window._.uniq(_userRoles)
           };
 
-          Groups.update({
-              id: selectedGroup._id
-            }, groupUpdate, function() {
-              Roles.update({
-                id: selectedRole._id
-              }, roleUpdate, function() {
-                Users.update({
-                  id: _userid
-                }, userUpdate, function(user) {
-                  $scope.groupErr = 'Successfully added to group';
-                  $rootScope.activeUser = user;
-                  $rootScope.activeGroup = user.groupId[0]._id;
-                  $state.go('dashboard.list', {
-                    id: $rootScope.activeUser._id,
-                    groupid: user.groupId[0]._id
-                  });
-                }, function() {
-                  $scope.groupErr = 'Error updating user';
-                });
-              }, function() {
-                $scope.groupErr = 'Error updating role';
-              });
-            },
-            function(err) {
-              if (err.status === 403) {
-                $scope.groupErr = 'Invalid Passphrase';
+          Users.joingroup(
+            [$scope.signform, userUpdate],
+            function(err, user) {
+              if (err) {
+                if (err.status === 403) {
+                  $scope.groupErr = 'Invalid Passphrase';
+                } else {
+                  $scope.groupErr = 'Error updating group';
+                }
               } else {
-                $scope.groupErr = 'Error updating group';
+                console.log(user);
+                $scope.groupErr = 'Successfully added to group';
+                $rootScope.activeUser = user;
+                $rootScope.activeGroup = user.groupId[0];
+
+                $state.go('dashboard.list', {
+                  id: $rootScope.activeUser._id,
+                  groupid: user.groupId[0]._id
+                });
               }
             });
         };

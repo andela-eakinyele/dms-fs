@@ -40,7 +40,7 @@ md-content.dashgroup(layout ="column" flex="100" layout-margin)
             div(layout)
               md-icon(md-font-set="fa fa-users")
               md-select(name="group" ng-change= "getRoles()" ng-model="signform.group" class="select" aria-label="group Name" ng-disabled="newgroup")
-                md-option(ng-value="group" ng-repeat="group in groups") {{group.title}}
+                md-option(ng-value="group" ng-repeat="group in groups track by $index") {{group.title}}
           md-input-container
             label(for="role") Role
             div(layout)

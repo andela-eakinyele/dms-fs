@@ -16,6 +16,7 @@
 
   module.exports = function() {
 
+    var role = '';
     var testuser = '';
     var userData = '';
     var token = '';
@@ -55,14 +56,25 @@
                   };
                 });
 
-                // mock updated user data
                 mock.seedUpdate(apiTest.model.user, updateData, ids)
                   .then(function(updated) {
                     userData = updated;
                     console.log('Updated seed Users');
-                    done();
-                  })
-                  .catch(function(err) {
+                    // mock role for group
+                    mock.seedCreate(apiTest.model.role, ['title', 'groupId'], {
+                        roles: ['Header', 113]
+                      },
+                      20).then(function(roles) {
+                      role = roles[0];
+                      console.log('Seeded role');
+                      done();
+
+                      // catch blocks
+                    }).catch(function(err) {
+                      console.log('Error mocking role', err);
+                      return;
+                    });
+                  }).catch(function(err) {
                     console.log('Error updating users', err);
                     return;
                   });
@@ -510,28 +522,35 @@
         });
 
         it('- Should be able to join a group', function(done) {
-          seedGroupdata[1].users.push(usersId[0]);
+          var group = {
+            users: [200],
+            _id: 113
+          };
           request
-            .put('/api/groups/' + 113)
+            .post('/api/groups/join')
             .set({
               access_token: token,
               userid: usersId[0]
             })
             .type('json')
-            .send({
-              users: [200, usersId[0]],
-              pass: groupSeed.testGroup[2],
-              userid: usersId[0]
-            })
+            .send([{
+              passphrase: groupSeed.testGroup[2],
+              group: group,
+              role: role
+            }, {
+              roles: [20],
+              groupId: [114, 113]
+            }])
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
-              var response = res.body;
-              assert.deepEqual(response.users, [200, 102]);
+              var response = _.pluck(res.body.data.groupId, '_id');
+              assert.deepEqual(response, [114, 113]);
               done();
             });
         });
+
 
         // should not be able to delete own userdata
         it('- Should not be able to delete own data', function(done) {

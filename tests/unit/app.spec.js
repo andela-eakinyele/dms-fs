@@ -72,7 +72,7 @@
         isLoggedIn: function() {
           return true;
         },
-        setToken: function(a, b) {
+        setToken: function() {
           return true;
         },
         logout: function() {
@@ -89,35 +89,37 @@
 
       describe('when token is valid', function() {
 
-        it('should implement session and redirect to user dashboard', function() {
+        it('should implement session and ' +
+          'redirect to user dashboard',
+          function() {
 
-          Users = {
-            session: function(cb) {
-              cb(null, res1);
-            }
-          };
+            Users = {
+              session: function(cb) {
+                cb(null, res1);
+              }
+            };
 
-          spyOn(Auth, 'setToken').and.callThrough();
-          spyOn(state, 'go').and.callThrough();
-          spyOn(Users, 'session').and.callThrough();
+            spyOn(Auth, 'setToken').and.callThrough();
+            spyOn(state, 'go').and.callThrough();
+            spyOn(Users, 'session').and.callThrough();
 
-          module('prodocs', function($provide) {
-            $provide.value('Users', Users);
-            $provide.value('Auth', Auth);
-            $provide.value('$state', state);
+            module('prodocs', function($provide) {
+              $provide.value('Users', Users);
+              $provide.value('Auth', Auth);
+              $provide.value('$state', state);
+            });
+
+            inject(function($injector) {
+              scope = $injector.get('$rootScope');
+            });
+
+            expect(Auth.setToken).toHaveBeenCalled();
+            expect(Users.session).toHaveBeenCalled();
+            expect(state.go).toHaveBeenCalledWith('dashboard.list', {
+              id: 1,
+              groupid: 1
+            });
           });
-
-          inject(function($injector) {
-            scope = $injector.get('$rootScope');
-          });
-
-          expect(Auth.setToken).toHaveBeenCalled();
-          expect(Users.session).toHaveBeenCalled();
-          expect(state.go).toHaveBeenCalledWith('dashboard.list', {
-            id: 1,
-            groupid: 1
-          });
-        });
 
         it('should implement session and redirect to group', function() {
           Users = {
@@ -281,7 +283,7 @@
           });
 
           state.go('dashboard.admin.group');
-          state.go('home.features')
+          state.go('home.features');
           scope.back();
           expect(state.go).toHaveBeenCalledWith('dashboard.admin.group');
         });
@@ -300,7 +302,7 @@
 
           state.go('home.login');
           scope.$digest();
-          state.go('dashboard.admin.group')
+          state.go('dashboard.admin.group');
           scope.back();
           expect(state.go).toHaveBeenCalledWith('home.features');
         });
