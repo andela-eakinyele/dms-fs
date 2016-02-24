@@ -1,154 +1,447 @@
-    html,
-    body {
-        width: 100%;
-        font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
-        text-transform: none;
-        background-image: url('../images/homeBckgrd.jpg');
-        >main {
-            height: inherit;
-            > md-content {
-                background-color: rgba(2, 18, 25, 0.76);
+html,
+body {
+    width: 100%;
+    font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
+    text-transform: none;
+    background-image: url('../images/homeBckgrd.jpg');
+    >main {
+        height: inherit;
+        > md-content {
+            background-color: rgba(2, 18, 25, 0.76);
+        }
+    }
+}
+
+body > md-toolbar {
+    height: 30px;
+    z-index: 3;
+}
+
+.footer {
+    background-color: #3F4E48;
+    height: 50px;
+    position: relative;
+}
+
+h1 h2 h3 h4 {
+    margin: 0;
+}
+
+span.appName {
+    font-size: 36px;
+    color: #B9CEB7;
+    font-family: 'Georgia';
+}
+
+#dashContent {
+    min-width: 600px;
+}
+
+.md-button {
+    text-transform: none;
+    text-align: center;
+    margin: 0 8px 0 0;
+    &.md-raised:not([disabled]) {
+        font-size: 12px;
+    }
+}
+
+md-input-container {
+    margin: 0;
+}
+
+.overlay {
+    background: linear-gradient(#4E614F, rgba(2, 18, 25, 0.76)), url('../images/homeBckgrd.jpg');
+    text-align: center;
+    >div {
+        background-color: rgba(96, 130, 111, 0.29);
+    }
+}
+
+.extraView {
+    margin-top: 40px;
+    .md-button {
+        font-size: 1.0em;
+        width: 60px;
+    }
+    h3 {
+        font-size: 18px;
+    }
+}
+
+.features {
+    margin-top: 75px;
+    h3 {
+        color: #B9CEB7;
+        font-size: 16px;
+    }
+    span {
+        font-size: 14px;
+    }
+    .side-border {
+        border-right: 3px solid #3C626B;
+    }
+    .bottom {
+        border-bottom: 3px solid #3C626B;
+    }
+}
+
+span.hint {
+    color: orange;
+    font-size: 12px;
+}
+
+div.nextViews {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    background-color: #536A58;
+}
+
+.md-table-pagination {
+    color: rgb(80, 99, 81);
+}
+
+.signup {
+    width: 400px;
+    >form {
+        min-width: 400px;
+        font-size: 14px;
+        md-input-container {
+            color: #5D518E;
+        }
+        .md-button {
+            width: 100%;
+            font-size: 0.9em;
+        }
+    }
+    > span {
+        font-size: 14px;
+    }
+}
+
+.login {
+    span {
+        font-size: 12px;
+    }
+    width: 350px;
+    >form {
+        min-width: 200px;
+        font-size: 14px;
+        md-input-container {
+            color: #5D518E;
+        }
+        .md-button {
+            width: 100%;
+        }
+    }
+}
+
+.options {
+    text-align: left;
+}
+
+.redirect {
+    span {
+        font-size: 12px;
+    }
+    .md-button {
+        margin-left: 10px;
+    }
+}
+
+md-toolbar {
+    min-height: 45px;
+}
+
+md-toolbar .md-toolbar-tools {
+    font-size: 14px;
+    background-color: #4E614F;
+}
+
+md-toolbar:not(.md-menu-toolbar) {
+    background-color: #4E614F;
+}
+
+md-toolbar .md-menu {
+    margin: 0;
+}
+
+md-toolbar.table.alternate .md-toolbar-tools {
+    font-size: 14px;
+    color: #1e88e5;
+    background-color: #e3f2fd;
+}
+
+.header {
+    background-color: #E1EDEF;
+    min-width: 550px;
+    opacity: 0.9;
+    .md-button.md-icon-button {
+        padding: 0;
+    }
+    .right-border {
+        height: 80%;
+        border-right: 1px solid orange;
+    }
+    md-menu {
+        > .md-button {
+            width: 100px;
+            margin: 2px;
+            span {
+                color: white;
+                font-size: 12px;
+                margin-left: 10px;
             }
         }
     }
-    
-    body > md-toolbar {
+}
+
+div.right-border {
+    > button md-icon {
+        vertical-align: middle;
+        margin: auto;
+        background-repeat: no-repeat no-repeat;
+        height: 80%;
+        width: inherit;
+    }
+    > a md-icon {
+        vertical-align: middle;
+        margin: auto;
+        background-repeat: no-repeat no-repeat;
+        height: inherit;
+        width: inherit;
+    }
+    span {
+        color: #D8D6E8;
+        vertical-align: middle;
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+}
+
+.colorful {
+    background-color: #40C4FF;
+}
+
+md-content.md-default-theme,
+md-content {
+    background-color: rgba(255, 255, 255, 0.36);
+}
+
+.sectionTitle.md-toolbar-tools {
+    md-input-container {
+        background-color: white;
+        color: black;
+        border-radius: 10px;
         height: 30px;
-        z-index: 3;
-    }
-    
-    .footer {
-        background-color: #3F4E48;
-        height: 50px;
-        position: relative;
-    }
-    
-    h1 h2 h3 h4 {
-        margin: 0;
-    }
-    /*md-sidenav.md-locked-open md-sidenav.md-locked-open.md-closed,
-md-sidenav.md-locked-open.md-closed.md-sidenav-left {
-    height: 100%;
-}*/
-    
-    span.appName {
-        font-size: 36px;
-        color: #B9CEB7;
-        font-family: 'Georgia';
-    }
-    
-    #dashContent {
-        min-width: 600px;
-    }
-    
-    .md-button {
-        text-transform: none;
-        text-align: center;
-        margin: 0 8px 0 0;
-        &.md-raised:not([disabled]) {
+        width: 300px;
+        margin-right: 10px;
+        > input.md-input {
+            text-align: center;
+            border: none;
             font-size: 12px;
         }
     }
-    
-    md-input-container {
-        margin: 0;
+    h3 {
+        font-size: 1.2em;
+        font-weight: bold;
+        vertical-align: middle;
     }
-    
-    .overlay {
-        background: linear-gradient(#4E614F, rgba(2, 18, 25, 0.76)), url('../images/homeBckgrd.jpg');
-        text-align: center;
-        >div {
-            background-color: rgba(96, 130, 111, 0.29);
-        }
-    }
-    
-    .extraView {
-        margin-top: 20px;
-        .md-button {
-            font-size: 1.0em;
-            width: 60px;
-        }
-        h3 {
-            font-size: 18px;
+    >.md-button {
+        margin-right: 10px;
+        margin-left: 10px;
+        > md-icon {
+            vertical-align: middle;
+            font-size: 24px;
         }
     }
-    
-    .features {
-        margin-top: 75px;
-        h3 {
-            color: #B9CEB7;
-            font-size: 16px;
+}
+
+md-fab-speed-dial md-fab-trigger {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.sidenav {
+    md-icon {
+        margin-top: 10px;
+    }
+    md-content {
+        > div {
+            >h3 {
+                font-size: 18px;
+                color: indigo;
+                margin: 0;
+            }
+            md-checkbox {
+                font-size: 12px;
+                margin-top: 5px;
+                margin-left: 15px;
+            }
+            font-style: italic;
+            width: 100%;
+            padding: 0;
         }
+    }
+}
+
+md-toolbar:not(.md-menu-toolbar) {
+    color: white;
+    background-color: rgba(75, 89, 77, 0.4);
+    &.username {
         span {
             font-size: 14px;
         }
-        .side-border {
-            border-right: 3px solid #3C626B;
+        >div {
+            border-radius: 5px;
+            margin: 5px;
+            >h3 {
+                margin: 5px;
+            }
         }
-        .bottom {
-            border-bottom: 3px solid #3C626B;
+        color: #532F7A
+    }
+}
+
+.btn-style {
+    margin: 0;
+    font-size: 12px;
+    text-align: left;
+    width: 100%;
+    padding: 5px 0 10px 15px;
+    height: 40px;
+    text-transform: none;
+    &.sidehead {
+        color: white;
+        box-shadow: 0 2px 5px 0 rgb(64, 196, 255);
+        background-color: rgba(83, 94, 84, 0.78);
+        font-size: 14px;
+    }
+    :not([disabled]):hover {
+        background-color: rgba(193, 193, 193, 0.96);
+        transition: 0.3s;
+        color: #40C4FF;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+md-dialog-actions {
+    >.md-button {
+        width: 100px;
+        span {
+            font-size: 16px;
         }
     }
-    
-    span.hint {
-        color: orange;
+}
+
+.messages {
+    >div {
+        font-size: 16px;
+    }
+}
+
+.docForm {
+    height: 100%;
+    min-width: 600px;
+    .formTitle {
         font-size: 12px;
-    }
-    
-    div.nextViews {
-        margin-top: 20px;
-        margin-bottom: 30px;
-        border-radius: 10px;
-        background-color: #536A58;
-    }
-    
-    .dashgroup {
-        background-color: #EDF1EE;
-    }
-    
-    .group {
-        margin: 50px auto;
-    }
-    
-    .joingroup {
-        md-input-container {
-            margin-bottom: 20px;
-            div {
-                md-icon {
-                    margin-top: 20px;
-                }
-                > md-select {
-                    font-size: 12px;
-                    margin: 0;
-                }
+        background-color: #ECECEC;
+        margin: 0;
+        padding: 0;
+        height: 54px;
+        vertical-align: middle;
+        >md-input-container {
+            .md-input {
+                text-align: center;
+                border: none;
+                color: red;
+                font-size: 18px;
+                font-weight: bold;
             }
         }
     }
-    
-    fieldset {
-        margin: 0 auto;
-        min-width: 400px;
-        width: 50%;
+    .formContent {
+        min-height: 600px;
+        background-color: #ECECEC;
+        font-size: 18px;
+        md-input-container textarea.md-input {
+            color: black;
+            border: none;
+        }
+    }
+    .docheader {
+        font-size: 14px;
+    }
+}
+
+.joingroup {
+    md-input-container {
+        margin-bottom: 20px;
+        div {
+            md-icon {
+                margin-top: 20px;
+            }
+            > md-select {
+                width: 100px;
+                font-size: 12px;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.group {
+    margin: 50px auto;
+    min-width: 400px;
+    width: 50%;
+    md-checkbox {
+        text-align: left;
+    }
+    span {
+        font-size: 12px;
+    }
+    > fieldset {
+        border: 2px solid orange;
         > legend {
+            text-align: center;
             font-size: 16px;
         }
         >form {
-            md-icon {
-                vertical-align: middle;
-                font-size: 14px;
-                margin: 0;
-                margin-top: 10px;
-            }
+            vertical-align: middle;
             min-width: 400px;
-            font-size: 18px;
+            font-size: 14px;
+            margin-top: 10px;
             md-input-container {
                 color: #5D518E;
             }
         }
     }
-    
-    .signup {
-        width: 400px;
+}
+
+.adduser {
+    width: 80%;
+    margin: 0 auto;
+}
+
+md-content.fullHeight {
+    height: inherit;
+}
+
+md-sidenav.md-sidenav-right {
+    width: 280px;
+}
+
+md-sidenav.md-sidenav-right {
+    margin-right: 20px;
+    height: 100%;
+    width: 700px;
+    .update {
+        background-color: ghostwhite;
+        margin: 0 auto;
         >form {
             min-width: 400px;
             font-size: 14px;
@@ -157,479 +450,175 @@ md-sidenav.md-locked-open.md-closed.md-sidenav-left {
             }
             .md-button {
                 width: 100%;
-                font-size: 0.9em;
             }
         }
         > span {
-            font-size: 14px;
-        }
-    }
-    
-    .login {
-        span {
             font-size: 12px;
         }
-        width: 350px;
-        >form {
-            min-width: 200px;
+        .updateUser {
+            border-radius: 5px;
+        }
+        > h3 {
+            margin: 0;
+            text-align: center;
+            width: 100%;
             font-size: 14px;
-            md-input-container {
-                color: #5D518E;
+            border-bottom: 1px solid beige;
+            border-top: 1px solid beige;
+            background-color: #ECECEC;
+            margin-bottom: 10px;
+        }
+        md-list {
+            width: 100%;
+            md-list-item.md-3-line .md-list-item-text h3 {
+                font-size: 18px;
             }
-            .md-button {
-                width: 100%;
-            }
         }
     }
-    
-    .options {
-        text-align: left;
-    }
-    
-    .redirect {
-        span {
-            font-size: 12px;
-        }
-        .md-button {
-            margin-left: 10px;
-        }
-    }
-    
-    md-toolbar {
-        min-height: 45px;
-    }
-    
-    md-toolbar .md-toolbar-tools {
+}
+
+.share {
+    background-color: #ECECEC;
+    span {
         font-size: 14px;
-        background-color: #4E614F;
     }
-    
-    md-toolbar:not(.md-menu-toolbar) {
-        background-color: #4E614F;
+}
+
+md-menu,
+md-menu-item>.md-button {
+    font-size: 10px;
+    md-icon {
+        margin: 10px 0 0 0;
     }
-    
-    md-toolbar .md-menu {
-        margin: 0;
-    }
-    
-    md-toolbar.table.alternate .md-toolbar-tools {
-        font-size: 14px;
-        color: #1e88e5;
-        background-color: #e3f2fd;
-    }
-    
-    .header {
-        background-color: #E1EDEF;
-        min-width: 550px;
-        opacity: 0.9;
-        .md-button.md-icon-button {
-            padding: 0;
-        }
-        .right-border {
-            height: 80%;
-            border-right: 1px solid orange;
-        }
-        md-menu {
-            > .md-button {
-                width: 100px;
-                margin: 2px;
-                span {
-                    color: white;
-                    font-size: 12px;
-                    margin-left: 10px;
-                }
-            }
-        }
-    }
-    
-    div.right-border {
-        > button md-icon {
-            vertical-align: middle;
-            margin: auto;
-            background-repeat: no-repeat no-repeat;
-            height: 80%;
-            width: inherit;
-        }
-        > a md-icon {
-            vertical-align: middle;
-            margin: auto;
-            background-repeat: no-repeat no-repeat;
-            height: inherit;
-            width: inherit;
-        }
-        span {
-            color: #D8D6E8;
-            vertical-align: middle;
-            font-size: 0.8em;
-            margin-left: 5px;
-        }
-    }
-    
-    .colorful {
-        background-color: #40C4FF;
-    }
-    
-    .sectionTitle.md-toolbar-tools {
-        md-input-container {
-            background-color: white;
-            color: black;
-            border-radius: 10px;
-            height: 30px;
-            width: 300px;
-            margin-right: 10px;
-            > input.md-input {
-                text-align: center;
-                border: none;
-                font-size: 12px;
-            }
-        }
-        h3 {
-            font-size: 1.2em;
-            font-weight: bold;
-            vertical-align: middle;
-        }
-        >.md-button {
-            width: 150px;
-            margin-right: 10px;
-            margin-left: 10px;
-            > md-icon {
-                vertical-align: middle;
-                font-size: 24px;
-            }
-        }
-    }
-    
-    md-fab-speed-dial md-fab-trigger {
-        transition: all 0.3s ease-in-out;
-        transform: scale(1);
-    }
-    
-    .sidenav {
-        position: relative;
-        md-icon {
-            margin-top: 10px;
-        }
-        md-content {
-            > div {
-                >h3 {
-                    font-size: 18px;
-                    color: indigo;
-                    margin: 0;
-                }
-                md-checkbox {
-                    font-size: 12px;
-                    margin-top: 5px;
-                    margin-left: 15px;
-                }
-                font-style: italic;
-                width: 100%;
-                padding: 0;
-            }
-        }
-    }
-    
-    md-toolbar:not(.md-menu-toolbar) {
-        color: white;
-        background-color: rgba(75, 89, 77, 0.4);
-        &.username {
-            span {
-                font-size: 14px;
-            }
-            >div {
-                border-radius: 5px;
-                margin: 5px;
-                >h3 {
-                    margin: 5px;
-                }
-            }
-            color: #532F7A
-        }
-    }
-    
-    .btn-style {
-        margin: 0;
-        font-size: 12px;
-        text-align: left;
-        width: 100%;
-        padding: 5px 0 10px 15px;
-        height: 40px;
-        text-transform: none;
-        &.sidehead {
-            color: white;
-            box-shadow: 0 2px 5px 0 rgb(64, 196, 255);
-            background-color: rgba(83, 94, 84, 0.78);
-            font-size: 14px;
-        }
-        :not([disabled]):hover {
-            background-color: rgba(193, 193, 193, 0.96);
-            transition: 0.3s;
-            color: #40C4FF;
-        }
-    }
-    
-    a {
-        text-decoration: none;
-    }
-    
-    md-dialog-actions {
-        >.md-button {
-            width: 100px;
-            span {
+}
+
+md-tooltip {
+    font-size: 12px;
+    color: red;
+    opacity: 1;
+}
+
+.addrole {
+    min-width: 500px;
+    background-color: #ECECEC;
+    > md-content {
+        >md-input-container {
+            > .md-input {
                 font-size: 16px;
             }
         }
     }
-    
-    .messages {
-        >div {
-            font-size: 16px;
+    md-content {
+        &.roleadd md-input-container {
+            margin-top: 10px;
         }
-    }
-    
-    .docForm {
-        height: 100%;
-        min-width: 600px;
-        .formTitle {
-            font-size: 12px;
-            background-color: #ECECEC;
-            margin: 0;
-            padding: 0;
-            height: 54px;
-            vertical-align: middle;
-            >md-input-container {
-                .md-input {
-                    text-align: center;
-                    border: none;
-                    color: red;
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-            }
-        }
-        .formContent {
-            min-height: 600px;
-            background-color: #ECECEC;
-            font-size: 18px;
-            md-input-container textarea.md-input {
-                color: black;
-                border: none;
-            }
-        }
-        .docheader {
-            font-size: 14px;
-        }
-    }
-    
-    .group {
         md-checkbox {
             text-align: left;
+            font-size: 1.0em;
         }
-        span {
+    }
+}
+
+.listdata {
+    > md-toolbar .md-toolbar-tools {
+        text-align: center;
+    }
+    md-content {
+        background-color: #E1ECEE;
+    }
+}
+
+.no-padding {
+    padding: 0;
+    > .md-button {
+        margin-left: 5px;
+    }
+    md-icon {
+        font-size: 16px;
+    }
+    .plusminus {
+        .md-button {
+            width: 40px;
+            margin: 5px;
+            background-color: #ECECEC;
+            border-radius: 10%;
+        }
+    }
+}
+
+.listDocs {
+    table.md-table {
+        td.md-cell {
             font-size: 12px;
         }
-        > fieldset {
-            border: 2px solid orange;
-            > legend {
-                font-size: 12px;
-            }
-            >form {
-                min-width: 400px;
-                font-size: 12px;
-                md-input-container {
-                    color: #5D518E;
-                }
-            }
+        th.md-column {
+            font-size: 12px;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        thead.md-head>tr.md-row {
+            height: 20px;
         }
     }
-    
-    .adduser {
-        width: 80%;
+}
+
+.dashheader {
+    font-size: 18px;
+}
+
+.docdata {
+    width: inherit;
+    .md-whiteframe-4dp {
+        background-color: #fff;
         margin: 0 auto;
-    }
-    
-    md-content.fullHeight {
-        height: inherit;
-    }
-    
-    md-sidenav.md-sidenav-right {
-        width: 280px;
-    }
-    
-    md-sidenav.md-sidenav-right {
-        margin-right: 20px;
-        height: 100%;
-        width: 700px;
-        .update {
-            background-color: ghostwhite;
-            margin: 0 auto;
-            >form {
-                min-width: 400px;
-                font-size: 14px;
-                md-input-container {
-                    color: #5D518E;
-                }
-                .md-button {
-                    width: 100%;
-                }
-            }
-            > span {
-                font-size: 12px;
-            }
-            .updateUser {
-                border-radius: 5px;
-            }
-            > h3 {
-                margin: 0;
-                text-align: center;
-                width: 100%;
-                font-size: 14px;
-                border-bottom: 1px solid beige;
-                border-top: 1px solid beige;
-                background-color: #ECECEC;
-                margin-bottom: 10px;
-            }
-            md-list {
-                width: 100%;
-                md-list-item.md-3-line .md-list-item-text h3 {
-                    font-size: 18px;
-                }
-            }
+        margin-top: 10px;
+        border-radius: 10px;
+        > div.head {
+            width: 100%;
+        }
+        background-color: #fff;
+        md-fab-speed-dial {
+            /*            margin-left: 50px;
+*/
+        }
+        .foot span {
+            font-size: 12px;
+        }
+        h2 {
+            font-size: 18px;
         }
     }
-    
-    .share {
-        background-color: #ECECEC;
-        span {
-            font-size: 14px;
-        }
+}
+
+.contentView {
+    font-size: 18px;
+}
+
+.dashh eader {
+    text-align: center;
+    h3 {
+        font-size: 14px;
     }
-    
-    md-menu,
-    md-menu-item>.md-button {
-        font-size: 10px;
-        md-icon {
-            margin: 10px 0 0 0;
-        }
+    >img {
+        height: 50px;
+        margin: 0;
+        opacity: 0.6;
     }
-    
-    md-tooltip {
-        font-size: 12px;
-        color: red;
-        opacity: 1;
+}
+
+.updatelist {
+    background-color: #F8F8FF;
+    text-align: left;
+    >span {
+        color: #532F7A;
+        font-size: 25px;
     }
-    
-    .addrole {
-        min-width: 500px;
-        background-color: #ECECEC;
-        > md-content {
-            >md-input-container {
-                > .md-input {
-                    font-size: 16px;
-                }
-            }
-        }
-        md-content {
-            &.roleadd md-input-container {
-                margin-top: 10px;
-            }
-            md-checkbox {
-                text-align: left;
-                font-size: 1.0em;
-            }
-        }
-    }
-    
-    .listdata {
-        > md-toolbar .md-toolbar-tools {
-            text-align: center;
-        }
-        md-content {
-            background-color: #E1ECEE;
-        }
-    }
-    
-    .no-padding {
-        padding: 0;
-        > .md-button {
-            margin-left: 5px;
-        }
-        md-icon {
-            font-size: 16px;
-        }
-        .plusminus {
-            .md-button {
-                width: 40px;
-                margin: 5px;
-                background-color: #ECECEC;
-                border-radius: 10%;
-            }
-        }
-    }
-    
-    .listDocs {
-        table.md-table {
-            td.md-cell {
-                font-size: 12px;
-            }
-            th.md-column {
-                font-size: 12px;
-                font-weight: normal;
-                margin-bottom: 5px;
-            }
-            thead.md-head>tr.md-row {
-                height: 20px;
-            }
-        }
-    }
-    
-    .docdata {
-        width: inherit;
-        .md-whiteframe-4dp {
-            width: 80%;
-            min-height: 700px;
-            background-color: #fff;
-            margin: 0 auto;
-            margin-top: 10px;
-            border-radius: 10px;
-            > div.head {
-                width: inherit;
-            }
-            background-color: #fff;
-            md-fab-speed-dial {
-                margin-left: 50px;
-            }
-        }
-    }
-    
-    .contentView {
-        font-size: 18px;
-    }
-    
-    .dashh eader {
-        text-align: center;
-        h3 {
-            font-size: 14px;
-        }
-        >img {
-            height: 50px;
-            margin: 0;
-            opacity: 0.6;
-        }
-    }
-    
-    .updatelist {
-        background-color: #F8F8FF;
-        text-align: left;
-        >span {
-            color: #532F7A;
-            font-size: 25px;
-        }
-    }
-    
-    @media screen and (min-width: 600px) md-sidenav-left {
-        width: 200px;
-    }
-    
-    md-sidenav.md-sidenav-left {
-        max-width: 250px;
-    }
+}
+
+@media screen and (min-width: 600px) md-sidenav-left {
+    width: 200px;
+}
+
+md-sidenav.md-sidenav-left {
+    max-width: 250px;
+}

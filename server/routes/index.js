@@ -21,13 +21,13 @@
 
 
   router.post('/users/login', auth.login);
-  router.get('/session', validate.session);
 
   router.post('/users', validate.adminUser, userRoute.create);
 
 
   // Routes that can be accessed only by authenticated users
   router.all('/*', validate.authenticate);
+  router.get('/session', validate.session);
 
 
   router.get('/users', userRoute.all);

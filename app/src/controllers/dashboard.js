@@ -18,7 +18,8 @@
             $scope.groups = $rootScope.activeUser.groupId;
             // if user is a not member of a group and not superadmin
             //  redirect to group
-            // check if current state is superadmin
+
+            // check if current state is superadmin access
             $scope.$watch(function() {
               return $state.current.name;
 
@@ -26,7 +27,8 @@
               if (name === 'dashboard.admin.group' ||
                 name === 'dashboard.admin.user') {
                 $scope.groupName = 'Admin';
-              } else {
+              } else if ($rootScope.activeUser) {
+                // else show active group name
                 var testName = window.
                 _.filter($rootScope.activeUser.groupId, {
                   _id: parseInt($stateParams.groupid)

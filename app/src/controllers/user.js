@@ -1,9 +1,9 @@
 (function() {
   'use strict';
   angular.module('prodocs.controllers')
-    .controller('UserCtrl', ['$rootScope', '$scope',
+    .controller('UserCtrl', ['$rootScope', '$scope', '$mdSidenav',
       '$state', '$stateParams', 'Utils', 'Users', 'Roles',
-      function($rootScope, $scope, $state, $stateParams,
+      function($rootScope, $scope, $mdSidenav, $state, $stateParams,
         Utils, Users, Roles) {
 
         $scope.init = function() {
@@ -35,7 +35,7 @@
           $rootScope.close('right');
         };
 
-        // update user modal
+        // update user
         $scope.update = function() {
           if ($scope.data.password === 'undefined') {
             delete $scope.data.password;
