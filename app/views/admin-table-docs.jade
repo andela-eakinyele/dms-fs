@@ -27,7 +27,7 @@ md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
               md-checkbox(aria-label="Select Column" ng-checked="all(docs)" ng-click="selectAll(docs)" role="checkbox")
             th.md-column No
             th.md-column(md-order-by="nameToLower" ng-repeat="header in docHeaders") {{header}}
-        tbody.md-body
+        tbody.md-body.third
           tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search track by $index")
             td.md-cell.md-checkbox-cell
               md-checkbox(aria-label="Select Row" ng-checked="isSelected(doc._id, selected)" ng-click="toggle(doc._id, selected)" role="checkbox")

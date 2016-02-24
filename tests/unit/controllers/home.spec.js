@@ -5,6 +5,7 @@
 
     var scope,
       state,
+      mdMedia,
       httpBackend,
       controller;
 
@@ -20,6 +21,8 @@
         $scope: scope,
       });
       state = $injector.get('$state');
+      mdMedia = $injector.get('$mdMedia');
+
       httpBackend = $injector.get('$httpBackend');
       httpBackend
         .whenGET('/api/session')
@@ -34,7 +37,10 @@
     }));
 
     it('should call initialize the controller', function() {
+      expect(scope.features).toBeDefined();
+      scope.init();
       expect(scope.showButton).toBeDefined();
+      expect(scope.bigScreen).toBeDefined();
     });
 
     it('should call watch the current state', function() {
@@ -49,6 +55,11 @@
       scope.$digest();
       expect(state.current.name).toBe('home.features');
       expect(scope.showButton).toBe(true);
+    });
+
+    it('should watch the screen size', function() {
+      scope.$digest();
+      expect(scope.bigScreen).toBeDefined();
     });
 
   });
