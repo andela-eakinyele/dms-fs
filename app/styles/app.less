@@ -19,7 +19,7 @@ body > md-toolbar {
 
 .footer {
     background-color: #3F4E48;
-    height: 50px;
+    height: 40px;
     position: relative;
 }
 
@@ -53,12 +53,17 @@ md-input-container {
 .overlay {
     background: linear-gradient(#4E614F, rgba(2, 18, 25, 0.76)), url('../images/homeBckgrd.jpg');
     text-align: center;
-    >div {
+    div.boxes {
         background-color: rgba(96, 130, 111, 0.29);
+        border: 2px solid #3C626B;
+        border-radius: 10px;
     }
 }
 
 .extraView {
+    &.centred {
+        margin-top: 200px;
+    }
     margin-top: 40px;
     .md-button {
         font-size: 1.0em;
@@ -70,7 +75,6 @@ md-input-container {
 }
 
 .features {
-    margin-top: 75px;
     h3 {
         color: #B9CEB7;
         font-size: 16px;
@@ -78,11 +82,33 @@ md-input-container {
     span {
         font-size: 14px;
     }
+    &.styled {
+        > div {
+            > div:nth-child(1) {
+                margin-top: -50%;
+                margin-left: 35%;
+            }
+            >div:nth-child(2) {
+                margin-top: 10px;
+                margin-left: -250px;
+            }
+            >div:nth-child(3) {
+                margin-top: -225px;
+                margin-left: 85px;
+            }
+            >div:nth-child(4) {
+                margin-top: -225px;
+                margin-left: -111%;
+            }
+        }
+    }
     .side-border {
-        border-right: 3px solid #3C626B;
+        /* margin-right: 20px;*/
+        width: 250px;
+        height: 150px;
     }
     .bottom {
-        border-bottom: 3px solid #3C626B;
+        margin-bottom: 20px;
     }
 }
 

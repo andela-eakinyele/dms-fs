@@ -17,7 +17,6 @@
 
   // Require Controllers
   require('./controllers/home');
-  require('./controllers/features');
   require('./controllers/login');
   require('./controllers/register');
   require('./controllers/dashboard');
@@ -73,7 +72,7 @@
           views: {
             'feature@home': {
               templateUrl: 'views/feature.html',
-              controller: 'FeatCtrl'
+              controller: 'StartPageCtrl'
             },
           }
         })
