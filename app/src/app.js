@@ -17,7 +17,6 @@
 
   // Require Controllers
   require('./controllers/home');
-  require('./controllers/features');
   require('./controllers/login');
   require('./controllers/register');
   require('./controllers/dashboard');
@@ -73,7 +72,7 @@
           views: {
             'feature@home': {
               templateUrl: 'views/feature.html',
-              controller: 'FeatCtrl'
+              controller: 'StartPageCtrl'
             },
           }
         })
@@ -334,24 +333,25 @@
                 'title': 'superAdmin'
               });
 
-            if (superAdmin.length > 0) {
-              $state.go('dashboard.admin.group', {
-                id: res.data.user._id
-              });
-            } else {
-              // check if user belongs to a group
-              if (!res.group && res.data.user.groupId.length === 0) {
+
+            // check if user belongs to a group
+            if (!res.group && res.data.user.groupId.length === 0) {
+              // not in a group, check superAdmin
+              if (superAdmin.length > 0) {
+                $state.go('dashboard.admin.group', {
+                  id: res.data.user._id
+                });
+              } else {
                 $state.go('dashboard.group', {
                   id: res.data.user._id
                 });
-
-                // use user group or last set header group
-              } else {
-                $state.go('dashboard.list', {
-                  id: res.data.user._id,
-                  groupid: $rootScope.activeGroup
-                });
               }
+              // use user group or last set header group
+            } else {
+              $state.go('dashboard.list', {
+                id: res.data.user._id,
+                groupid: $rootScope.activeGroup
+              });
             }
           } else {
             if (/Token/.test(err.data.message)) {

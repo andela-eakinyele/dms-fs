@@ -26,7 +26,7 @@ div(layout="column" layout-margin)
           thead.md-head(md-order="query.order")
             tr.headerSection.md-row
               th.md-column(md-order-by="doc.title" ng-repeat="header in headers") {{header.name}}
-          tbody.md-body
+          tbody.md-body.noboxes
             tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search")
               td.md-cell {{doc.label}}
               td.md-cell {{doc.title}}
