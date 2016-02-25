@@ -424,7 +424,7 @@
 
           $scope.init();
 
-          Auth.setToken(Token.get()[0], '');
+          $rootScope.activeGroup = '';
 
           $scope.listName = 'appUsers';
           $scope.userHeaders = [
