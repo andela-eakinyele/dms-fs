@@ -42,8 +42,8 @@
           width: '100%',
           min_height: 500,
           plugins: 'textcolor lists autolink link image spellchecker advlist',
-          toolbar: 'undo redo styleselect bold italic fontsizeselect' +
-            ' forecolor backcolor paste wordcount spellchecker' +
+          toolbar: 'bold italic fontsizeselect' +
+            ' forecolor backcolor wordcount spellchecker' +
             'alignleft aligncenter alignright',
           fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
           menubar: 'file edit insert view format table tools',
