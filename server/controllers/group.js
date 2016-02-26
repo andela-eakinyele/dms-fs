@@ -3,7 +3,7 @@
   var Group = require('./../models/group');
   var User = require('./../models/user');
   var Role = require('./../models/role');
-  var user = require('./userMethods');
+  var user = require('./user');
   var cm = require('./helpers');
   var _async = require('async');
   var _ = require('lodash');
@@ -252,8 +252,7 @@
         if (err) {
           res.status(500).json(err);
         } else {
-          res.status(200).json(result[2]
-);
+          res.status(200).json(result[2]);
         }
       });
     },

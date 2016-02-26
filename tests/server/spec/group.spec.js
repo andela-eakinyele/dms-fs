@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar')();
+  var apiTest = require('./../helpers/spec-var')();
   var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
@@ -35,6 +35,26 @@
           });
       });
 
+      // should be authenticated to create a group
+      it('- Should require an access_token to' +
+        ' create group',
+        function(done) {
+          var groupData = mock.parseData(keys, data.testGroup);
+          groupData.userid = usersId[0];
+
+          request
+            .post('/api/groups')
+            .type('json')
+            .send(groupData)
+            .expect(400)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.message, 'Invalid Token or Key');
+              assert.equal(undefined, response.data);
+              done();
+            });
+        });
       // successful login and token
       it('- Should return a token on Successful login', function(done) {
         request

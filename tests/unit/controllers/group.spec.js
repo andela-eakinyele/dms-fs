@@ -4,6 +4,30 @@
   describe('GroupCtrl tests', function() {
 
     var scope,
+
+      sampleUser = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
+
+      sampleRole = [{
+        _id: 1,
+        title: 'a',
+        users: [1, 2]
+      }, {
+        _id: 2,
+        title: 'b',
+        users: [1, 2]
+      }, {
+        _id: 3,
+        title: 'c',
+        users: [1, 2]
+      }],
+
       Users = {
         login: function(user, cb) {
           if (user.password && user.username === 'superAdmin') {
@@ -48,6 +72,7 @@
             return cb(true, null);
           }
         },
+
         joingroup: function(data, cb) {
           var user = {
             _id: 1,
@@ -64,71 +89,136 @@
             return cb('error');
           }
         },
-        get: function(id, cb, cbb) {
-          return id ? cb(true) : cbb(false);
-        },
-        update: function(id, data, cb, cbb) {
-          return (id && data) ? cb({
-            _id: data,
-            groupId: [{
-              _id: 1
-            }]
-          }) : cbb(false);
-        }
-      },
-      Groups = {
-        save: function(data, cb, cbb) {
-          return data ? cb({
-            _id: data
-          }) : cbb(false);
-        },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb({
-            _id: data
-          }) : cbb(false);
-        },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
-            message: 'I am groot',
-            data: [1, 3, 4]
-          }) : cbb({
-            message: 'error'
-          });
-        },
-        query: function() {
-          return [{
-            message: 'I am groot',
-            data: [1, 3, 4]
-          }];
-        }
-      },
-      Roles = {
-        save: function(data, cb) {
-          return data ? cb(data) : cb(false);
-        },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
-        },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
-            message: 'I am groot',
-            data: [1, 3, 4]
-          }) : cbb({
-            message: 'error'
-          });
-        },
-        query: function(params) {
-          if (params.groupid) {
-            return [{
-              message: 'I am groot',
-              data: [1, 3, 4]
-            }];
-          } else {
-            return 'error';
-          }
 
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
+            data: sampleUser
+          }) : errorCallback({
+            error: 'error'
+          });
+        },
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback({
+              _id: data,
+              groupId: [{
+                _id: 1
+              }]
+            }) : errorCallback(false);
+        },
+      },
+
+      Groups = {
+        save: function(data, successCallback, errorCallback) {
+          return data ? successCallback({
+            _id: 1
+          }) : errorCallback(false);
+        },
+
+        delete: function(params, successCallback, errorCallback) {
+          if (params.id) {
+            return successCallback();
+          } else if (!params.id) {
+            return errorCallback();
+          }
+        },
+
+        count: function(cb) {
+          return cb(null, 3);
+        },
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
+        },
+
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
+            users: [{
+              roles: [1, 2, 3]
+            }]
+          }) : errorCallback({
+            error: 'error'
+          });
+        },
+
+        query: function(params, successCallback, errorCallback) {
+          if (params) {
+            if (successCallback) {
+              return successCallback({
+                data: [{
+                  _id: 1,
+                  title: 'Pollock'
+                }]
+              });
+            }
+            return ({
+              data: [{
+                _id: 1,
+                title: 'Pollock'
+              }]
+            });
+          } else {
+            if (errorCallback) {
+              return errorCallback({
+                error: 'error'
+              });
+            }
+            return ({
+              data: [{
+                _id: 1,
+                title: 'Pollock'
+              }]
+            });
+          }
         }
       },
+
+      Roles = {
+        save: function(data, successCallback, errorCallback) {
+          return (data[0].title !== '') ?
+            successCallback(data) : errorCallback(false);
+        },
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
+        },
+
+        get: function(params, successCallback, errorCallback) {
+          return params.groupid ? successCallback({
+            data: {
+              _id: 1,
+              title: 'a',
+              users: [1, 2]
+            }
+          }) : errorCallback({
+            error: 'error'
+          });
+        },
+
+        query: function(params, successCallback, errorCallback) {
+          if (params.groupid) {
+            if (successCallback) {
+              return successCallback(sampleRole);
+            } else {
+              return sampleRole;
+            }
+          } else {
+            if (errorCallback) {
+              return errorCallback({
+                error: 'error'
+              });
+            } else {
+              return {
+                error: 'error'
+              };
+            }
+          }
+        }
+      },
+
       state,
       stateParams,
       controller;
@@ -136,7 +226,6 @@
     beforeEach(function() {
       module('prodocs');
     });
-
 
     beforeEach(inject(function($injector) {
       var $controller = $injector.get('$controller');

@@ -3,10 +3,10 @@
   var promise = require('bluebird');
   var bcrypt = require('bcrypt-nodejs');
   var _ = require('lodash');
-  var User = require('./../../server/models/user');
-  var Doc = require('./../../server/models/document');
-  var Role = require('./../../server/models/role');
-  var Group = require('./../../server/models/group');
+  var User = require('./../../../server/models/user');
+  var Doc = require('./../../../server/models/document');
+  var Role = require('./../../../server/models/role');
+  var Group = require('./../../../server/models/group');
 
   exports.seedCreate = function(model, keys, seedData, minId) {
     keys.push('_id');

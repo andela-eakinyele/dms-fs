@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar')();
+  var apiTest = require('./../helpers/spec-var')();
   var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');

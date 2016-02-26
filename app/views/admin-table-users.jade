@@ -2,13 +2,16 @@ md-content(layout ="column" flex="100" layout-margin ng-init="userList()")
 
   md-toolbar.table
     .md-toolbar-tools.sectionTitle(layout="row")
-      span(flex)  List of Users {{userErr}}
+      div(layout flex)
+        span.title List of Users
+        span.small {{userErr}}
       md-input-container.md-block(md-no-float)
         label(for="search")
         input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
-      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
-        md-icon(md-font-set="fa fa-refresh fa-2x") 
-        span Refresh
+      div.headerbutton(layout layout-align="center center")
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+          md-icon(md-font-set="fa fa-refresh") 
+          span Refresh
 
   md-content.listDocs(layout="column" layout-margin)
     md-table-container

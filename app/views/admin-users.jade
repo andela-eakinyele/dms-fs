@@ -2,13 +2,16 @@ md-content(layout ="column" flex="100" layout-margin ng-init="appUsers()")
 
   md-toolbar.table
     .md-toolbar-tools.sectionTitle(layout="row")
-      span(flex)  List of All Users {{userErr}}
+      div(layout flex)
+        span.title(flex)  List of All Users
+        span.small {{userErr}}
       md-input-container.md-block(md-no-float)
         label(for="search")
         input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
-      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
-        md-icon(md-font-set="fa fa-refresh fa-2x") 
-        span Refresh
+      div.headerbutton(layout layout-align="center center")
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+          md-icon(md-font-set="fa fa-refresh") 
+          span Refresh
 
 
 
@@ -31,11 +34,11 @@ md-content(layout ="column" flex="100" layout-margin ng-init="appUsers()")
             td.md-cell
               md-menu(ng-hide="user._id === 100 || user._id === 101")
                   md-button(aria-label="user options" ng-click="openMenu($mdOpenMenu, $event)")
-                    md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
+                    md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
                   md-menu-content(width="1")
                     md-menu-item
                       md-button.md-primary(aria-label="Delete user" ng-click="menuAction(\"delete\", user._id)")
-                        md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
+                        md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
                         span Delete
     md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{allUsers.length}}" md-on-paginate="onPaginateAppUser" md-page-select)
 

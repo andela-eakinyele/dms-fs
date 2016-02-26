@@ -1,10 +1,8 @@
-md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-sm\")")
-  md-toolbar.username
-    div(layout="column" layout-align="center center")
-      span {{activeUser.username}}
-    div(layout="column" layout-align="center center")
-      span ({{userRole[0].title || activeUser.email}})
+md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-sm\")")
   md-content(layout="column")
+    div.logoName(layout="column" layout-align="center center")
+      img(ng-src="./images/test-logo.png")
+      h3.md-headline Prodocs
     div(layout-padding ng-if="superAdmin.length > 0")
       md-button.btn-style.sidehead Administrator Menu
       md-button.btn-style(md-ink-ripple aria-label="superAdmin menu item" ui-sref="dashboard.admin.group" ui-sref-active="colorful") 

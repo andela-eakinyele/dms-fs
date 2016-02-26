@@ -16,7 +16,9 @@ div.login(layout="column" layout-padding layout-align="center center")
         div(ng-messages="loginForm.npassword.$error" ng-show="loginForm.npassword.$dirty")
           div(ng-message="required") Password is required
     md-button.md-primary.md-raised(ng-disabled="loginForm.$invalid" type="submit") Submit 
-  div.redirect(layout layout-align="center center")
+  md-divider
+  div.redirect(layout-xs="column" layout="row" layout-align="center center" layout-margin)
     span Not Registered ? 
-    md-button.md-primary.md-raised(ui-sref="home.adduser") SignUp
-    md-button.md-accent.md-raised(ui-sref="home.features") Cancel
+    div(layout)
+      md-button.md-primary.md-raised(ui-sref="home.adduser") SignUp
+      md-button.md-accent.md-raised(ui-sref="home.features") Cancel

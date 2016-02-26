@@ -207,20 +207,22 @@
           Utils.showConfirm(evt, 'Delete', 'Documents will be deleted',
             'Delete',
             function() {
-              Docs.bulkdelete($scope.selectedDocs, function() {
-                $scope.docs = window._.filter($scope.docs, function(doc) {
-                  return $scope.selectedDocs.indexOf(doc._id) < 0;
-                });
-                $scope.count = $scope.count - $scope.selectedDocs.length;
-                $scope.selectedDocs = [];
+              Docs.bulkdelete($scope.selectedDocs, function(err) {
+                if (err) {
+                  Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                    'deleting document');
+                } else {
+                  $scope.docs = window._.filter($scope.docs, function(doc) {
+                    return $scope.selectedDocs.indexOf(doc._id) < 0;
+                  });
+                  $scope.count = $scope.count - $scope.selectedDocs.length;
+                  $scope.selectedDocs = [];
 
-                $state.go('dashboard.list.mydocs', {
-                  id: $stateParams.id,
-                  groupid: $stateParams.groupid
-                });
-              }, function() {
-                Utils.showAlert(evt, 'Delete Action', 'Error ' +
-                  'deleting document');
+                  $state.go('dashboard.list.mydocs', {
+                    id: $stateParams.id,
+                    groupid: $stateParams.groupid
+                  });
+                }
               });
             });
         };

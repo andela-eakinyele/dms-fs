@@ -6,7 +6,7 @@
       // format date data
       this.parseDate = function(date) {
         return {
-          day: $filter('date')(date, 'EEEE dd MMM yyyy'),
+          day: $filter('date')(date, 'dd MMM yyyy'),
           time: $filter('date')(date, 'hh:mma')
         };
       };
