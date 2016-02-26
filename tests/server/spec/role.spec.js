@@ -140,8 +140,7 @@
             access_token: token
           }).query({
             limit: 1,
-            page: 1,
-            groupid: 113
+            page: 1
           })
           .expect(200)
           .end(function(err, res) {
@@ -159,7 +158,9 @@
           .type('json')
           .set({
             userid: adminUser._id,
-            access_token: token,
+            access_token: token
+          })
+          .query({
             groupid: 113
           })
           .expect(200)
