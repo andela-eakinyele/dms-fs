@@ -53,8 +53,8 @@
       $httpProvider.interceptors.push('TokenInjector');
 
       $mdThemingProvider.theme('default')
-        .primaryPalette('green')
-        .accentPalette('light-blue');
+        .primaryPalette('cyan')
+        .accentPalette('orange');
 
       // For any unmatched url, redirect to /state1
       $urlRouterProvider.otherwise('/404');

@@ -1,12 +1,12 @@
-md-content.fullHeight(layout="column" ng-cloak ng-if="activeUser")
-  md-toolbar(ui-view="header")
-  md-content.fullHeight(layout="row" id="dashContent")
-    div.sidenav(ui-view="sidenav")
-    div(layout="column" flex)
+md-content.fullHeight(layout="row" ng-cloak ng-if="activeUser")
+  div.sidenav(ui-view="sidenav")
+  md-content.fullHeight(layout="column" id="dashContent")
+    md-toolbar(ui-view="header")
+    div.afterSideNav(layout="column" flex)
       div(ui-view="inner")
       div(ui-view="admin")
       md-content.dashgroup(layout="column" ui-view="group" flex)
-    div.profile(ui-view="profile")
+  div.profile(ui-view="profile")
 
         
 

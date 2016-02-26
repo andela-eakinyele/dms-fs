@@ -2,18 +2,21 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
 
   md-toolbar.table
     .md-toolbar-tools.sectionTitle(layout="row")
-      span(flex)  List of Roles {{roleErr}}
+      div(layout flex)
+        span.title List of Roles
+        span.small {{roleErr}}
       md-input-container.md-block(md-no-float)
         label(for="search")
         input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
-      div.right-border(layout layout-align="center center")
+      div.headerbutton(layout layout-align="center center")
         md-button(ui-sref="dashboard.admin.role.add")
-          md-icon(md-font-set="fa fa-briefcase fa-2x") 
+          md-icon(md-font-set="fa fa-briefcase") 
           span Add/Edit Roles
           md-tooltip Add Group Roles
-      md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
-        md-icon(md-font-set="fa fa-refresh fa-2x") 
-        span Refresh
+      div.headerbutton(layout layout-align="center center")
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+          md-icon(md-font-set="fa fa-refresh") 
+          span Refresh
 
   md-content.listDocs(layout="column" layout-margin)
     md-table-container
@@ -31,15 +34,15 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
             td.md-cell
               md-menu(ng-if="role.title !==\"Admin\"")
                   md-button(aria-label="doc options" ng-click="openMenu($mdOpenMenu, $event)")
-                    md-icon(md-font-set="fa fa-ellipsis-v fa-2x" md-menu-origin) 
+                    md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
                   md-menu-content(width="1")
                     md-menu-item
                       md-button.md-primary(aria-label="Edit role")
-                        md-icon(md-font-set="fa fa-pencil-square-o fa-2x" md-menu-align-target) 
+                        md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
                         span Edit role
                     md-menu-item
                       md-button.md-primary(aria-label="Delete role" ng-click="menuAction(\"delete\", role._id, $index, $event)")
-                        md-icon(md-font-set="fa fa-trash fa-2x" md-menu-align-target) 
+                        md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
                         span Delete
     md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateRole" md-page-select)
 

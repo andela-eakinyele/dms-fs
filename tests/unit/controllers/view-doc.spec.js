@@ -4,42 +4,74 @@
   describe('ViewDocCtrl tests', function() {
 
     var scope,
+
+      sampleDoc = {
+        ownerId: [{
+          name: {
+            first: 'a',
+            last: 'b'
+          }
+        }]
+      },
+
       Docs = {
-        save: function(data, cb, cbb) {
-          return data ? cb(data) : cbb(false);
+        save: function(data, successCallback, errorCallback) {
+          return data === 'new' ?
+            successCallback(data) : errorCallback(false);
         },
-        bulkview: function(arr, cb) {
-          if (arr.length > 0) {
-            return cb(null, [1, 2, 3]);
-          } else {
-            return cb('error');
+
+        delete: function(params, successCallback, errorCallback) {
+          if (params.id) {
+            return successCallback();
+          } else if (!params.id) {
+            return errorCallback();
           }
         },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
+
+        count: function(successCallback) {
+          return successCallback(null, 3);
         },
-        delete: function(params, cb, cbb) {
-          return (params.id) ? cb({
-            _id: 1
-          }) : cbb(false);
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
         },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
+
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
             message: 'I am groot',
-            data: [1, 3, 4]
-          }) : cbb({
-            message: 'error'
+            data: [sampleDoc]
+          }) : errorCallback({
+            error: 'error'
           });
         },
-        query: function(cb) {
-          return cb([{
-            ownerId: [{
-              name: {
-                first: 'a',
-                last: 'b'
-              }
-            }]
-          }]);
+
+        query: function(params, successCallback, errorCallback) {
+          if (params.groupid) {
+            return successCallback([sampleDoc]);
+          } else {
+            return errorCallback(true);
+          }
+        },
+
+        bulkdelete: function(data, cb) {
+          if (data.length > 0) {
+            return cb(null, data);
+          } else {
+            return cb({
+              error: 'err'
+            });
+          }
+        },
+
+        bulkview: function(data, cb) {
+          if (data.length > 0) {
+            return cb(null, data);
+          } else {
+            return cb({
+              error: 'err'
+            });
+          }
         }
       },
 
@@ -166,7 +198,7 @@
 
       it('should initialize the controller and return an error', function() {
         spyOn(Docs, 'bulkview').and.callFake(function(id, cb) {
-          return cb(true, null);
+          return cb(true);
         });
         spyOn(Utils, 'showAlert').and.callThrough();
         stateParams.docIds = [1, 2, 3];
@@ -228,9 +260,10 @@
 
     it('should return error deleting a file', function() {
       spyOn(Utils, 'showConfirm').and.callThrough();
-      spyOn(Docs, 'delete').and.callFake(function(params, cb, cbb) {
-        return cbb();
-      });
+      spyOn(Docs, 'delete').and.callFake(
+        function(params, successCallback, errorCallback) {
+          return errorCallback();
+        });
       spyOn(scope, 'delete').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       spyOn(state, 'go');

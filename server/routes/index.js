@@ -6,10 +6,10 @@
   var auth = require('./auth');
   var validate = require('./validate');
 
-  var userRoute = require('./../controllers/userMethods');
-  var docRoute = require('./../controllers/docMethods');
-  var roleRoute = require('./../controllers/roleMethods');
-  var groupRoute = require('./../controllers/groupMethods');
+  var userRoute = require('./../controllers/user');
+  var docRoute = require('./../controllers/doc');
+  var roleRoute = require('./../controllers/role');
+  var groupRoute = require('./../controllers/group');
 
 
   // Routes that can be accessed by all users

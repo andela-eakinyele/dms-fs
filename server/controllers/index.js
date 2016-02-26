@@ -1,9 +1,9 @@
 (function() {
   'use strict';
-  var docFunc = require('./docMethods');
-  var roleFunc = require('./roleMethods');
-  var userFunc = require('./userMethods');
-  var groupFunc = require('./groupMethods');
+  var docFunc = require('./doc');
+  var roleFunc = require('./role');
+  var userFunc = require('./user');
+  var groupFunc = require('./group');
 
 
   module.exports = {

@@ -1,39 +1,38 @@
-.header.md-toolbar-tools(layout ="row" layout-align="center center" layout-padding)
-  md-button(ng-click="openSideNav(\"lefty\")" aria-label="openLeftMenu" hide-gt-sm id="hdrbtn")
-    md-icon(md-font-set="fa fa-bars fa-2x")
+.header.md-toolbar-tools.md-whiteframe-6dp(layout ="row" layout-align="center center" layout-padding)
+  div.headerbutton
+    md-button.md-icon-button(ng-click="openSideNav(\"lefty\")" aria-label="openLeftMenu" hide-gt-sm id="hdrbtn")
+      md-icon(md-font-set="fa fa-bars")
   div.dashheader(layout layout-align="start center" flex)
-    div(layout="column" layout-align="center center")
-      span Prodocs
-    span(flex="30")
-    h3 Dashboard ({{groupName}})
+    div(layout="row" layout-align="center center")
+      span(ui-sref="home.features") Prodocs
+      span(ng-if="groupName")  &nbsp; &gt; Dashboard ({{groupName}})
 
-  div.right-border(layout layout-align="center center" ng-if="userRole[0].title === \"superAdmin\"")
+  div.headerbutton.headerbar(layout layout-align="center center" ng-if="userRole[0].title === \"superAdmin\"")
     md-button(ui-sref="dashboard.admin.user" ui-sref-active="colorful")
       md-icon(md-font-set="fa fa-user-plus" md-menu-origin)
       span Add User
       md-tooltip Add User
 
-  div.right-border(layout layout-align="center center" hide-xs hide-sm ng-show="newButton")
+  div.headerbutton.headerbar(layout layout-align="center center" hide-xs hide-sm ng-show="newButton")
     md-button(ui-sref="dashboard.new" ui-sref-active="colorful")
       md-icon(md-font-set="fa fa-file-text-o") 
       span New Doc
       md-tooltip New Doc
 
-  div.right-border(layout ng-repeat="i in menu" hide-xs hide-sm layout-align="center center")
+  div.headerbutton.headerbar(layout ng-repeat="i in menu" hide-xs hide-sm layout-align="center center")
     md-button(ng-click="menuAction(i.click)")
       md-icon(md-font-set="{{i.icon}}") 
       span(hide-xs hide-sm) {{i.name}}
       md-tooltip {{i.name}}
     
-  div.right-border(layout hide-gt-sm layout-align="center center")
+  div.headerbutton.headerbar(layout hide-gt-sm layout-align="center center")
     md-menu(md-offset="-50 50")
       md-button(ng-click="openMenu($mdOpenMenu, $event)")
-        span Menu &nbsp;
         md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
         md-tooltip New Doc, User Profile, Logout
       md-menu-content(width="2")
         md-menu-item(ng-show="newButton")
-          md-button.md-primary(ui-sref="dashboard.new" ui-sref-active="colorful")
+          md-button.md-primary(ui-sref="dashboard.new")
             md-icon(md-font-set="fa fa-file-text-o") 
             span New Doc
         md-menu-item(ng-repeat="i in menu")
