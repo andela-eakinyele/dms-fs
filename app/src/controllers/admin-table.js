@@ -11,6 +11,8 @@
         $scope.init = function() {
           $scope.selected = [];
 
+          $rootScope.close('lefty');
+
           // set pagination parameters
           $scope.query = $stateParams.query;
         };

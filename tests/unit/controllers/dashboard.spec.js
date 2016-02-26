@@ -211,7 +211,7 @@
     });
 
     it('should check group', function() {
-      stateParams.groupid = 2;
+      scope.activeGroup = 2;
       var checked = scope.isSelected(2);
       expect(checked).toBeTruthy();
     });
