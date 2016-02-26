@@ -169,18 +169,20 @@
 
     count: function(req, res) {
 
-      var groupid = req.headers.groupid || req.query.groupid;
-      var params = {};
-      if (!isNaN(parseInt(groupid))) {
-        params.groupId = [parseInt(groupid)];
+      var groupid = req.query.groupid;
 
-        Role.count(params, function(err, count) {
-          if (err) {
-            cm.resdberrors(res, 'querying database', err);
-          } else {
-            res.status(200).json(count);
-          }
-        });
+      if (!isNaN(parseInt(groupid))) {
+
+        Role.count()
+          .where('groupId')
+          .in([parseInt(groupid)])
+          .exec(function(err, count) {
+            if (err) {
+              cm.resdberrors(res, 'querying database', err);
+            } else {
+              res.status(200).json(count);
+            }
+          });
       } else {
         res.status(200).json(0);
       }
