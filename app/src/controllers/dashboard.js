@@ -26,6 +26,7 @@
             }, function(name) {
               if (name === 'dashboard.admin.group' ||
                 name === 'dashboard.admin.user') {
+                $rootScope.activeGroup = '';
                 $scope.groupName = 'Admin';
               } else if ($rootScope.activeUser) {
                 // else show active group name
@@ -74,8 +75,8 @@
 
         // check selected items
         $scope.isSelected = function(id) {
-          var checked = $stateParams.groupid ?
-            parseInt($stateParams.groupid) === id : false;
+          var checked = $rootScope.activeGroup ?
+            parseInt($rootScope.activeGroup) === id : false;
           return checked;
         };
 

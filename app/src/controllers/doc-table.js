@@ -9,6 +9,8 @@
           $scope.selectedDocs = [];
           $scope.count = 0;
 
+          $rootScope.close('lefty');
+
           $scope.query = {
             limit: 10,
             page: 1,
