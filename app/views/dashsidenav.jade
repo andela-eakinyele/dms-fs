@@ -5,23 +5,23 @@ md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locke
       h3.md-headline Prodocs
     div(layout-padding ng-if="superAdmin.length > 0")
       md-button.btn-style.sidehead Administrator Menu
-      md-button.btn-style(md-ink-ripple aria-label="superAdmin menu item" ui-sref="dashboard.admin.group" ui-sref-active="colorful") 
+      md-button.btn-style(md-ink-ripple aria-label="superAdmin menu item" ui-sref="dashboard.admin.group({id: activeUser._id})") 
         md-icon(md-font-set="fa fa-group")
         span Groups
-      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.user" ui-sref-active="colorful") 
+      md-button.btn-style(md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.user({id: activeUser._id})") 
         md-icon(md-font-set="fa fa-user")
         span Users
       md-divider
 
     div(layout="column" ng-if="userRole[0].title === \"Admin\"" layout-padding)
       md-button.btn-style.sidehead Group Admin
-      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.doc({groupid: activeGroup})" ui-sref-active="colorful") 
+      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.doc({groupid: activeGroup})") 
         md-icon(md-font-set="fa fa-long-arrow-right")
         span Documents
-      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewuser({groupid: activeGroup})" ui-sref-active="colorful") 
+      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.viewuser({groupid: activeGroup})") 
         md-icon(md-font-set="fa fa-long-arrow-right")
         span Users
-      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.role({groupid: activeGroup})" ui-sref-active="colorful")  
+      md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.role({groupid: activeGroup})")  
         md-icon(md-font-set="fa fa-long-arrow-right")
         span Roles
       md-divider
@@ -30,11 +30,11 @@ md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locke
       md-checkbox(ng-repeat="group in groups" aria-label="user groups" ng-checked= "isSelected(group._id)" ng-click="toggle(group._id)" ) {{group.title}}
       md-divider
     div(layout="column" layout-padding)
-      md-button.btn-style.sidehead(ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list" ui-sref-active="colorful") Documents -All
-      md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.mydocs" ui-sref-active="colorful") 
+      md-button.btn-style.sidehead(ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list") Documents -All
+      md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.mydocs") 
         md-icon(md-font-set="fa fa-file-text")
         span My Documents
-      md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.shared({roleid: userRole[0]._id})" ui-sref-active="colorful") 
+      md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.shared({roleid: userRole[0]._id})") 
         md-icon(md-font-set="fa fa-share-square")
         span Shared Documents
       md-divider
