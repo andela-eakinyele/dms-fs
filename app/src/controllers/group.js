@@ -85,7 +85,6 @@
                   $scope.groupErr = 'Error updating group';
                 }
               } else {
-                console.log(user);
                 $scope.groupErr = 'Successfully added to group';
                 $rootScope.activeUser = user;
                 $rootScope.activeGroup = user.groupId[0];

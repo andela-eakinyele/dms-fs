@@ -4,6 +4,7 @@
   describe('UserCtrl tests', function() {
 
     var scope,
+
       sampleRole = [{
         _id: 1,
         title: 'a',
@@ -17,6 +18,7 @@
         title: 'c',
         users: [1, 2]
       }],
+
       sampleDoc = {
         ownerId: [{
           name: {
@@ -25,6 +27,7 @@
           }
         }]
       },
+
       sampleUser = {
         ownerId: [{
           name: {
@@ -33,98 +36,201 @@
           }
         }]
       },
+
       Roles = {
-        save: function(data, cb, cbb) {
-          return (data[0].title !== '') ? cb(data) : cbb(false);
+        save: function(data, successCallback, errorCallback) {
+          return (data[0].title !== '') ?
+            successCallback(data) : errorCallback(false);
         },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
         },
-        get: function(params, cb, cbb) {
-          return params.groupid ? cb({
-            message: 'I am groot',
+
+        get: function(params, successCallback, errorCallback) {
+          return params.groupid ? successCallback({
             data: {
               _id: 1,
               title: 'a',
               users: [1, 2]
             }
-          }) : cbb({
-            message: 'error'
+          }) : errorCallback({
+            error: 'error'
           });
         },
-        query: function(params, cb, cbb) {
+
+        query: function(params, successCallback, errorCallback) {
           if (params.groupid) {
-            if (!cb && !cbb) {
-              return sampleRole;
+            if (successCallback) {
+              return successCallback(sampleRole);
             } else {
-              return cb(sampleRole);
+              return sampleRole;
             }
           } else {
-            return 'error';
+            if (errorCallback) {
+              return errorCallback({
+                error: 'error'
+              });
+            } else {
+              return {
+                error: 'error'
+              };
+            }
           }
         }
       },
+
       Docs = {
-        save: function(data, cb, cbb) {
-          return data ? cb(data) : cbb(false);
+        save: function(data, successCallback, errorCallback) {
+          return data === 'new' ?
+            successCallback(data) : errorCallback(false);
         },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
+
+        delete: function(params, successCallback, errorCallback) {
+          if (params.id) {
+            return successCallback();
+          } else if (!params.id) {
+            return errorCallback();
+          }
         },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
+
+        count: function(successCallback) {
+          return successCallback(null, 3);
+        },
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
+        },
+
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
             message: 'I am groot',
-            data: sampleDoc
-          }) : cbb({
-            message: 'error'
+            data: [sampleDoc]
+          }) : errorCallback({
+            error: 'error'
           });
         },
-        query: function(cb) {
-          return cb([sampleDoc]);
-        }
+
+        query: function(params, successCallback, errorCallback) {
+          if (params.groupid) {
+            return successCallback([sampleDoc]);
+          } else {
+            return errorCallback(true);
+          }
+        },
+
+        bulkdelete: function(data, successCallback, errorCallback) {
+          if (data.length > 0) {
+            return successCallback(data);
+          } else {
+            return errorCallback(data);
+          }
+        },
       },
+
       Users = {
-        save: function(data, cb, cbb) {
-          return data ? cb(data) : cbb(false);
+        save: function(data, successCallback, errorCallback) {
+          return data ? successCallback(data) : errorCallback(false);
         },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
         },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
-            message: 'I am groot',
+
+        count: function(successCallback) {
+          return successCallback(null, 3);
+        },
+
+        delete: function(params, successCallback, errorCallback) {
+          if (params.id) {
+            return successCallback();
+          } else if (!params.id) {
+            return errorCallback();
+          }
+        },
+
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
             data: sampleUser
-          }) : cbb({
-            message: 'error'
+          }) : errorCallback({
+            error: 'error'
           });
         },
-        query: function(cb) {
-          return cb([sampleUser]);
+
+        query: function(params, successCallback, errorCallback) {
+          if (params.page) {
+            return successCallback([sampleUser]);
+          } else {
+            return errorCallback({
+              error: 'error'
+            });
+          }
         }
       },
 
       Groups = {
-        save: function(data, cb, cbb) {
-          return data ? cb(data) : cbb(false);
+        save: function(data, successCallback, errorCallback) {
+          return data ? successCallback({
+            _id: 1
+          }) : errorCallback(false);
         },
-        update: function(params, data, cb, cbb) {
-          return (params.id && data) ? cb(data) : cbb(false);
+
+
+        delete: function(params, successCallback, errorCallback) {
+          if (params.id) {
+            return successCallback();
+          } else if (!params.id) {
+            return errorCallback();
+          }
         },
-        get: function(params, cb, cbb) {
-          return params.id ? cb({
-            message: 'I am groot',
+
+        update: function(params, data, successCallback, errorCallback) {
+          return (params.id && data) ?
+            successCallback(data) : errorCallback(false);
+        },
+
+        get: function(params, successCallback, errorCallback) {
+          return params.id ? successCallback({
             users: [{
               roles: [1, 2, 3]
             }]
-          }) : cbb({
-            message: 'error'
+          }) : errorCallback({
+            error: 'error'
           });
         },
-        query: function(cb) {
-          return cb([{
-            message: 'I am groot',
-            data: [1, 3, 4]
-          }]);
+
+        query: function(params, successCallback, errorCallback) {
+          if (params) {
+            if (successCallback) {
+              return successCallback({
+                data: [{
+                  _id: 1,
+                  title: 'Pollock'
+                }]
+              });
+            }
+            return ({
+              data: [{
+                _id: 1,
+                title: 'Pollock'
+              }]
+            });
+          } else {
+            if (errorCallback) {
+              return errorCallback({
+                error: 'error'
+              });
+            }
+            return ({
+              data: [{
+                _id: 1,
+                title: 'Pollock'
+              }]
+            });
+          }
         }
       },
 

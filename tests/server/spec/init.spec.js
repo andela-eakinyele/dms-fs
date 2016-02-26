@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var apiTest = require('./specVar')();
+  var apiTest = require('./../helpers/spec-var')();
   var request = apiTest.request;
 
   module.exports = function() {

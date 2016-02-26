@@ -30,7 +30,6 @@ div.signup(layout="column" layout-padding layout-align="center center")
           input(type="text" name="username" ng-model="signform.username" required)
           div(ng-messages="registerForm.username.$error" ng-show="registerForm.username.$dirty")
             div(ng-message="required") Username is required
-        md-divider
         md-input-container.md-block(flex="50")
           label(for="npassword") Password
           md-icon(md-font-set="fa fa-key")
@@ -40,7 +39,9 @@ div.signup(layout="column" layout-padding layout-align="center center")
             div(ng-message="minlength") Password must be at Least Six Characters
       
     md-button.md-primary.md-raised(ng-disabled="registerForm.$invalid" type="submit") Submit 
-  div.redirect(layout layout-align="center center" layout-margin)
+  md-divider
+  div.redirect(layout-xs="column" layout="row" layout-align="center center" layout-margin)
     span Existing User? 
-    md-button.md-primary.md-raised(ui-sref="home.login") Login
-    md-button.md-accent.md-raised(ui-sref="home.features") Cancel
+    div(layout)
+      md-button.md-primary.md-raised(ui-sref="home.login") Login
+      md-button.md-accent.md-raised(ui-sref="home.features") Cancel

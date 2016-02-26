@@ -1,11 +1,11 @@
 (function() {
   'use strict';
-  var apiTest = require('./specVar')();
+  var apiTest = require('./../helpers/spec-var')();
   var request = apiTest.request;
   var assert = require('assert');
   var _ = require('lodash');
 
-  var admin = require('./../../server/config/secret.js')().testAd;
+  var admin = require('./../../../server/config/secret.js')().testAd;
   var userSeed = apiTest.testdata.users;
 
   module.exports = function() {

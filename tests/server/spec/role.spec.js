@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   var _ = require('lodash');
-  var apiTest = require('./specVar')();
+  var apiTest = require('./../helpers/spec-var')();
   var assert = require('assert');
   var request = apiTest.request;
   var roleSeed = apiTest.testdata.roles;

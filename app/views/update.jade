@@ -48,5 +48,5 @@ md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id="right" aria-label=
   md-divider
   div.update(layout="column" layout-align="start center")
     h3.md-header Group List
-  div.updatelist(layout="row" layout-margin layout-wrap layout-align="start center")
-    span(ng-repeat="group in data.groupId" flex="33") {{group.title}}
+  div.grouplist(layout="row" layout-wrap layout-align="center center")
+    span.md-padding(ng-repeat="group in data.groupId" flex="50") {{$index + 1}}. {{group.title}}

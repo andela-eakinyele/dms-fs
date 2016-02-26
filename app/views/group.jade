@@ -7,50 +7,45 @@ md-content.dashgroup(layout ="column" flex="100" layout-margin)
       span.md-warn {{groupErr}}
 
   div.group(layout="column" layout-margin)  
-    fieldset.newgroup(ng-show="newgroup")
-      legend Fill the fields
-      form(name="newGroup" method="post" autocomplete="off")
-        div.options(layout="column")
-          md-input-container
-            label(for="title") Group Name
-            md-icon(md-font-set="fa fa-users")
-            input(type="text" ng-model="pform.title" name="title" required ng-disabled="joingroup")
-            div(ng-messages="newGroup.title.$error" ng-show="newGroup.title.$dirty")
-              div(ng-message="required") Group Name is required
-          md-input-container
-            label(for="description") Description
-            md-icon(md-font-set="fa fa-file-text")
-            input(type="text" name="description" ng-model="pform.description" required ng-disabled="joingroup")
-            div(ng-messages="newGroup.description.$error" ng-show="newGroup.description.$dirty")
-              div(ng-message="required") Description is required
-          md-input-container
-            label(for="passphrase") Passphrase
-            md-icon(md-font-set="fa fa-key")
-            input(type="text" name="passphrase" ng-model="pform.passphrase" required ng-disabled="joingroup")
-            div(ng-messages="newGroup.passphrase.$error" ng-show="newGroup.passphrase.$dirty")
-              div(ng-message="required") Passphrase is required
-
-
-    fieldset.joingroup(ng-show="joingroup")
-      legend Select a Group and Role
-      form(name="groupForm" method="post" autocomplete="off")
-        div(layout="row" layout-margin layout-align)
-          md-input-container
-            label(for="group") Group Name
-            div(layout)
-              md-icon(md-font-set="fa fa-users")
-              md-select(name="group" ng-change= "getRoles()" ng-model="signform.group" class="select" aria-label="group Name" ng-disabled="newgroup")
-                md-option(ng-value="group" ng-repeat="group in groups track by $index") {{group.title}}
-          md-input-container
-            label(for="role") Role
-            div(layout)
-              md-icon(md-font-set="fa fa-briefcase")
-              md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
-                md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
-        md-input-container.md-block
-          label(for="passphrase") Enter group passphrase
+    form(name="newGroup" method="post" autocomplete="off" ng-show="newgroup")
+      div(layout="column")
+        md-input-container
+          label(for="title") Group Name
+          md-icon(md-font-set="fa fa-users")
+          input(type="text" ng-model="pform.title" name="title" required ng-disabled="joingroup")
+          div(ng-messages="newGroup.title.$error" ng-show="newGroup.title.$dirty")
+            div(ng-message="required") Group Name is required
+        md-input-container
+          label(for="description") Description
+          md-icon(md-font-set="fa fa-file-text")
+          input(type="text" name="description" ng-model="pform.description" required ng-disabled="joingroup")
+          div(ng-messages="newGroup.description.$error" ng-show="newGroup.description.$dirty")
+            div(ng-message="required") Description is required
+        md-input-container
+          label(for="passphrase") Passphrase
           md-icon(md-font-set="fa fa-key")
-          input(type="text" name="passphrase" ng-model="signform.passphrase" required ng-disabled="newgroup")
+          input(type="text" name="passphrase" ng-model="pform.passphrase" required ng-disabled="joingroup")
+          div(ng-messages="newGroup.passphrase.$error" ng-show="newGroup.passphrase.$dirty")
+            div(ng-message="required") Passphrase is required
+
+
+    form.joingroup(name="groupForm" method="post" autocomplete="off" ng-show="joingroup")
+      md-input-container.md-block
+        label(for="group") Group Name
+        div(layout)
+          md-icon(md-font-set="fa fa-users")
+          md-select(name="group" ng-change= "getRoles()" ng-model="signform.group" class="select" aria-label="group Name" ng-disabled="newgroup")
+            md-option(ng-value="group" ng-repeat="group in groups track by $index") {{group.title}}
+      md-input-container.md-block
+        label(for="role") Role
+        div(layout)
+          md-icon(md-font-set="fa fa-briefcase")
+          md-select(name="role" ng-model="signform.role" class="select" aria-label="signform.role" ng-disabled="newgroup")
+            md-option(ng-value="role" ng-if="role.title !== \"Admin\"" ng-repeat="role in roles") {{role.title}}
+      md-input-container.md-block
+        label(for="passphrase") Enter group passphrase
+        md-icon(md-font-set="fa fa-key")
+        input(type="text" name="passphrase" ng-model="signform.passphrase" required ng-disabled="newgroup")
 
     div(layout layout-align="center center")
       md-button.long.md-primary.md-raised(ng-disabled="groupForm.$invalid && newGroup.$invalid" ng-click="newgroup? addGroup() : joinGroup()" md-ink-ripple type="submit") {{newgroup? buttonName[0] : buttonName[1]}}

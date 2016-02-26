@@ -145,21 +145,24 @@
           Utils.showConfirm(evt, 'Delete', 'Documents will be deleted',
             'Delete',
             function() {
-              Docs.bulkdelete($scope.selected, function() {
-                $scope.docs = window._.filter($scope.docs, function(doc) {
-                  return $scope.selected.indexOf(doc._id) < 0;
-                });
-                $scope.count = $scope.count - $scope.selected.length;
-                $scope.selected = [];
 
-                // re-initialize page
-                $state.go('dashboard.admin.doc', {
-                  id: $stateParams.id,
-                  groupid: $stateParams.groupid
-                });
-              }, function() {
-                Utils.showAlert(evt, 'Delete Action', 'Error ' +
-                  'deleting document');
+              Docs.bulkdelete($scope.selected, function(err) {
+                if (err) {
+                  Utils.showAlert(evt, 'Delete Action', 'Error ' +
+                    'deleting document');
+                } else {
+                  $scope.docs = window._.filter($scope.docs, function(doc) {
+                    return $scope.selected.indexOf(doc._id) < 0;
+                  });
+                  $scope.count = $scope.count - $scope.selected.length;
+                  $scope.selected = [];
+
+                  // re-initialize page
+                  $state.go('dashboard.admin.doc', {
+                    id: $stateParams.id,
+                    groupid: $stateParams.groupid
+                  });
+                }
               });
             });
         };
