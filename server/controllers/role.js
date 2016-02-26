@@ -136,16 +136,18 @@
     },
 
     all: function(req, res) {
-      var groupid = req.headers.groupid || req.query.groupid;
-      var params = {};
+      var groupid = req.query.groupid;
+
+      var query = Role.find({});
 
       var page = req.query.page || null;
       var limit = parseInt(req.query.limit) || null;
 
       if (!isNaN(parseInt(groupid))) {
-        params.groupId = [parseInt(groupid)];
 
-        var query = Role.find(params);
+        query = query
+          .where('groupId')
+          .in([parseInt(groupid)]);
 
         if (limit && page) {
           page = parseInt(page) - 1;

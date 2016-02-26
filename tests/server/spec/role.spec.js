@@ -114,10 +114,13 @@
           .set({
             userid: adminUser._id,
             access_token: token,
+          })
+          .query({
             groupid: 113
           })
           .expect(200)
           .end(function(err, res) {
+            console.log(res.body);
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
             assert.deepEqual(_.pluck(response, 'title'), ['Admin',
@@ -134,14 +137,15 @@
           .type('json')
           .set({
             userid: adminUser._id,
-            access_token: token,
-            groupid: 113
+            access_token: token
           }).query({
             limit: 1,
-            page: 1
+            page: 1,
+            groupid: 113
           })
           .expect(200)
           .end(function(err, res) {
+            console.log(res.body);
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
             assert.deepEqual(_.pluck(response, 'title'), ['Admin']);
