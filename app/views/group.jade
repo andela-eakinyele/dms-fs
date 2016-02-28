@@ -7,7 +7,7 @@ md-content.dashgroup(layout ="column" flex="100" layout-margin)
       span.md-warn {{groupErr}}
 
   div.group(layout="column" layout-margin)  
-    form(name="newGroup" method="post" autocomplete="off" ng-show="newgroup")
+    form.newgroup(name="newGroup" method="post" autocomplete="off" ng-show="newgroup")
       div(layout="column")
         md-input-container
           label(for="title") Group Name

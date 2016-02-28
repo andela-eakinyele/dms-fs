@@ -90,7 +90,7 @@
       describe('when token is valid', function() {
 
         it('should implement session and ' +
-          'redirect to user dashboard',
+          'update user token',
           function() {
 
             Users = {
@@ -100,13 +100,11 @@
             };
 
             spyOn(Auth, 'setToken').and.callThrough();
-            spyOn(state, 'go').and.callThrough();
             spyOn(Users, 'session').and.callThrough();
 
             module('prodocs', function($provide) {
               $provide.value('Users', Users);
               $provide.value('Auth', Auth);
-              $provide.value('$state', state);
             });
 
             inject(function($injector) {
@@ -115,10 +113,6 @@
 
             expect(Auth.setToken).toHaveBeenCalled();
             expect(Users.session).toHaveBeenCalled();
-            expect(state.go).toHaveBeenCalledWith('dashboard.list', {
-              id: 1,
-              groupid: 1
-            });
           });
 
         it('should implement session and redirect to group', function() {

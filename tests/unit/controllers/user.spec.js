@@ -5,20 +5,6 @@
 
     var scope,
 
-      sampleRole = [{
-        _id: 1,
-        title: 'a',
-        users: [1, 2]
-      }, {
-        _id: 2,
-        title: 'b',
-        users: [1, 2]
-      }, {
-        _id: 3,
-        title: 'c',
-        users: [1, 2]
-      }],
-
       sampleDoc = {
         ownerId: [{
           name: {
@@ -37,50 +23,6 @@
         }]
       },
 
-      Roles = {
-        save: function(data, successCallback, errorCallback) {
-          return (data[0].title !== '') ?
-            successCallback(data) : errorCallback(false);
-        },
-
-        update: function(params, data, successCallback, errorCallback) {
-          return (params.id && data) ?
-            successCallback(data) : errorCallback(false);
-        },
-
-        get: function(params, successCallback, errorCallback) {
-          return params.groupid ? successCallback({
-            data: {
-              _id: 1,
-              title: 'a',
-              users: [1, 2]
-            }
-          }) : errorCallback({
-            error: 'error'
-          });
-        },
-
-        query: function(params, successCallback, errorCallback) {
-          if (params.groupid) {
-            if (successCallback) {
-              return successCallback(sampleRole);
-            } else {
-              return sampleRole;
-            }
-          } else {
-            if (errorCallback) {
-              return errorCallback({
-                error: 'error'
-              });
-            } else {
-              return {
-                error: 'error'
-              };
-            }
-          }
-        }
-      },
-
       Docs = {
         save: function(data, successCallback, errorCallback) {
           return data === 'new' ?
@@ -93,10 +35,6 @@
           } else if (!params.id) {
             return errorCallback();
           }
-        },
-
-        count: function(successCallback) {
-          return successCallback(null, 3);
         },
 
         update: function(params, data, successCallback, errorCallback) {
@@ -262,10 +200,10 @@
       controller = $controller('UserCtrl', {
         $scope: scope,
         Docs: Docs,
-        Roles: Roles,
         Groups: Groups,
         Users: Users
       });
+
       state = $injector.get('$state');
       stateParams = $injector.get('$stateParams');
       mdDialog = $injector.get('$mdDialog');
@@ -276,25 +214,19 @@
       stateParams.groupid = 1;
       stateParams.id = 1;
       scope.activeUser = user;
-      spyOn(Roles, 'query').and.callThrough();
       spyOn(Users, 'get').and.callThrough();
       scope.init();
       expect(scope.data.data).toBeDefined();
-      expect(scope.roles).toBeDefined();
-      expect(Roles.query).toHaveBeenCalled();
       expect(Users.get).toHaveBeenCalled();
     });
 
     it('should initialize the controller to an error', function() {
       stateParams.groupid = 1;
       scope.activeUser = user;
-      spyOn(Roles, 'query').and.callThrough();
       spyOn(Users, 'get').and.callThrough();
       spyOn(Utils, 'showAlert').and.callThrough();
       scope.init();
       expect(scope.data.data).not.toBeDefined();
-      expect(scope.roles).toBeDefined();
-      expect(Roles.query).toHaveBeenCalled();
       expect(Users.get).toHaveBeenCalled();
       expect(Utils.showAlert).toHaveBeenCalled();
     });

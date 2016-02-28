@@ -2,12 +2,11 @@
   'use strict';
 
   angular.module('prodocs.services')
-    .factory('Groups', ['$resource',
-      function groupFactory($resource) {
-        return $resource('/api/groups/:id', {
-          id: '@id',
-          page: '@page',
-          limit: '@limit'
+    .factory('Counts', ['$resource',
+      function countFactory($resource) {
+        return $resource('/api/count/:name', {
+          name: '@name',
+          groupid: '@groupid'
         }, {
           update: {
             // this method issues a PUT request
@@ -16,7 +15,6 @@
         }, {
           stripTrailingSlashes: false
         });
-
       }
     ]);
 

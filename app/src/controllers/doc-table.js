@@ -2,8 +2,9 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('DocTableCtrl', ['$rootScope', '$scope', '$state',
-      '$stateParams', 'Docs', 'Utils',
-      function($rootScope, $scope, $state, $stateParams, Docs, Utils) {
+      '$stateParams', 'Docs', 'Utils', 'Counts',
+      function($rootScope, $scope, $state, $stateParams,
+        Docs, Utils, Counts) {
 
         $scope.init = function() {
           $scope.selectedDocs = [];
@@ -38,7 +39,7 @@
                         Utils.showAlert(null, 'Error retrieving' +
                           ' user documents');
                       } else {
-                        $scope.count = res;
+                        $scope.count = res.count;
                       }
                     });
                 }
@@ -60,7 +61,7 @@
                         Utils.showAlert(null, 'Error retrieving ' +
                           'shared documents');
                       } else {
-                        $scope.count = res;
+                        $scope.count = res.count;
                       }
                     });
                 }
@@ -71,13 +72,13 @@
             Docs.query(query, function(res) {
                 $scope.docs = res;
 
-                Docs.count(function(err, res) {
-                  if (err) {
-                    Utils.showAlert(null, 'Error retrieving ' +
-                      'documents');
-                  } else {
-                    $scope.count = res;
-                  }
+                Counts.get({
+                  name: 'documents'
+                }, function(count) {
+                  $scope.count = count.count;
+                }, function() {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'documents');
                 });
               },
               function() {

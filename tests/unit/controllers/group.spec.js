@@ -84,7 +84,9 @@
             }]
           };
           if (data) {
-            return cb(null, user);
+            return cb(null, {
+              data: user
+            });
           } else {
             return cb('error');
           }
@@ -122,10 +124,6 @@
           } else if (!params.id) {
             return errorCallback();
           }
-        },
-
-        count: function(cb) {
-          return cb(null, 3);
         },
 
         update: function(params, data, successCallback, errorCallback) {

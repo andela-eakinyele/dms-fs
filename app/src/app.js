@@ -11,6 +11,7 @@
   require('./services/docs');
   require('./services/auth');
   require('./services/group');
+  require('./services/count');
   require('./services/utils');
   require('./services/token');
   require('./services/token-injector');
@@ -346,13 +347,8 @@
                   id: res.data.user._id
                 });
               }
-              // use user group or last set header group
-            } else {
-              $state.go('dashboard.list', {
-                id: res.data.user._id,
-                groupid: $rootScope.activeGroup
-              });
             }
+
           } else {
             if (/Token/.test(err.data.message)) {
               Auth.logout();

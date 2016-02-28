@@ -134,16 +134,6 @@
         });
     },
 
-    count: function(req, res) {
-      Group.count({}, function(err, count) {
-        if (err) {
-          cm.resdberrors(res, 'querying database', err);
-        } else {
-          res.status(200).json(count);
-        }
-      });
-    },
-
     get: function(req, res) {
       var query = Group.findOne({
         _id: req.params.id
@@ -235,7 +225,7 @@
               }).select('name roles username groupId')
             .populate({
               path: 'groupId',
-              select: 'title roles'
+              select: 'title roles _id'
             })
             .populate({
               path: 'roles'

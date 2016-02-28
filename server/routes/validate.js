@@ -72,14 +72,14 @@
   exports.authorize = function(req, res, next) {
     var query = {
       _id: req.headers.userid,
-      groupId: req.headers.groupid
+      groupId: req.query.groupid || req.headers.groupid
     };
     // retrieve user details
     userFunc.retrieveData(query).then(function(user) {
       if (user) {
         var admin = _.filter(user.roles, {
           title: 'Admin',
-          groupId: [parseInt(req.headers.groupid)]
+          groupId: [parseInt(req.query.groupid || req.headers.groupid)]
         });
         // check for admin role
         if (admin.length) {
@@ -197,9 +197,6 @@
           'error': 'Unauthorized user action'
         });
       }
-      // } else {
-      //   next();
-      // }
     }).catch(function(err) {
       res.status(500).json({
         'status': 500,
@@ -207,7 +204,6 @@
         'error': 'Group not verified ' + err
       });
     });
-
   };
 
 })();

@@ -163,28 +163,9 @@
             res.status(err.status).json(err.error);
           });
       } else {
-        res.status(200).json([{}]);
-      }
-    },
-
-    count: function(req, res) {
-
-      var groupid = req.query.groupid;
-
-      if (!isNaN(parseInt(groupid))) {
-
-        Role.count()
-          .where('groupId')
-          .in([parseInt(groupid)])
-          .exec(function(err, count) {
-            if (err) {
-              cm.resdberrors(res, 'querying database', err);
-            } else {
-              res.status(200).json(count);
-            }
-          });
-      } else {
-        res.status(200).json(0);
+        res.status(400).json({
+          error: 'Invalid groupid'
+        });
       }
     },
 
@@ -205,6 +186,7 @@
     },
 
     update: function(req, res) {
+
       var query = Role.findByIdAndUpdate(req.params.id,
         req.body, {
           new: true
@@ -257,7 +239,9 @@
       Doc.getDocsByRoleCount(req.params.id,
           req.headers.groupid)
         .then(function(data) {
-          res.status(200).json(data);
+          res.status(200).json({
+            count: data
+          });
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });
