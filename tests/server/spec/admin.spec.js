@@ -449,8 +449,8 @@
                 var response = res.body;
                 users = response;
                 var name = _.pluck(response, 'username');
-                assert.deepEqual(name, ['JCraig', 'MBridge',
-                  'ACside', 'HAhmed', 'PNishi'
+                assert.deepEqual(name, ['MBridge', 'ACside', 'EAbbott',
+                  'HAhmed', 'PNishi'
                 ]);
                 done();
               });

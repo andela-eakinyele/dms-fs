@@ -254,16 +254,15 @@
       }
 
       if (limit && page) {
-        console.log(page, limit);
         page = parseInt(page) - 1;
         query = query
           .limit(limit)
-          .skip(limit * page);
+          .skip(limit * page)
+          .sort('_id');
       }
 
       cm.gGetAll('Users', query)
         .then(function(result) {
-          console.log(result.data);
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
