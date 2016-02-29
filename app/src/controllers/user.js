@@ -2,21 +2,12 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('UserCtrl', ['$rootScope', '$scope', '$mdSidenav',
-      '$state', '$stateParams', 'Utils', 'Users', 'Roles',
-      function($rootScope, $scope, $mdSidenav, $state, $stateParams,
-        Utils, Users, Roles) {
+      '$state', '$stateParams', 'Utils', 'Users',
+      function($rootScope, $scope, $mdSidenav,
+        $state, $stateParams, Utils, Users) {
 
         $scope.init = function() {
           $scope.data = {};
-          // check user admin privilege
-          $scope.userRole = window._.filter($rootScope.activeUser.roles, {
-            title: 'Admin',
-            groupId: [$stateParams.groupid]
-          });
-
-          $scope.roles = Roles.query({
-            groupid: $stateParams.groupid
-          });
 
           // load old user data
           Users.get({

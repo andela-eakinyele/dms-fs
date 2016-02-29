@@ -284,8 +284,7 @@
         });
 
       // should return count of all documents owned by user 
-      it('-Should be able to get document by' +
-        ' userid paginated',
+      it('-Should be able to get count of document',
         function(done) {
           request
             .get('/api/users/' + userIds[0] + '/documents/count')
@@ -301,17 +300,17 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response, 3);
+              assert.equal(response.count, 3);
               done();
             });
         });
 
 
-      // should return all docs owned by user
-      it('-Should be able to get count of documents',
+      // should return count of all docs in group
+      it('-Should be able to get count of documents in group',
         function(done) {
           request
-            .get('/api/documentcount')
+            .get('/api/count/documents')
             .set({
               'username': userSeed.docUsers.tuser3[2],
               'password': userSeed.docUsers.tuser3[3],
@@ -324,7 +323,29 @@
             .end(function(err, res) {
               assert.equal(null, err, 'Error encountered');
               var response = res.body;
-              assert.equal(response, 4);
+              assert.equal(response.count, 4);
+              done();
+            });
+        });
+
+      // should not return count of all docs in group
+      it('-Should not be able to get count of' +
+        ' documents in group without a group Id',
+        function(done) {
+          request
+            .get('/api/count/documents')
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              userid: userIds[0],
+              access_token: token[0].token
+            })
+            .expect('Content-Type', /json/)
+            .expect(400)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.error, 'Invalid groupid');
               done();
             });
         });
@@ -341,7 +362,7 @@
             access_token: token[0].token
           })
           .send({
-
+            title: 'Invictus'
           })
           .expect('Content-Type', /json/)
           .expect(200)
@@ -349,9 +370,37 @@
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
             assert.equal(response._id, docIds[1]);
+            assert.equal(response.title, 'Invictus');
             done();
           });
       });
+
+      //  should not be able to update documents shared by others
+      it('-Should not be able to update shared document ' +
+        'owned by others',
+        function(done) {
+          request
+            .put('/api/documents/' + docIds[2])
+            .set({
+              'username': userSeed.docUsers.tuser3[2],
+              'password': userSeed.docUsers.tuser3[3],
+              groupid: 113,
+              userid: userIds[0],
+              access_token: token[0].token
+            }).send({
+              title: 'Insightful'
+            })
+            .expect('Content-Type', /json/)
+            .expect(403)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.message, 'Not authorized ' +
+                'to update document');
+              assert.equal(response.data, '');
+              done();
+            });
+        });
 
       // should be able to delete document with only role access and ownerId
       it('-Should be able to delete own document', function(done) {
@@ -374,7 +423,7 @@
           });
       });
 
-      //  should not be able to delete documents shared with others
+      //  should not be able to delete documents shared by others
       it('-Should not be able to delete shared document ' +
         'owned by others',
         function(done) {

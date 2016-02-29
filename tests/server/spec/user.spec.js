@@ -368,8 +368,8 @@
           });
 
         // invalid token response
-        it('- Should return a new token if token' +
-          ' is still active',
+        it('- Should not validate a token if token' +
+          ' is invalid',
           function(done) {
             var invalidToken = token.substring(2);
             request

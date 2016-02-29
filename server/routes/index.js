@@ -10,6 +10,7 @@
   var docRoute = require('./../controllers/doc');
   var roleRoute = require('./../controllers/role');
   var groupRoute = require('./../controllers/group');
+  var countRoute = require('./../controllers/count');
 
 
   // Routes that can be accessed by all users
@@ -19,7 +20,6 @@
     });
   });
 
-
   router.post('/users/login', auth.login);
 
   router.post('/users', validate.adminUser, userRoute.create);
@@ -27,17 +27,17 @@
 
   // Routes that can be accessed only by authenticated users
   router.all('/*', validate.authenticate);
+
   router.get('/session', validate.session);
 
+  router.get('/count/:name', countRoute);
 
   router.get('/users', userRoute.all);
-  router.get('/usercount', userRoute.count);
 
   router.route('/users/:id')
     .get(userRoute.get)
     .put(userRoute.update);
 
-  router.get('/groupcount', groupRoute.count);
   router.post('/groups/join', validate.joinGroup, groupRoute.joinGroup);
 
   router.route('/groups')
@@ -49,9 +49,8 @@
     .get(groupRoute.get);
 
   router.delete('/documents/bulkdelete', docRoute.bulkDelete);
-  router.get('/documents/bulkview', docRoute.bulkView);
 
-  router.get('/documentcount', docRoute.count);
+  router.get('/documents/bulkview', docRoute.bulkView);
 
   router.route('/documents')
     .get(docRoute.all)
@@ -59,9 +58,7 @@
   router.put('/documents/:id', docRoute.update);
 
   router.get('/roles', roleRoute.all);
-  router.route('/roles/:id')
-    .put(roleRoute.update)
-    .get(roleRoute.get);
+  router.get('/roles/:id', roleRoute.get);
 
   router.get('/roles/:id/documents', roleRoute.getDocsByRole);
   router.get('/roles/:id/documents/count', roleRoute.getDocsByRoleCount);
@@ -78,14 +75,10 @@
   router.delete('/users/:id', validate.superAdmin, userRoute.delete);
   router.delete('/groups/:id', validate.superAdmin, groupRoute.delete);
 
-
   // Routes that can be accessed only by authenticated and authorized users
   router.all('/*', validate.authorize);
 
-  router.get('/rolecount', roleRoute.count);
-
   router.post('/roles', roleRoute.bulkCreate);
-
 
   router.route('/roles/:id')
     .put(roleRoute.update)

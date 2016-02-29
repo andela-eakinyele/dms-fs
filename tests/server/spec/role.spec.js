@@ -107,13 +107,15 @@
           });
       });
 
-      it('- Should be able to get all roles', function(done) {
+      it('- Should be able to get all roles in group', function(done) {
         request
           .get('/api/roles')
           .type('json')
           .set({
             userid: adminUser._id,
             access_token: token,
+          })
+          .query({
             groupid: 113
           })
           .expect(200)
@@ -127,6 +129,24 @@
           });
       });
 
+      it('- Should not be able to get all' +
+        ' roles without  a groupid',
+        function(done) {
+          request
+            .get('/api/roles')
+            .type('json')
+            .set({
+              userid: adminUser._id,
+              access_token: token,
+            })
+            .expect(400)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.error, 'Invalid groupid');
+              done();
+            });
+        });
 
       it('- Should be able to get all roles by pages', function(done) {
         request
@@ -134,11 +154,11 @@
           .type('json')
           .set({
             userid: adminUser._id,
-            access_token: token,
-            groupid: 113
+            access_token: token
           }).query({
             limit: 1,
-            page: 1
+            page: 1,
+            groupid: 113
           })
           .expect(200)
           .end(function(err, res) {
@@ -151,21 +171,42 @@
 
       it('- Should be able to get count of roles', function(done) {
         request
-          .get('/api/rolecount')
+          .get('/api/count/roles')
           .type('json')
           .set({
             userid: adminUser._id,
-            access_token: token,
+            access_token: token
+          })
+          .query({
             groupid: 113
           })
           .expect(200)
           .end(function(err, res) {
             assert.equal(null, err, 'Error encountered');
             var response = res.body;
-            assert.equal(response, 2);
+            assert.equal(response.count, 2);
             done();
           });
       });
+
+      it('- Should not be able to get count' +
+        ' of roles without a group Id',
+        function(done) {
+          request
+            .get('/api/count/roles')
+            .type('json')
+            .set({
+              userid: adminUser._id,
+              access_token: token
+            })
+            .expect(400)
+            .end(function(err, res) {
+              assert.equal(null, err, 'Error encountered');
+              var response = res.body;
+              assert.equal(response.error, 'Invalid groupid');
+              done();
+            });
+        });
 
 
       it('- Should be able to get a role', function(done) {

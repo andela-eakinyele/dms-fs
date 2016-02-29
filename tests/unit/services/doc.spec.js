@@ -124,41 +124,7 @@
         Documents.update();
         expect(Documents.update).toBeDefined();
         expect(typeof Documents.update).toBe('function');
-
-        it('should get documents count', function() {
-
-
-          httpBackend
-            .whenGET('/api/documentcount')
-            .respond(200, {
-              data: 2
-            });
-
-          Documents.count(cb);
-
-          httpBackend.flush();
-
-          expect(error).toBe(null);
-          expect(response).toBeDefined();
-        });
-
-        it('should return error getting documents count', function() {
-
-          httpBackend
-            .whenGET('/api/documentcount')
-            .respond(400, {
-              err: 'err'
-            });
-
-          Documents.count(cb);
-
-          httpBackend.flush();
-
-          expect(response).toBe(null);
-          expect(error.data.err).toBe('err');
-        });
       });
-
 
       describe('custom request routes', function() {
 
@@ -234,7 +200,6 @@
 
         describe('getting document by role', function() {
 
-
           it('should get documents by role only', function() {
 
             httpBackend
@@ -253,6 +218,7 @@
             expect(error).toBe(null);
             expect(response).toBeDefined();
           });
+
           it('should return error getting documents by role', function() {
 
             httpBackend

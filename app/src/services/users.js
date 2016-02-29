@@ -33,15 +33,6 @@
           });
         };
 
-        obj.count = function(cb) {
-          return $http.get('/api/usercount')
-            .then(function(res) {
-              cb(null, res.data);
-            }, function(err) {
-              cb(err, null);
-            });
-        };
-
         obj.joingroup = function(data, cb) {
           return $http.post('/api/groups/join', data).then(function(res) {
             cb(null, res.data);

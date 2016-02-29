@@ -124,24 +124,15 @@
         query = query
           .limit(limit)
           .skip(limit * page)
-          .sort('dateCreated');
+          .sort('_id');
       }
+
       cm.gGetAll('Groups', query)
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
-    },
-
-    count: function(req, res) {
-      Group.count({}, function(err, count) {
-        if (err) {
-          cm.resdberrors(res, 'querying database', err);
-        } else {
-          res.status(200).json(count);
-        }
-      });
     },
 
     get: function(req, res) {
@@ -235,7 +226,7 @@
               }).select('name roles username groupId')
             .populate({
               path: 'groupId',
-              select: 'title roles'
+              select: 'title roles _id'
             })
             .populate({
               path: 'roles'

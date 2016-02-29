@@ -98,41 +98,6 @@
       httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe('User count resource', function() {
-      it('should get users count', function() {
-
-        httpBackend
-          .whenGET('/api/usercount')
-          .respond(200, {
-            data: 2
-          });
-
-        Users.count(cb);
-
-        httpBackend.flush();
-
-        expect(error).toBe(null);
-        expect(response).toBeDefined();
-      });
-
-      it('should return error getting users count', function() {
-
-        httpBackend
-          .whenGET('/api/usercount')
-          .respond(400, {
-            err: 'err'
-          });
-
-        Users.count(cb);
-
-        httpBackend.flush();
-
-        expect(response).toBe(null);
-        expect(error.data.err).toBe('err');
-      });
-    });
-
-
     describe('User joins a group resource', function() {
       it('should get add user to a group', function() {
 

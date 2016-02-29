@@ -28,10 +28,6 @@
           }
         },
 
-        count: function(successCallback) {
-          return successCallback(null, 3);
-        },
-
         update: function(params, data, successCallback, errorCallback) {
           return (params.id && data) ?
             successCallback(data) : errorCallback(false);

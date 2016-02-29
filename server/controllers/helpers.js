@@ -2,11 +2,6 @@
   'use strict';
   var _ = require('lodash');
 
-  // generate objec data for create and update
-  exports.parseData = function(keys, _data) {
-    return _.zipObject(keys, _data);
-  };
-
   var getNextId = function(qresult) {
     var maxId = _.max(qresult.map(function(value) {
       return value._id;
@@ -106,7 +101,6 @@
           }
         },
         function(err) { // db error
-          // console.log('Error querying database');
           dberrors(reject, 'querying database', err, 500);
         });
     });
