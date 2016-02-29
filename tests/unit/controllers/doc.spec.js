@@ -57,10 +57,6 @@
           }
         },
 
-        count: function(cb) {
-          return cb(null, 3);
-        },
-
         query: function(params, successCallback, errorCallback) {
           if (params.groupid) {
             if (successCallback) {
@@ -94,10 +90,6 @@
           } else if (!params.id) {
             return errorCallback();
           }
-        },
-
-        count: function(successCallback) {
-          return successCallback(null, 3);
         },
 
         update: function(params, data, successCallback, errorCallback) {

@@ -213,6 +213,7 @@
           path: 'groupId',
           select: 'title description'
         });
+
       superAdmin(req.params.id, req.headers.userid)
         .then(function(result) {
           if (result) {
@@ -234,7 +235,7 @@
 
     all: function(req, res) {
 
-      var groupid = req.headers.groupid || req.query.groupid;
+      var groupid = req.headers.groupid;
 
       var page = req.query.page || null;
       var limit = parseInt(req.query.limit) || null;
@@ -245,7 +246,6 @@
           path: 'roles',
           select: 'title'
         });
-
 
       if (!isNaN(parseInt(groupid))) {
         query = query
@@ -258,35 +258,15 @@
         query = query
           .limit(limit)
           .skip(limit * page)
-          .sort('dateCreated');
+          .sort('_id');
       }
+
       cm.gGetAll('Users', query)
         .then(function(result) {
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
-    },
-
-    count: function(req, res) {
-      var groupid = req.headers.groupid || req.query.groupid;
-
-      var query = User.count({});
-
-      if (!isNaN(parseInt(groupid))) {
-        query = query
-          .where('groupId')
-          .in([parseInt(groupid)]);
-        query.exec(function(err, count) {
-          if (err) {
-            cm.resdberrors(res, 'querying database', err);
-          } else {
-            res.status(200).json(count);
-          }
-        });
-      } else {
-        res.status(200).json(0);
-      }
     },
 
     delete: function(req, res) {

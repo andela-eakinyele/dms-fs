@@ -60,7 +60,6 @@
 
           var selectedGroup = $scope.signform.group;
           var selectedRole = $scope.signform.role;
-
           //  get user document details to be updated
           var userGroup = $rootScope.activeUser.groupId;
           var _userRoles = window._
@@ -86,12 +85,12 @@
                 }
               } else {
                 $scope.groupErr = 'Successfully added to group';
-                $rootScope.activeUser = user;
-                $rootScope.activeGroup = user.groupId[0];
+                $rootScope.activeUser = user.data;
+                $rootScope.activeGroup = user.data.groupId[0];
 
                 $state.go('dashboard.list', {
                   id: $rootScope.activeUser._id,
-                  groupid: user.groupId[0]._id
+                  groupid: user.data.groupId[0]._id
                 });
               }
             });

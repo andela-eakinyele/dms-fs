@@ -123,8 +123,16 @@ md-content.nextViews {
     }
 }
 
+md-dialog .md-dialog-content {
+    h2.md-title {
+        font-size: 16px
+    }
+    padding: 24px;
+    font-size: 14px;
+}
+
 .login {
-    width: 350px;
+    width: 352px;
     md-divider {
         color: #000;
         padding: 0;
@@ -348,7 +356,7 @@ md-dialog-actions {
     >.md-button {
         width: 100px;
         span {
-            font-size: 16px;
+            font-size: 12px;
         }
     }
 }
@@ -396,6 +404,19 @@ md-dialog-actions {
 
 .joingroup {
     text-align: left;
+    div {
+        md-icon {
+            margin-top: 20px;
+        }
+    }
+}
+
+.newgroup {
+    div {
+        md-icon {
+            margin-top: 8px;
+        }
+    }
 }
 
 .dashgroup {
@@ -403,6 +424,10 @@ md-dialog-actions {
         color: #fff;
         font-size: 12px;
     }
+}
+
+md-input-container>md-icon {
+    top: 10px;
 }
 
 .group {
@@ -413,9 +438,6 @@ md-dialog-actions {
         margin: 0;
     }
     div {
-        md-icon {
-            margin-top: 10px;
-        }
         > md-select {
             width: 200px;
             font-size: 10px;

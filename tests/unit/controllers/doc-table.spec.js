@@ -28,10 +28,6 @@
           }
         },
 
-        count: function(cb) {
-          return cb(null, 3);
-        },
-
         update: function(params, data, successCallback, errorCallback) {
           return (params.id && data) ?
             successCallback(data) : errorCallback(false);
@@ -69,14 +65,27 @@
             cb(null, 'success') : cb('error');
         },
         getUserDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cb(true);
+          return id ? cb(null, {
+            count: 3
+          }) : cb(true);
         },
         getRoleDocs: function(id, params, cb) {
           return (id && params) ? cb(null, 'success') : cb('error');
         },
         getRoleDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cb(true);
+          return id ? cb(null, {
+            count: 3
+          }) : cb(true);
         },
+      },
+
+      Counts = {
+        get: function(params, successCallback, errorCallback) {
+          return (params.name) ?
+            successCallback({
+              count: 3
+            }) : errorCallback(true);
+        }
       },
 
       mdOpenMenu = function(ev) {
@@ -109,8 +118,10 @@
 
       controller = $controller('DocTableCtrl', {
         $scope: scope,
-        Docs: Docs
+        Docs: Docs,
+        Counts: Counts
       });
+
       state = $injector.get('$state');
       Utils = $injector.get('Utils');
       stateParams = $injector.get('$stateParams');
@@ -229,8 +240,10 @@
           stateParams.groupid = 2;
           state.current.name = 'dashboard.list';
           spyOn(Docs, 'query').and.callThrough();
+          spyOn(Counts, 'get').and.callThrough();
           scope.getDocs(scope.query);
           expect(Docs.query).toHaveBeenCalled();
+          expect(Counts.get).toHaveBeenCalled();
           expect(scope.docs).toBeDefined();
           expect(scope.count).toBe(3);
         });

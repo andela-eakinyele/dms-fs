@@ -42,7 +42,6 @@
         });
 
     });
-
   }
 
 
@@ -64,7 +63,6 @@
         }).catch(function(err) {
           res.status(err.status).json(err.error);
         });
-
     },
 
     all: function(req, res) {
@@ -97,16 +95,6 @@
         });
     },
 
-    count: function(req, res) {
-      Doc.count({}, function(err, count) {
-        if (err) {
-          cm.resdberrors(res, 'querying database', err);
-        } else {
-          res.status(200).json(count);
-        }
-      });
-    },
-
     get: function(req, res) {
       var userid = parseInt(req.headers.userid),
         groupid = parseInt(req.headers.groupid);
@@ -128,8 +116,6 @@
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });
-
-
     },
 
     update: function(req, res) {
@@ -140,13 +126,15 @@
         .then(function(a) {
           if (a[0].status) {
             res.status(a[0].status).json(a[0].data);
+            // document ownerId equals userId
           } else if (!a[0].status &&
             (a[2].data._id === a[1].data.ownerId[0]._id)) {
-            req.body.ownerId = [a[1].data.ownerId[0]._id];
+
             req.body.lastModified = Date.now();
             var query = Doc.findByIdAndUpdate(req.params.id, req.body, {
               new: true
             });
+
             cm.gUpdate('Documents', req.params.id, query)
               .then(function(result) {
                 res.status(result.status).json(result.data);
@@ -192,7 +180,9 @@
 
       Doc.getDocsByOwnerIdCount(ownerId, groupid)
         .then(function(data) {
-          res.status(200).json(data);
+          res.status(200).json({
+            count: data
+          });
         }).catch(function(err) {
           cm.resdberrors(res, 'querying database', err);
         });

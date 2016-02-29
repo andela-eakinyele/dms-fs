@@ -49,10 +49,6 @@
           }
         },
 
-        count: function(cb) {
-          return cb(null, 3);
-        },
-
         query: function(params, successCallback, errorCallback) {
           if (params.groupid) {
             if (successCallback) {

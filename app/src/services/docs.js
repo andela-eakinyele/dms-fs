@@ -17,15 +17,6 @@
           stripTrailingSlashes: false
         });
 
-        obj.count = function(cb) {
-          return $http.get('/api/documentcount')
-            .then(function(res) {
-              cb(null, res.data);
-            }, function(err) {
-              cb(err, null);
-            });
-        };
-
         obj.getUserDocs = function(id, params, cb) {
           return $http.get('/api/users/' + id + '/documents?limit=' +
               params.limit + '&page=' + params.page)

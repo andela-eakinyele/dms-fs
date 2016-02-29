@@ -37,10 +37,6 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
                     md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
                   md-menu-content(width="1")
                     md-menu-item
-                      md-button.md-primary(aria-label="Edit role")
-                        md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
-                        span Edit role
-                    md-menu-item
                       md-button.md-primary(aria-label="Delete role" ng-click="menuAction(\"delete\", role._id, $index, $event)")
                         md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
                         span Delete

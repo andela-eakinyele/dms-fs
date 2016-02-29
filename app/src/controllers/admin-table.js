@@ -3,9 +3,9 @@
   angular.module('prodocs.controllers')
     .controller('AdminTableCtrl', ['$rootScope', '$scope', '$state',
       '$stateParams', 'Groups', 'Users', 'Roles', 'Docs', 'Utils', 'Auth',
-      'Token',
+      'Token', 'Counts',
       function($rootScope, $scope, $state, $stateParams, Groups,
-        Users, Roles, Docs, Utils, Auth, Token) {
+        Users, Roles, Docs, Utils, Auth, Token, Counts) {
 
         // initialize variables 
         $scope.init = function() {
@@ -90,6 +90,7 @@
                     id: id
                   }, function() {
                     $scope.docs.splice(index, 1);
+                    $scope.count -= 1;
                     Utils.showAlert(evt, 'Delete Action', 'Document ' +
                       'successfully deleted');
                   },
@@ -104,6 +105,7 @@
                   id: id
                 }, function() {
                   $scope.roles.splice(index, 1);
+                  $scope.count -= 1;
                   Utils.showAlert(evt, 'Delete Action', 'Role ' +
                     'successfully deleted');
                 }, function() {
@@ -117,7 +119,7 @@
                     id: id
                   }, function() {
                     $scope.groups.splice(index, 1);
-
+                    $scope.count -= 1;
                     Utils.showAlert(evt, 'Delete Action', 'Groups ' +
                       'successfully deleted');
                   },
@@ -132,6 +134,7 @@
                   id: id
                 }, function() {
                   $scope.allUsers.splice(index, 1);
+                  $scope.count -= 1;
                   Utils.showAlert(null, 'Delete Action', 'Users ' +
                     'successfully deleted');
                 }, function() {
@@ -185,14 +188,16 @@
               $scope.roles = res;
 
               // obtain count of roles for pagination
-              Roles.count(function(err, count) {
-                if (err) {
-                  Utils.showAlert(null, 'Error retrieving ' +
-                    'roles');
-                } else {
-                  $scope.count = count;
-                }
+              Counts.get({
+                groupid: $stateParams.groupid,
+                name: 'roles'
+              }, function(count) {
+                $scope.count = count.count;
+              }, function() {
+                Utils.showAlert(null, 'Error retrieving ' +
+                  'roles count');
               });
+
             } else {
               $scope.roleErr = 'There are no roles in this group';
             }
@@ -238,13 +243,13 @@
               $scope.docs = res;
 
               // retrieve count for pagination
-              Docs.count(function(err, res) {
-                if (err) {
-                  Utils.showAlert(null, 'Error retrieving ' +
-                    'documents');
-                } else {
-                  $scope.count = res;
-                }
+              Counts.get({
+                name: 'documents'
+              }, function(count) {
+                $scope.count = count.count;
+              }, function() {
+                Utils.showAlert(null, 'Error retrieving ' +
+                  'document count');
               });
             } else {
               $scope.docErr = 'There are no documents in this group';
@@ -309,14 +314,14 @@
                 // assign parsed data to scope variable
                 $scope.users = data;
 
-                // obatin count of users in group for pagination
-                Users.count(function(err, count) {
-                  if (err) {
-                    Utils.showAlert(null, 'Error retrieving ' +
-                      'users');
-                  } else {
-                    $scope.count = count;
-                  }
+                // obtain count of users in group for pagination
+                Counts.get({
+                  name: 'users'
+                }, function(count) {
+                  $scope.count = count.count;
+                }, function() {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'users count');
                 });
               } else {
                 $scope.userErr = 'There are no users in this group';
@@ -361,13 +366,13 @@
                 $scope.groups = res;
 
                 // request for group count
-                Groups.count(function(err, res) {
-                  if (err) {
-                    Utils.showAlert(null, 'Error retrieving ' +
-                      'groups');
-                  } else {
-                    $scope.count = res;
-                  }
+                Counts.get({
+                  name: 'groups'
+                }, function(count) {
+                  $scope.count = count.count;
+                }, function() {
+                  Utils.showAlert(null, 'Error retrieving ' +
+                    'groups count');
                 });
               } else {
                 $scope.groupErr = 'There are no groups';
@@ -408,14 +413,17 @@
           Users.query(query, function(res) {
             if (res.length > 0) {
               $scope.allUsers = res;
-              Users.count(function(err, res) {
-                if (err) {
-                  Utils.showAlert(null, 'Error retrieving ' +
-                    'users');
-                } else {
-                  $scope.count = res;
-                }
+
+              // obtain count of users for pagination
+              Counts.get({
+                name: 'users'
+              }, function(count) {
+                $scope.count = count.count;
+              }, function() {
+                Utils.showAlert(null, 'Error retrieving ' +
+                  'users count');
               });
+
             } else {
               $scope.userErr = 'There are no users';
             }
