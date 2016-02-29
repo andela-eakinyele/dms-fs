@@ -123,11 +123,12 @@
         page = parseInt(page) - 1;
         query = query
           .limit(limit)
-          .skip(limit * page)
-          .sort('dateCreated');
+          .skip(limit * page);
       }
+
       cm.gGetAll('Groups', query)
         .then(function(result) {
+          console.log(result.data);
           res.status(result.status).json(result.data);
         }).catch(function(err) {
           res.status(err.status).json(err.error);
