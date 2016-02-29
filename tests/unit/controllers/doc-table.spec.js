@@ -65,13 +65,17 @@
             cb(null, 'success') : cb('error');
         },
         getUserDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cb(true);
+          return id ? cb(null, {
+            count: 3
+          }) : cb(true);
         },
         getRoleDocs: function(id, params, cb) {
           return (id && params) ? cb(null, 'success') : cb('error');
         },
         getRoleDocsCount: function(id, cb) {
-          return id ? cb(null, 3) : cb(true);
+          return id ? cb(null, {
+            count: 3
+          }) : cb(true);
         },
       },
 
