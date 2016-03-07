@@ -20,7 +20,7 @@ div.docForm(layout="column" ng-init="loadDoc()")
                 div(ng-message="maxlength") Label Exceeds maximum character length
             md-input-container.md-block(md-no-float flex="70")
               label(for="title")
-              input(name="title" ng-model="doc.title" ng-maxlength="30" placeholder="Enter Document Title")
+              input(name="title" ng-model="doc.title" ng-maxlength="50" placeholder="Enter Document Title")
               div(ng-messages="docForm.title.$error" ng-show="docForm.title.$dirty")
                 div(ng-message="maxlength") Title Exceeds maximum character length
         .formContent(layout-padding)

@@ -16,8 +16,6 @@
           } else {
             // check for state name and stateParams
             $scope.groups = $rootScope.activeUser.groupId;
-            // if user is a not member of a group and not superadmin
-            //  redirect to group
 
             // check if current state is superadmin access
             $scope.$watch(function() {

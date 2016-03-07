@@ -7,15 +7,7 @@
 
         $scope.init = function() {
           $scope.showButton = true;
-          $scope.bigScreen = $mdMedia('gt-sm');
         };
-
-
-        $scope.$watch(function() {
-          return $mdMedia('gt-sm');
-        }, function(big) {
-          $scope.bigScreen = big;
-        });
 
         // $scope.features = Utils.fetch('data/features.json');
         $scope.features = [{
@@ -35,7 +27,6 @@
           'content': 'Documents are managed by role assignment ' +
             'and ownership '
         }];
-
 
         $scope.$watch(function() {
           return $state.current.name;

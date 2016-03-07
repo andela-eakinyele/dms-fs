@@ -1,5 +1,5 @@
-div(layout="row"  layout-wrap layout-sm="column" layout-margin layout-align="center start" ng-init="init()")
-  md-whiteframe(flex-gt-md="60" flex="80" class="md-whiteframe-4dp" layout-align="center start" layout="column" layout-margin ng-repeat="doc in docs")
+div(layout="row" layout-wrap flex layout-margin layout-align="center start" ng-init="init()")
+  md-whiteframe(flex="80" class="md-whiteframe-4dp" layout-align="center start" layout="column" layout-margin ng-repeat="doc in docs")
     div.head(layout="row" layout-align="start center")
       md-button.md-primary(aria-label="back to list" ui-sref="dashboard.list.mydocs")
         md-icon(md-font-set="fa fa-arrow-left")

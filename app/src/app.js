@@ -238,10 +238,10 @@
             },
           }
         })
-        .state('dashboard.admin.role.add', {
-          url: '/add',
+        .state('dashboard.admin.addrole', {
+          url: '/:groupid/roles/add',
           views: {
-            'inner@dashboard.admin.role': {
+            'inner@dashboard.admin': {
               templateUrl: 'views/add-role.html',
               controller: 'AdminRoleCtrl'
             },
@@ -276,8 +276,8 @@
 
   ])
 
-  .run(['$rootScope', '$location', '$mdSidenav', '$state', 'Auth', 'Users',
-    function($rootScope, $location, $mdSidenav, $state, Auth, Users) {
+  .run(['$rootScope', '$location', '$mdSidenav', '$mdMedia', '$state', 'Auth', 'Users',
+    function($rootScope, $location, $mdSidenav, $mdMedia, $state, Auth, Users) {
 
 
       // side navigation bar control
@@ -288,6 +288,13 @@
       $rootScope.close = function(dir) {
         $mdSidenav(dir).close();
       };
+
+      //check screen sizes
+      $rootScope.$watch(function() {
+        return $mdMedia('gt-sm');
+      }, function(big) {
+        $rootScope.bigScreen = big;
+      });
 
       // previous state handling
       $rootScope.previousState = {};

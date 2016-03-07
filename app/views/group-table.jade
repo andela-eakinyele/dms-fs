@@ -1,58 +1,57 @@
-div(layout="column" layout-margin)
-  md-content(layout ="column" flex="100" layout-margin)
+md-content(layout ="column" flex="100")
 
-    md-toolbar.table
-      .md-toolbar-tools.sectionTitle(layout="row" layout-margin)
-        span.title(flex) Group Documents - Access
-        md-input-container.md-block(md-no-float)
-          label(for="search")
-          input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
-        div.headerbutton(layout layout-align="center center")
-          md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
-            md-icon(md-font-set="fa fa-refresh") 
-            span Refresh
-
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
+    .md-toolbar-tools.sectionTitle(layout="row" layout-margin)
+      span.title(flex) Group Documents - Access
+      md-input-container.md-block(md-no-float)
+        label(for="search")
+        input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
+      div.headerbutton(layout layout-align="center center")
+        md-button.md-accent.md-raised(aria-label="Refresh Table" ng-click="refreshTable()")
+          md-icon(md-font-set="fa fa-refresh") 
+          span Refresh
 
 
-    md-toolbar.table.alternate(ng-if="selectedDocs.length > 0")
-      .md-toolbar-tools.sectionTitle(layout="row")
-        span(flex) {{selectedDocs.length}} Selected
-        md-button.md-primary.md-raised(aria-label="View Selected")
-          md-icon(md-font-set="fa fa-external-link") 
-          span View
 
-    md-content.listDocs(layout="column" layout-margin)
-      md-table-container
-        table.md-table(md-row-select md-progress="promise")
-          thead.md-head(md-order="query.order")
-            tr.headerSection.md-row
-              th.md-column(md-order-by="doc.title" ng-repeat="header in headers") {{header.name}}
-          tbody.md-body.noboxes
-            tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search")
-              td.md-cell {{doc.label}}
-              td.md-cell {{doc.title}}
-              td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
-              td.md-cell {{getDate(doc.dateCreated).day}}
-              td.md-cell {{getDate(doc.lastModified).day}}
-              td.md-cell
-                md-icon(ng-if="doc.roles.length > 0" md-font-set="fa fa-group")
-              td.md-cell
-                md-menu(ng-if="editDoc(doc)")
-                  md-button(aria-label="doc options" ng-click="openMenu($mdOpenMenu, $event)")
-                    md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
-                  md-menu-content(width="1")
-                    md-menu-item
-                      md-button.md-primary(aria-label="Edit doc" ui-sref="dashboard.doc.view({docId:doc._id})")
-                        md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
-                        span View doc
-                    md-menu-item
-                      md-button.md-primary(aria-label="Edit doc" ng-click="menuAction(\"edit\", doc._id, $event)")
-                        md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
-                        span Edit doc
-                    md-menu-item
-                      md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $event)")
-                        md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
-                        span Delete
-                md-button.md-primary(ng-if="!editDoc(doc) && access(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
-                  md-icon(md-font-set="fa fa-external-link" md-menu-align-target) 
-      md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginate" md-page-select)
+  md-toolbar.table.alternate(ng-if="selectedDocs.length > 0" ng-class="{\"reset\": !bigScreen}")
+    .md-toolbar-tools.sectionTitle(layout="row")
+      span(flex) {{selectedDocs.length}} Selected
+      md-button.md-primary.md-raised(aria-label="View Selected")
+        md-icon(md-font-set="fa fa-external-link") 
+        span View
+
+  md-content.listDocs(layout="column" layout-margin)
+    md-table-container
+      table.md-table(md-row-select md-progress="promise")
+        thead.md-head(md-order="query.order")
+          tr.headerSection.md-row
+            th.md-column(md-order-by="doc.title" ng-repeat="header in headers") {{header.name}}
+        tbody.md-body.noboxes
+          tr.md-row(md-auto-select ng-repeat="doc in docs | orderBy: query.order | filter : search")
+            td.md-cell {{doc.label}}
+            td.md-cell {{doc.title}}
+            td.md-cell {{doc.ownerId[0].name.first}} {{doc.ownerId[0].name.last}}
+            td.md-cell {{getDate(doc.dateCreated).day}}
+            td.md-cell {{getDate(doc.lastModified).day}}
+            td.md-cell
+              md-icon(ng-if="doc.roles.length > 0" md-font-set="fa fa-group")
+            td.md-cell
+              md-menu(ng-if="editDoc(doc)")
+                md-button(aria-label="doc options" ng-click="openMenu($mdOpenMenu, $event)")
+                  md-icon(md-font-set="fa fa-ellipsis-v" md-menu-origin) 
+                md-menu-content(width="1")
+                  md-menu-item
+                    md-button.md-primary(aria-label="Edit doc" ui-sref="dashboard.doc.view({docId:doc._id})")
+                      md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
+                      span View doc
+                  md-menu-item
+                    md-button.md-primary(aria-label="Edit doc" ng-click="menuAction(\"edit\", doc._id, $event)")
+                      md-icon(md-font-set="fa fa-pencil-square-o" md-menu-align-target) 
+                      span Edit doc
+                  md-menu-item
+                    md-button.md-primary(aria-label="Delete doc" ng-click="menuAction(\"delete\", doc._id, $event)")
+                      md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
+                      span Delete
+              md-button.md-primary(ng-if="!editDoc(doc) && access(doc)" aria-label="Delete doc" ui-sref="dashboard.doc.view({docId:doc._id})")
+                md-icon(md-font-set="fa fa-external-link" md-menu-align-target) 
+    md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginate" md-page-select)

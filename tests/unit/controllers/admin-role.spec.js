@@ -94,9 +94,9 @@
       });
 
       it('should increase scope value', function() {
-        expect(scope.num).toBe(0);
+        expect(scope.num).toBe(3);
         scope.increase();
-        expect(scope.num).toBe(1);
+        expect(scope.num).toBe(4);
       });
 
       it('should decrease scope value', function() {
@@ -149,7 +149,7 @@
         scope.newRoles = ['Editor', ' Publisher'];
         scope.cancelAdd();
         expect(scope.newRoles.length).toBe(0);
-        expect(scope.num).toBe(0);
+        expect(scope.num).toBe(2);
       });
 
     });
