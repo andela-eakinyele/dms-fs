@@ -276,8 +276,10 @@
 
   ])
 
-  .run(['$rootScope', '$location', '$mdSidenav', '$mdMedia', '$state', 'Auth', 'Users',
-    function($rootScope, $location, $mdSidenav, $mdMedia, $state, Auth, Users) {
+  .run(['$rootScope', '$location', '$mdSidenav', '$mdMedia', '$state',
+    'Auth', 'Users',
+    function($rootScope, $location, $mdSidenav, $mdMedia, $state,
+      Auth, Users) {
 
 
       // side navigation bar control

@@ -29,7 +29,6 @@
         $scope.enableCreateButton = function(list) {
           if (list.length > 0) {
             return window._.every(list, function(a) {
-              [0].length
               return a ? a.trim().length > 0 : false;
             });
           } else {

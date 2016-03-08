@@ -2,8 +2,8 @@
   'use strict';
   angular.module('prodocs.controllers')
     .controller('StartPageCtrl', ['$rootScope', '$scope',
-      '$state', '$mdMedia',
-      function(rootScope, $scope, $state, $mdMedia) {
+      '$state',
+      function(rootScope, $scope, $state) {
 
         $scope.init = function() {
           $scope.showButton = true;
