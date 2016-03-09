@@ -1,6 +1,6 @@
-md-content(layout ="column" flex="100" layout-margin ng-init="appUsers()")
+md-content(layout ="column" flex="100" ng-init="appUsers()")
 
-  md-toolbar.table
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       div(layout flex)
         span.title(flex)  List of All Users

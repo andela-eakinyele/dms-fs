@@ -4,6 +4,7 @@
   describe('Application Run tests', function() {
     var scope,
       Users,
+      httpBackend,
       res1 = {
         data: {
           user: {
@@ -86,6 +87,40 @@
       };
 
     describe('Application run', function() {
+
+      describe('watch screen', function() {
+
+        it('should watch the screen size', function() {
+          Users = {
+            session: function(cb) {
+              cb(null, res1);
+            }
+          };
+
+
+
+          module('prodocs', function($provide) {
+            $provide.value('Users', Users);
+            $provide.value('Auth', Auth);
+          });
+
+          inject(function($injector) {
+            httpBackend = $injector.get('$httpBackend');
+            scope = $injector.get('$rootScope');
+          });
+
+          httpBackend
+            .whenGET('views/home.html')
+            .respond(200, [{
+              res: 'res'
+            }]);
+
+          scope.$digest();
+          expect(scope.bigScreen).toBeDefined();
+        });
+
+      });
+
 
       describe('when token is valid', function() {
 

@@ -1,15 +1,18 @@
 html,
 body {
     width: 100%;
+    height: 100%;
     font-family: "Roboto", "Open Sans", "Arial", "Verdana", sans-serif;
     text-transform: none;
     background-image: url('../images/homeBg.jpg');
     background-repeat: no-repeat no-repeat;
     background-size: cover;
     >main {
-        min-height: 100%;
+        height: inherit;
+        width: inherit;
         > div {
-            min-height: 800px;
+            height: inherit;
+            width: inherit;
             background-color: rgba(2, 18, 25, 0.76);
         }
     }
@@ -20,17 +23,17 @@ body > md-toolbar {
     z-index: 3;
 }
 
-.footer {
-    height: 40px;
-    position: relative;
-    background-color: rgba(93, 112, 120, 0.93);
-}
-
 .overlay {
-    min-height: inherit;
+    height: inherit;
     background: linear-gradient(rgba(78, 88, 97, 0.59), rgba(18, 75, 100, 0.66));
     text-align: center;
-    div.boxes {}
+}
+
+.fullHeight {
+    height: inherit;
+    > div {
+        height: inherit;
+    }
 }
 
 .md-button {
@@ -198,13 +201,27 @@ md-toolbar .md-menu {
     margin: 0;
 }
 
-.header.md-toolbar-tools {
-    background-color: #C6DCDF;
-    height: 50px;
+#dashContent {
+    min-width: 600px;
+    width: 100%;
+    margin-left: 2px;
+    >md-toolbar {
+        position: fixed;
+        z-index: 50;
+        top: 0;
+        right: 0;
+        width: auto;
+        left: 250px;
+        &.reset {
+            left: 0;
+        }
+    }
 }
 
-.header {
+.header.md-toolbar-tools {
     min-width: 550px;
+    background-color: #C6DCDF;
+    height: 50px;
     .md-button.md-icon {
         color: #fff;
         padding: 0;
@@ -221,7 +238,23 @@ md-toolbar .md-menu {
 }
 
 .afterSideNav {
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-top: 60px;
     margin-left: 10px;
+    margin-right: 10px;
+    height: auto;
+    >md-content {
+        background-color: inherit;
+        md-toolbar.table {
+            position: fixed;
+            width: auto;
+            right: 10px;
+            left: 262px;
+            &.reset {
+                left: 12px;
+            }
+        }
+    }
 }
 
 .md-button.md-accent.md-raised:not([disabled]) md-icon {
@@ -261,12 +294,6 @@ div.headerbutton {
     }
 }
 
-#dashContent {
-    min-width: 600px;
-    width: 100%;
-    margin-left: 2px;
-}
-
 .sectionTitle.md-toolbar-tools {
     vertical-align: middle;
     md-input-container {
@@ -303,6 +330,7 @@ md-fab-speed-dial md-fab-trigger {
 }
 
 .logoName {
+    margin: 0 75px;
     img {
         width: 100px;
         height: 100px;
@@ -315,17 +343,13 @@ md-fab-speed-dial md-fab-trigger {
 }
 
 .sidenav {
-    float: left;
     md-icon {
         margin-top: 10px;
     }
     md-content {
+        border-top: 2px solid #FFD094;
         > div {
             width: 100%;
-            padding: 0;
-            &.logoName {
-                padding: 10px;
-            }
             md-checkbox {
                 font-size: 12px;
                 margin-top: 5px;
@@ -468,10 +492,6 @@ md-input-container>md-icon {
     margin: 0 auto;
 }
 
-md-content.fullHeight {
-    min-height: inherit;
-}
-
 md-sidenav.md-sidenav-right {
     margin-right: 20px;
     height: 100%;
@@ -541,6 +561,7 @@ md-menu-item>.md-button {
 }
 
 .listDocs {
+    margin-top: 70px;
     table.md-table {
         > tbody.noboxes > tr > td:nth-child(2) {
             min-width: 150px;
@@ -563,7 +584,7 @@ md-menu-item>.md-button {
             margin-bottom: 5px;
         }
         thead.md-head>tr.md-row {
-            height: 20px;
+            height: 36px;
         }
     }
 }
@@ -574,6 +595,8 @@ span.title {
 
 .docdata {
     width: inherit;
+    height: inherit;
+    background-color: inherit;
     .md-whiteframe-4dp {
         background-color: #fff;
         margin: 20px 10%;
@@ -651,5 +674,8 @@ span.title {
 
 md-sidenav.md-sidenav-left {
     max-width: 250px;
+    md-divider {
+        padding: 0;
+    }
     height: inherit;
 }

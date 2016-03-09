@@ -6,7 +6,7 @@
       function($rootScope, $scope, $state, $stateParams, Utils, Roles) {
 
         // initialize scope variables
-        $scope.num = 0;
+        $scope.num = 3;
         $scope.newRoles = [];
 
         // returns an array for repeating role inout field
@@ -22,13 +22,18 @@
         // decease number of input field
         $scope.decrease = function() {
           $scope.num -= 1;
+          $scope.newRoles.pop();
         };
 
         // check input fields are not empty
         $scope.enableCreateButton = function(list) {
-          return window._.every(list, function(a) {
-            return a ? a.trim().length > 0 : false;
-          });
+          if (list.length > 0) {
+            return window._.every(list, function(a) {
+              return a ? a.trim().length > 0 : false;
+            });
+          } else {
+            return false;
+          }
         };
 
         // create roles
@@ -61,14 +66,14 @@
             });
           }, function() { // alert error encountered creating roles
             Utils.showAlert(ev, 'Create', 'Error Creating Roles-' +
-              ' Check Duplicate Roles');
+              ' Check Duplicate/Empty Roles');
           });
         };
 
         // reset input fields and go to role dashboard view 
         $scope.cancelAdd = function() {
           $scope.newRoles = [];
-          $scope.num = 0;
+          $scope.num = 2;
           $state.go('dashboard.admin.role', {
             id: $stateParams.id,
             groupid: $stateParams.groupid

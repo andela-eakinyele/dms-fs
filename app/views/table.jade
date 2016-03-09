@@ -1,6 +1,6 @@
-md-content(layout ="column" flex="100" layout-margin)
+md-content(layout ="column" flex="100")
 
-  md-toolbar.table
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row" layout-margin)
       div(layout flex)
         span.title My Documents
@@ -14,7 +14,7 @@ md-content(layout ="column" flex="100" layout-margin)
           span Refresh
 
 
-  md-toolbar.table.alternate(ng-if="selectedDocs.length > 0")
+  md-toolbar.table.alternate(ng-if="selectedDocs.length > 0" ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       span(flex) {{selectedDocs.length}} Selected
       div.headerbutton(layout layout-align="center center")
@@ -22,7 +22,7 @@ md-content(layout ="column" flex="100" layout-margin)
           md-icon(md-font-set="fa fa-external-link") 
           span View
       div.headerbutton(layout layout-align="center center")
-        md-button.md-warn.md-raised(aria-label="View Selected" ng-click="deleteSelection($event)")
+        md-button.md-warn.md-raised(aria-label="Delete Selected" ng-click="deleteSelection($event)")
           md-icon(md-font-set="fa fa-trash") 
           span Delete
 

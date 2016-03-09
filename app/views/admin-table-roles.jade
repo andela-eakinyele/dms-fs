@@ -1,6 +1,6 @@
-md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
+md-content(layout ="column" flex="100" ng-init="roleList()")
 
-  md-toolbar.table
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       div(layout flex)
         span.title List of Roles
@@ -9,7 +9,7 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
         label(for="search")
         input(type="text" name="search" ng-model="search.$" placeholder="Type here to search")
       div.headerbutton(layout layout-align="center center")
-        md-button(ui-sref="dashboard.admin.role.add")
+        md-button(ui-sref="dashboard.admin.addrole")
           md-icon(md-font-set="fa fa-briefcase") 
           span Add/Edit Roles
           md-tooltip Add Group Roles
@@ -41,9 +41,6 @@ md-content(layout ="column" flex="100" layout-margin ng-init="roleList()")
                         md-icon(md-font-set="fa fa-trash" md-menu-align-target) 
                         span Delete
     md-table-pagination(md-limit="query.limit" md-page="query.page" md-total="{{count}}" md-on-paginate="onPaginateRole" md-page-select)
-
-md-content(layout ="column" flex="100" layout-margin ui-view="inner")
-
 
 
       
