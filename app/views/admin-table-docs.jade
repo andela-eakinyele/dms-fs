@@ -1,6 +1,6 @@
-md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
+md-content(layout ="column" flex="100" ng-init="docList()")
 
-  md-toolbar.table
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       div(layout flex)
         span.title List of Documents
@@ -14,12 +14,14 @@ md-content(layout ="column" flex="100" layout-margin ng-init="docList()")
           span Refresh
 
 
-  md-toolbar.table.alternate(ng-if="selected.length > 0")
+  md-toolbar.table.alternate(ng-if="selected.length > 0" ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       span(flex) {{selected.length}} Selected
-      md-button.md-warn.md-raised(aria-label="Delete Selected" ng-click="deleteSelection($event)")
-        md-icon(md-font-set="fa fa-trash") 
-        span Delete
+
+      div.headerbutton(layout layout-align="center center")
+        md-button.md-warn.md-raised(aria-label="Delete Selected" ng-click="deleteSelection($event)")
+          md-icon(md-font-set="fa fa-trash") 
+          span Delete
 
   md-content.listDocs(layout="column" layout-margin)
     md-table-container

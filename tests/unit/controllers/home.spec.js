@@ -40,7 +40,6 @@
       expect(scope.features).toBeDefined();
       scope.init();
       expect(scope.showButton).toBeDefined();
-      expect(scope.bigScreen).toBeDefined();
     });
 
     it('should call watch the current state', function() {
@@ -56,12 +55,6 @@
       expect(state.current.name).toBe('home.features');
       expect(scope.showButton).toBe(true);
     });
-
-    it('should watch the screen size', function() {
-      scope.$digest();
-      expect(scope.bigScreen).toBeDefined();
-    });
-
   });
 
 })();

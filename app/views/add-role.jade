@@ -1,21 +1,23 @@
-md-toolbar.addrole(ng-init="loadRoles()")
-  .md-toolbar-tools(layout="row")
-    div(flex)
-      span.title Add New Roles
-    div.md-padding(layout="row") 
-      div.headerbutton(layout layout-align="center center")
-        md-button.md-icon-button(ng-click="decrease()" aria-label="remove fields")
-          md-icon(md-font-set="fa fa-minus")
-        md-button.md-icon-button(ng-click="increase()" aria-label="add fields")
-          md-icon(md-font-set="fa fa-plus")
-      div.headerbutton
-        md-button.md-primary(ng-click="create($event)" ng-disabled="!enableCreateButton(newRoles)")
-          span Create
-      div.headerbutton
-        md-button.md-accent.md-raised(ng-click="cancelAdd()")
-          span Cancel
+md-content.addrole(layout ="column" flex="100")
+  md-toolbar(ng-init="loadRoles()" ng-class="{\"reset\": !bigScreen}")
+    .md-toolbar-tools(layout="row")
+      div(flex)
+        span.title Add New Roles
+      div.md-padding(layout="row") 
+        div.headerbutton(layout layout-align="center center")
+          md-button.md-icon-button(ng-click="decrease()" aria-label="remove fields")
+            md-icon(md-font-set="fa fa-minus")
+          md-button.md-icon-button(ng-click="increase()" aria-label="add fields")
+            md-icon(md-font-set="fa fa-plus")
+        div.headerbutton
+          md-button.md-primary.md-raised(ng-click="create($event)" ng-disabled="!enableCreateButton(newRoles)")
+            span Create
+        div.headerbutton
+          md-button.md-accent.md-raised(ng-click="cancelAdd()")
+            span Cancel
+
   md-content(layout="row" layout-wrap layout-padding)
-    md-input-container(ng-repeat="i in range(num) track by $index" flex="45")
+    md-input-container(ng-repeat="i in range(num) track by $index" flex="33")
       label {{$index +1}} 
       md-icon(md-font-set="fa fa-dot-circle-o")
       input(type="text" ng-model="newRoles[$index]")

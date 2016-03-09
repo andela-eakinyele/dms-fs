@@ -1,9 +1,9 @@
 md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locked-open="$mdMedia(\"gt-sm\")")
+  div.logoName
+    img(ng-src="./images/test-logo.png")
+    h3.md-headline Prodocs
   md-content(layout="column")
-    div.logoName(layout="column" layout-align="center center")
-      img(ng-src="./images/test-logo.png")
-      h3.md-headline Prodocs
-    div(layout-padding ng-if="superAdmin.length > 0")
+    div(ng-if="superAdmin.length > 0")
       md-button.btn-style.sidehead Administrator Menu
       md-button.btn-style(md-ink-ripple aria-label="superAdmin menu item" ui-sref="dashboard.admin.group({id: activeUser._id})") 
         md-icon(md-font-set="fa fa-group")
@@ -13,7 +13,7 @@ md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locke
         span Users
       md-divider
 
-    div(layout="column" ng-if="userRole[0].title === \"Admin\"" layout-padding)
+    div(ng-if="userRole[0].title === \"Admin\"")
       md-button.btn-style.sidehead Group Admin
       md-button.btn-style(ng-disabled="activeGroup === \"\"" md-ink-ripple aria-label="admin menu item" ui-sref="dashboard.admin.doc({groupid: activeGroup})") 
         md-icon(md-font-set="fa fa-long-arrow-right")
@@ -25,11 +25,13 @@ md-sidenav.md-sidenav-left.md-whiteframe-7dp(md-component-id="lefty" md-is-locke
         md-icon(md-font-set="fa fa-long-arrow-right")
         span Roles
       md-divider
-    div(layout="column" layout-padding)
+
+    div
       md-button.btn-style.sidehead Groups
       md-checkbox(ng-repeat="group in groups" aria-label="user groups" ng-checked= "isSelected(group._id)" ng-click="toggle(group._id)" ) {{group.title}}
       md-divider
-    div(layout="column" layout-padding)
+
+    div
       md-button.btn-style.sidehead(ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list") Documents -All
       md-button.btn-style(md-ink-ripple aria-label="Doc category" ng-disabled="activeGroup === \"\"" ui-sref="dashboard.list.mydocs") 
         md-icon(md-font-set="fa fa-file-text")

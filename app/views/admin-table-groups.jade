@@ -1,6 +1,6 @@
-md-content(layout ="column" flex="100" layout-margin ng-init="groupList()")
+md-content(layout ="column" flex="100" ng-init="groupList()")
 
-  md-toolbar.table
+  md-toolbar.table(ng-class="{\"reset\": !bigScreen}")
     .md-toolbar-tools.sectionTitle(layout="row")
       div(layout flex)
         span.title List of Groups
